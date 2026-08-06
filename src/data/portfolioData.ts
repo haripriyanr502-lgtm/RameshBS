@@ -83,16 +83,43 @@ export const initialPortfolioData: PortfolioData = {
 
   lionisticJourney: {
     heading: 'MY LIONISTIC JOURNEY',
-    subheading: 'Dedicated Service, District Leadership & International Fellowship in Lions Clubs International',
-    overview: 'Being a Lion has expanded my circle of like-minded leaders while providing a platform to give back to the community. Through Lions International District 317F, we turn experience and compassion into meaningful impact.',
+    subheading: 'Dedicated Service, District Leadership, International Fellowship & MJF Honor in Lions Clubs International',
+    overview: 'Being a Lion has expanded my circle of like-minded leaders while providing a global platform to give back to the community. Conferred the Melvin Jones Fellow (MJF) honor in 2025-2026 by LCIF, we turn experience, compassion, and international synergy into enduring humanitarian impact.',
+    
+    mjfHonor: {
+      year: '2025 - 2026',
+      title: 'Melvin Jones Fellow (MJF)',
+      organization: 'Lions Clubs International Foundation (LCIF)',
+      description: 'Conferred the prestigious Melvin Jones Fellow (MJF) recognition in the year 2025-2026—the highest honor bestowed by LCIF for exemplary dedication to humanitarian service, clean water CSR infrastructure, and youth empowerment.',
+      highlights: [
+        'Highest international honor for humanitarian stewardship in Lions Clubs International.',
+        'Recognized for raising ₹31+ Lakhs CSR funding for rural clean drinking water plants.',
+        'Championing youth Leo club leadership across 12 clubs in District 317F.',
+        'Sustaining global LCIF mission initiatives and international cross-border fellowship.'
+      ]
+    },
+
     milestones: [
+      {
+        id: 'lion-0',
+        year: '2025 - 2026',
+        position: 'Melvin Jones Fellow (MJF) Honoree',
+        organization: 'Lions Clubs International Foundation (LCIF)',
+        location: 'District 317F / Global LCIF',
+        description: 'Awarded the prestigious Melvin Jones Fellow (MJF) title by LCIF for outstanding contribution to humanitarian causes, community welfare, and CSR water infrastructure.',
+        achievements: [
+          'Conferred Melvin Jones Fellowship (MJF) recognition for the Lions Year 2025-2026.',
+          'Acknowledged by District 317F and LCIF leadership for transformative service impact.'
+        ],
+        category: 'Council'
+      },
       {
         id: 'lion-1',
         year: '2026 - 2027',
         position: 'Region Chairperson',
         organization: 'Lions International District 317F',
         location: 'Bengaluru Region',
-        description: 'Providing strategic leadership and operational guidance for multiple Lions zones and clubs across District 317F.',
+        description: 'Providing strategic leadership and operational guidance for multiple Lions zones and 12 advisory Leo clubs across District 317F.',
         achievements: [
           'Overseeing regional humanitarian service projects and club growth.',
           'Fostering cross-district collaboration and leadership development.'
@@ -102,12 +129,12 @@ export const initialPortfolioData: PortfolioData = {
       {
         id: 'lion-2',
         year: '2023 - 2026',
-        position: 'District Coordinator Leo 317F & Leo Advisor of leo-Ashraya, leo-satva and Leo vishwayuvashakti',
+        position: 'District Coordinator Leo 317F & Leo Advisor of 12 Leo Clubs',
         organization: 'Lions International District 317F',
         location: 'District 317F',
-        description: 'Coordinating youth Leo clubs and mentoring young leaders across LEO Asraya, LEO Satva, and LEO Viswa YuvaShakti initiatives.',
+        description: 'Coordinating youth Leo clubs and mentoring young leaders across LEO Ashraya, LEO Satva, LEO Vishwayuvashakti and 9 additional advisory Leo clubs.',
         achievements: [
-          'Guiding leadership development, civic engagement, and community service across LEO Asraya, LEO Satva, and LEO Viswa YuvaShakti.',
+          'Guiding leadership development, civic engagement, and community service across 12 Leo Clubs.',
           'Mentoring youth across schools and colleges while organizing sports, health, and empowerment campaigns.'
         ],
         category: 'District'
@@ -162,6 +189,153 @@ export const initialPortfolioData: PortfolioData = {
           'Interacted with Lions leaders from District 309 in Singapore to foster global humanitarian partnership.'
         ],
         category: 'International'
+      }
+    ],
+
+    internationalExposures: [
+      {
+        id: 'exp-1',
+        title: 'Nepal Goodwill Lions Delegation & Cross-Border Service',
+        country: 'Nepal',
+        district: 'Districts 325 B1 & B2',
+        dignitaries: ['Ln. Puja Shrestha Rajbanshi (District 325 B2)', 'Ln. Bishwo Raj Paudel (District 325 B1)'],
+        description: 'Represented Lions International District 317F during official visits to Kathmandu and Pokhara, building bilateral service partnerships, clean water exchange models, and youth Leo joint initiatives.',
+        keyOutcomes: [
+          'Exchanged international club banners and goodwill greetings.',
+          'Shared blueprint of ₹31L CSR Reverse Osmosis clean water infrastructure.',
+          'Initiated Indo-Nepal Youth Leo cultural & leadership exchange discussions.'
+        ],
+        year: '2024 - 2025'
+      },
+      {
+        id: 'exp-2',
+        title: 'Singapore Lions Leadership & Enterprise Staffing Forum',
+        country: 'Singapore',
+        district: 'District 309',
+        dignitaries: ['District 309 Cabinet Officers & Club Presidents'],
+        description: 'Engaged with Lions leaders in Singapore to exchange best practices in modern club governance, digital platform integration, enterprise IT talent staffing, and WIN5M youth sports wellness.',
+        keyOutcomes: [
+          'Discussed cross-border youth sports talent development via WIN5M.',
+          'Analyzed digital recordkeeping and transparent CSR governance models.',
+          'Strengthened District 317F - District 309 international fellowship ties.'
+        ],
+        year: '2025'
+      },
+      {
+        id: 'exp-3',
+        title: 'Melvin Jones Fellowship (MJF) Global LCIF Network',
+        country: 'Global / USA',
+        district: 'LCIF Global Network',
+        dignitaries: ['Lions Clubs International Foundation Trustees & District 317F Leaders'],
+        description: 'Inducted into the global Melvin Jones Fellows network for 2025-2026, aligning local District 317F humanitarian drives with LCIF global grant causes (Vision, Youth, Disaster Relief, Hunger, Diabetes).',
+        keyOutcomes: [
+          'Conferred MJF pin and plaque for exemplary humanitarian stewardship.',
+          'Championed LCIF causes across 12 Leo advisory clubs.',
+          'Pledged continued CSR funding architecture for clean water and youth health.'
+        ],
+        year: '2025 - 2026'
+      }
+    ],
+
+    blogPosts: [
+      {
+        id: 'blog-1',
+        title: 'Borders Without Barriers: My Lions International Delegation to Nepal',
+        date: 'August 2025',
+        author: 'Ln. B.S. Ramesh, MJF',
+        location: 'Kathmandu & Pokhara, Nepal (Districts 325 B1 & B2)',
+        readTime: '4 min read',
+        summary: 'A journey of friendship and purpose: Interacting with Nepalese Lions leaders Ln. Puja Shrestha Rajbanshi and Ln. Bishwo Raj Paudel to advance clean water solutions and youth Leo exchanges.',
+        content: `Lions Clubs International is truly a global family without boundaries. During my official delegation to Nepal representing District 317F, I had the honor of engaging with distinguished Lions leaders, including Ln. Puja Shrestha Rajbanshi (District 325 B2) and Ln. Bishwo Raj Paudel (District 325 B1).
+
+Our discussions centered on two vital pillars: clean drinking water CSR projects and empowering youth through Leo clubs. I presented the operational architecture of our ₹31+ Lakhs Reverse Osmosis (RO) water purification initiative in Karnataka, demonstrating how local corporate CSR funds can be effectively harnessed by Lions clubs to bring pure water to rural Panchayats.
+
+Furthermore, we laid the groundwork for an Indo-Nepal Youth Leo Exchange program, allowing Leos from Bangalore and Nepal to collaborate on cultural, environmental, and leadership projects. Exchanging club banners and sharing service visions reminded me that compassion speaks a universal language.`,
+        tags: ['Nepal Delegation', 'District 325 B1/B2', 'Clean Water CSR', 'International Fellowship']
+      },
+      {
+        id: 'blog-2',
+        title: 'Innovating Governance & Youth Sports: Lions District 309 Visit to Singapore',
+        date: 'July 2025',
+        author: 'Ln. B.S. Ramesh, MJF',
+        location: 'Singapore (District 309)',
+        readTime: '5 min read',
+        summary: 'Exchanging enterprise staffing insights, digital transparency models, and WIN5M youth athletic programs with Lions leaders in Singapore.',
+        content: `Visiting Lions District 309 in Singapore provided an inspiring opportunity to blend corporate expertise with humanitarian service. As CEO of BSR IT Solutions and a Dual Affiliated Service Leader, I presented our WIN5M.com community sports unit—focusing on encouraging youngsters toward active sports participation and family calorie balance.
+
+Lions leaders in Singapore expressed immense interest in how technology, enterprise staffing frameworks, and structured sports campaigns can be combined to engage the next generation of leaders. We explored how digital recordkeeping, transparent audit trails, and online member portals elevate club efficiency.
+
+International fellowship visits like these reinforce my commitment as Region Chairperson and Leo Advisor to bring global best practices back to District 317F.`,
+        tags: ['Singapore District 309', 'WIN5M Sports', 'Enterprise Governance', 'Global Lions']
+      },
+      {
+        id: 'blog-3',
+        title: 'The Journey to Melvin Jones Fellow (MJF) 2025–2026 Recognition',
+        date: 'January 2026',
+        author: 'Ln. B.S. Ramesh, MJF',
+        location: 'Lions Clubs International Foundation (LCIF)',
+        readTime: '6 min read',
+        summary: 'Reflecting on receiving LCIF’s highest honor in 2025-2026 for continuous humanitarian service, CSR water stewardship, and mentoring 12 Leo clubs.',
+        content: `Receiving the Melvin Jones Fellowship (MJF) recognition for the Lions Year 2025-2026 is one of the most humbling milestones of my service career. Named after Melvin Jones, the founder of Lions Clubs International, the MJF award represents the pinnacle of commitment to humanitarian service and support for LCIF.
+
+When we founded the Lions Club of Bangalore Brigade as Charter Secretary, our vision was clear: to turn compassion into tangible, lasting community infrastructure. Raising ₹31+ Lakhs in corporate CSR capital within 12 months to install 3 RO water purification plants in rural Lingarajpuram, Thralu, and the TN-border was proof of what transparent leadership can achieve.
+
+As District Coordinator for Leos and Region Chairperson, this MJF honor belongs to every member, corporate donor, and young Leo leader who stood shoulder to shoulder with us. Service Above Self and We Serve will remain my guiding lights.`,
+        tags: ['MJF 2025-2026', 'LCIF Honor', 'Humanitarian Leadership', 'LCB Brigade']
+      },
+      {
+        id: 'blog-4',
+        title: 'Architecting Clean Water Infrastructure: A Blueprint for Corporate CSR',
+        date: 'November 2024',
+        author: 'Ln. B.S. Ramesh, MJF',
+        location: 'Bengaluru Rural & Urban Panchayats',
+        readTime: '4 min read',
+        summary: 'How Lions Club of Bangalore Brigade raised ₹31+ Lakhs CSR funds and handed over 3 high-capacity RO water purification plants to local rural Panchayats.',
+        content: `Access to clean drinking water is a fundamental human right, yet many rural villages in Karnataka struggle with high fluoridation and waterborne ailments. During my tenure as Charter Secretary and President of LCB Brigade, we identified clean water as our core flagship service drive.
+
+By presenting clear financial audits and measurable impact metrics to corporate CSR heads, we secured ₹31+ Lakhs funding. The execution involved acquiring land permissions, installing industrial grade Reverse Osmosis filtration systems, and executing formal handovers to local Panchayats.
+
+Today, thousands of villagers collect pure drinking water daily. This project stands as a benchmark for how Lions clubs can act as trusted execution partners for corporate CSR initiatives.`,
+        tags: ['CSR Clean Water', 'RO Water Plants', 'LCB Brigade', 'Rural Health']
+      }
+    ],
+
+    galleryBannerImages: [
+      {
+        id: 'gal-1',
+        url: '',
+        title: 'Region Chairperson & Cabinet Installation Assembly',
+        category: 'District 317F'
+      },
+      {
+        id: 'gal-2',
+        url: '',
+        title: 'Nepal International Lions Goodwill Delegation (Districts 325 B1/B2)',
+        category: 'International Visits'
+      },
+      {
+        id: 'gal-3',
+        url: '',
+        title: 'Melvin Jones Fellow (MJF 2025-2026) Award Ceremony',
+        category: 'LCIF Honor'
+      },
+      {
+        id: 'gal-4',
+        url: '',
+        title: 'Singapore District 309 Leadership & WIN5M Youth Forum',
+        category: 'International Visits'
+      },
+      {
+        id: 'gal-5',
+        url: '',
+        title: '12 Leo Advisory Clubs Youth Convention & Sports Meet',
+        category: 'Leo Advisory'
+      },
+      {
+        id: 'gal-6',
+        url: '',
+        title: 'CSR ₹31L Rural RO Clean Water Plant Handover to Panchayat',
+        category: 'Humanitarian CSR'
       }
     ]
   },

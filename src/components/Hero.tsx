@@ -4,6 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Award, ArrowRight, Download, Globe, Shield, Sparkles, Crown } from 'lucide-react';
 import { PersonalInfo } from '../types/portfolio';
+import { RegionChairDropdown } from './RegionChairDropdown';
 
 interface HeroProps {
   personalInfo: PersonalInfo;
@@ -34,10 +35,15 @@ export const Hero: React.FC<HeroProps> = ({ personalInfo, onOpenImporter }) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full gold-badge text-xs uppercase tracking-widest font-semibold"
+              className="flex items-center justify-center lg:justify-start gap-3 flex-wrap"
             >
-              <Sparkles className="w-3.5 h-3.5 text-[#D4AF37] animate-spin" style={{ animationDuration: '6s' }} />
-              <span>International Leadership & Governance</span>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full gold-badge text-xs uppercase tracking-widest font-semibold">
+                <Sparkles className="w-3.5 h-3.5 text-[#D4AF37] animate-spin" style={{ animationDuration: '6s' }} />
+                <span>International Leadership & Governance</span>
+              </div>
+
+              {/* Region Chairperson More Info Symbol & Dropdown */}
+              <RegionChairDropdown buttonText="Region Chair & 12 Leo Clubs" variant="badge" />
             </motion.div>
 
             {/* Name */}
@@ -135,19 +141,18 @@ export const Hero: React.FC<HeroProps> = ({ personalInfo, onOpenImporter }) => {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050814] via-transparent to-transparent opacity-80 pointer-events-none" />
 
                 {/* Floating Bottom Card */}
-                <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl glass-card border border-[#D4AF37]/30 backdrop-blur-md">
-                  <div className="flex items-center justify-between">
+                <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl glass-card border border-[#D4AF37]/40 backdrop-blur-md z-20">
+                  <div className="flex items-center justify-between gap-3">
                     <div>
-                      <p className="text-xs uppercase tracking-widest text-[#D4AF37] font-semibold">
+                      <p className="text-xs uppercase tracking-widest text-[#D4AF37] font-semibold flex items-center gap-1.5">
+                        <Crown className="w-3.5 h-3.5" />
                         Lions Clubs International
                       </p>
                       <p className="text-sm font-bold text-white mt-0.5">
                         Region Chairperson - District 317F
                       </p>
                     </div>
-                    <div className="w-10 h-10 rounded-xl bg-[#D4AF37]/20 border border-[#D4AF37]/40 flex items-center justify-center text-[#D4AF37]">
-                      <Crown className="w-5 h-5" />
-                    </div>
+                    <RegionChairDropdown buttonText="More Info" variant="badge" />
                   </div>
                 </div>
               </div>

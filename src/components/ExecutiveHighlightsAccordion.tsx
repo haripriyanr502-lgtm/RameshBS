@@ -24,6 +24,7 @@ import {
   Layout,
   Layers
 } from 'lucide-react';
+import { RegionChairDropdown } from './RegionChairDropdown';
 
 /* ==========================================================================
    INTEGRATED LOGO BADGES (Placed inside headers/overview cards)
@@ -113,18 +114,22 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
     <div className="w-full mt-12 space-y-6">
       
       {/* Section Title Header */}
-      <div className="flex items-center gap-3 mb-8">
-        <div className="p-3 rounded-2xl bg-[#D4AF37]/10 border border-[#D4AF37]/40 text-[#D4AF37]">
-          <Award className="w-6 h-6" />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div className="flex items-center gap-3">
+          <div className="p-3 rounded-2xl bg-[#D4AF37]/10 border border-[#D4AF37]/40 text-[#D4AF37]">
+            <Award className="w-6 h-6" />
+          </div>
+          <div>
+            <h3 className="text-2xl font-serif font-bold text-white tracking-tight">
+              Executive & Leadership Highlights
+            </h3>
+            <p className="text-xs text-slate-400 mt-1">
+              Move cursor over any header to inspect details • Automatically closes on mouse leave
+            </p>
+          </div>
         </div>
-        <div>
-          <h3 className="text-2xl font-serif font-bold text-white tracking-tight">
-            Executive & Leadership Highlights
-          </h3>
-          <p className="text-xs text-slate-400 mt-1">
-            Move cursor over any header to inspect details • Automatically closes on mouse leave
-          </p>
-        </div>
+
+        <RegionChairDropdown buttonText="Region Chair & 12 Leo Clubs" variant="badge" />
       </div>
 
       {/* Accordion Container with Auto-Close on Mouse Leave */}

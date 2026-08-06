@@ -24,6 +24,31 @@ export interface AboutSectionData {
   image: string;
 }
 
+export interface InternationalExposureItem {
+  id: string;
+  title: string;
+  country: string;
+  district: string;
+  dignitaries: string[];
+  description: string;
+  keyOutcomes: string[];
+  year: string;
+  image?: string;
+}
+
+export interface LionisticBlogPost {
+  id: string;
+  title: string;
+  date: string;
+  author: string;
+  location: string;
+  readTime: string;
+  summary: string;
+  content: string;
+  tags: string[];
+  image?: string;
+}
+
 export interface LionisticMilestone {
   id: string;
   year: string;
@@ -41,6 +66,21 @@ export interface LionisticSectionData {
   subheading: string;
   overview: string;
   milestones: LionisticMilestone[];
+  mjfHonor?: {
+    year: string;
+    title: string;
+    organization: string;
+    description: string;
+    highlights: string[];
+  };
+  internationalExposures?: InternationalExposureItem[];
+  blogPosts?: LionisticBlogPost[];
+  galleryBannerImages?: {
+    id: string;
+    url: string;
+    title: string;
+    category: string;
+  }[];
 }
 
 export interface ServiceItem {

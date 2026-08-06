@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, FileUp, Crown } from 'lucide-react';
 import { PersonalInfo } from '../types/portfolio';
+import { RegionChairDropdown } from './RegionChairDropdown';
 
 interface NavbarProps {
   personalInfo: PersonalInfo;
@@ -78,24 +79,30 @@ export const Navbar: React.FC<NavbarProps> = ({ personalInfo, onOpenImporter }) 
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          {/* Executive Brand Logo */}
-          <a
-            href="#"
-            className="flex items-center gap-3 group focus:outline-none"
-            onClick={(e) => handleNavClick(e, '#home')}
-          >
-            <div className="w-10 h-10 rounded-full border border-[#D4AF37]/40 bg-[#0A1128] flex items-center justify-center text-[#D4AF37] group-hover:border-[#D4AF37] group-hover:shadow-[0_0_15px_rgba(212,175,55,0.3)] transition-all">
-              <Crown className="w-5 h-5" />
+          {/* Executive Brand Logo & Region Chair Info Button */}
+          <div className="flex items-center gap-3">
+            <a
+              href="#"
+              className="flex items-center gap-3 group focus:outline-none"
+              onClick={(e) => handleNavClick(e, '#home')}
+            >
+              <div className="w-10 h-10 rounded-full border border-[#D4AF37]/40 bg-[#0A1128] flex items-center justify-center text-[#D4AF37] group-hover:border-[#D4AF37] group-hover:shadow-[0_0_15px_rgba(212,175,55,0.3)] transition-all">
+                <Crown className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="font-serif text-lg font-bold tracking-tight text-white group-hover:text-gold-gradient transition-colors">
+                  {personalInfo.name}
+                </span>
+                <span className="block text-[10px] uppercase tracking-widest text-[#D4AF37]">
+                  Executive Portfolio
+                </span>
+              </div>
+            </a>
+
+            <div className="hidden sm:block">
+              <RegionChairDropdown buttonText="Leo & Region Info" variant="badge" />
             </div>
-            <div>
-              <span className="font-serif text-lg font-bold tracking-tight text-white group-hover:text-gold-gradient transition-colors">
-                {personalInfo.name}
-              </span>
-              <span className="block text-[10px] uppercase tracking-widest text-[#D4AF37]">
-                Executive Portfolio
-              </span>
-            </div>
-          </a>
+          </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-1 xl:space-x-3">
