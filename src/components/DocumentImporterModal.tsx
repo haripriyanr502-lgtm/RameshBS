@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, FileUp, Sparkles, Check, RefreshCw, Layers, FileText, AlertCircle, ArrowRight } from 'lucide-react';
+import { X, FileUp, Sparkles, Check, RefreshCw, FileText, ArrowRight } from 'lucide-react';
 import { PortfolioData, CategorizedParagraph, SectionKey } from '../types/portfolio';
 import { parseAndCategorizeDocument, applyParsedContentToPortfolio } from '../utils/docParser';
 import mammoth from 'mammoth';
@@ -83,6 +83,7 @@ export const DocumentImporterModal: React.FC<DocumentImporterModalProps> = ({
     services: categorizedItems.filter((i) => i.suggestedSection === 'services').length,
     hobbies: categorizedItems.filter((i) => i.suggestedSection === 'hobbies').length,
     career: categorizedItems.filter((i) => i.suggestedSection === 'career').length,
+    contact: categorizedItems.filter((i) => i.suggestedSection === 'contact').length,
   };
 
   const sectionLabels: Record<SectionKey, string> = {
@@ -91,21 +92,22 @@ export const DocumentImporterModal: React.FC<DocumentImporterModalProps> = ({
     services: 'SERVICES INVOLVED IN',
     hobbies: 'HOBBIES',
     career: 'CAREER',
+    contact: 'CONTACT',
   };
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+      <div className="fixed inset-0 z-50 bg-[#070C1E]/90 backdrop-blur-xl flex items-center justify-center p-4 overflow-y-auto">
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative w-full max-w-4xl bg-[#0A1128] border-2 border-[#D4AF37]/40 rounded-3xl p-6 sm:p-8 shadow-2xl overflow-hidden my-8"
+          className="relative w-full max-w-4xl bg-[#0B1536] border border-amber-500/40 rounded-3xl p-6 sm:p-8 shadow-2xl overflow-hidden my-8"
         >
           {/* Top Bar Header */}
           <div className="flex items-center justify-between pb-6 border-b border-slate-800">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#D4AF37]/20 border border-[#D4AF37]/40 flex items-center justify-center text-[#D4AF37]">
+              <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300">
                 <FileUp className="w-5 h-5" />
               </div>
               <div>
@@ -135,7 +137,7 @@ export const DocumentImporterModal: React.FC<DocumentImporterModalProps> = ({
               {/* Left: Upload DOCX File */}
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-[#D4AF37]/40 hover:border-[#D4AF37] bg-slate-900/60 rounded-2xl p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-colors group"
+                className="border-2 border-dashed border-amber-500/40 hover:border-amber-400 bg-amber-950/30 rounded-2xl p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-colors group"
               >
                 <input
                   type="file"
@@ -144,7 +146,7 @@ export const DocumentImporterModal: React.FC<DocumentImporterModalProps> = ({
                   accept=".docx,.txt,.doc"
                   className="hidden"
                 />
-                <FileText className="w-10 h-10 text-[#D4AF37] mb-3 group-hover:scale-110 transition-transform" />
+                <FileText className="w-10 h-10 text-amber-400 mb-3 group-hover:scale-110 transition-transform" />
                 <p className="text-sm font-bold text-white mb-1">
                   {fileName ? fileName : 'Click to Upload .DOCX or .TXT File'}
                 </p>
@@ -163,7 +165,7 @@ export const DocumentImporterModal: React.FC<DocumentImporterModalProps> = ({
                     processText(e.target.value);
                   }}
                   placeholder="Paste your biography, Lionistic journey notes, services, career history, or hobbies content here..."
-                  className="w-full h-32 p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-[#D4AF37] resize-none"
+                  className="w-full h-32 p-3.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white focus:outline-none focus:border-amber-400 resize-none shadow-inner"
                 />
               </div>
 
@@ -174,14 +176,14 @@ export const DocumentImporterModal: React.FC<DocumentImporterModalProps> = ({
               <div className="pt-4 border-t border-slate-800 space-y-4">
                 
                 <div className="flex items-center justify-between">
-                  <span className="text-xs uppercase font-bold tracking-widest text-[#D4AF37] flex items-center gap-1.5">
-                    <Sparkles className="w-4 h-4" />
-                    Categorized {categorizedItems.length} Paragraphs Across 5 Sections:
+                  <span className="text-xs uppercase font-bold tracking-widest text-amber-400 flex items-center gap-1.5">
+                    <Sparkles className="w-4 h-4 text-amber-400" />
+                    Categorized {categorizedItems.length} Paragraphs Across 6 Sections:
                   </span>
 
                   <button
                     onClick={() => processText(rawText)}
-                    className="text-xs text-slate-400 hover:text-white flex items-center gap-1"
+                    className="text-xs text-slate-400 hover:text-white flex items-center gap-1 cursor-pointer"
                   >
                     <RefreshCw className={`w-3.5 h-3.5 ${isProcessing ? 'animate-spin' : ''}`} />
                     <span>Re-Analyze</span>
@@ -194,14 +196,14 @@ export const DocumentImporterModal: React.FC<DocumentImporterModalProps> = ({
                     <button
                       key={secKey}
                       onClick={() => setActivePreviewTab(secKey)}
-                      className={`px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all ${
+                      className={`px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer ${
                         activePreviewTab === secKey
-                          ? 'bg-[#D4AF37] text-slate-950 shadow-md'
-                          : 'bg-slate-900 border border-slate-800 text-slate-300 hover:text-white'
+                          ? 'btn-gold text-white shadow-md'
+                          : 'bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800'
                       }`}
                     >
                       <span>{sectionLabels[secKey]}</span>
-                      <span className="px-1.5 py-0.5 rounded-full bg-black/20 text-[10px]">
+                      <span className={`px-1.5 py-0.5 rounded-full text-[10px] ${activePreviewTab === secKey ? 'bg-white text-slate-950 font-extrabold' : 'bg-amber-950 text-amber-300'}`}>
                         {sectionCounts[secKey]}
                       </span>
                     </button>
@@ -209,19 +211,19 @@ export const DocumentImporterModal: React.FC<DocumentImporterModalProps> = ({
                 </div>
 
                 {/* Classified Items List Preview */}
-                <div className="max-h-48 overflow-y-auto p-4 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-3">
+                <div className="max-h-48 overflow-y-auto p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
                   {categorizedItems
                     .filter((item) => item.suggestedSection === activePreviewTab)
                     .map((item, idx) => (
                       <div
                         key={idx}
-                        className="p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 text-xs space-y-1"
+                        className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs space-y-1 shadow-inner"
                       >
-                        <div className="flex items-center justify-between text-[10px] text-[#D4AF37] font-semibold">
+                        <div className="flex items-center justify-between text-[10px] text-amber-400 font-semibold">
                           <span>Suggested Match: {sectionLabels[item.suggestedSection]}</span>
                           <span>Confidence: {item.confidence}%</span>
                         </div>
-                        <p className="text-slate-200 leading-relaxed">{item.text}</p>
+                        <p className="text-slate-300 leading-relaxed">{item.text}</p>
                       </div>
                     ))}
 
@@ -241,7 +243,7 @@ export const DocumentImporterModal: React.FC<DocumentImporterModalProps> = ({
           <div className="pt-6 border-t border-slate-800 flex items-center justify-between">
             <button
               onClick={onClose}
-              className="px-5 py-2.5 rounded-xl border border-slate-700 text-slate-300 text-xs font-bold uppercase hover:bg-slate-800"
+              className="px-5 py-2.5 rounded-xl border border-slate-800 text-slate-300 text-xs font-bold uppercase hover:bg-slate-800 cursor-pointer"
             >
               Cancel
             </button>
@@ -249,11 +251,11 @@ export const DocumentImporterModal: React.FC<DocumentImporterModalProps> = ({
             <button
               onClick={handleApplyToPortfolio}
               disabled={categorizedItems.length === 0 || isProcessing}
-              className="btn-gold px-8 py-3 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center gap-2 disabled:opacity-50"
+              className="btn-gold px-8 py-3 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center gap-2 disabled:opacity-50 shadow-lg cursor-pointer"
             >
               {appliedSuccess ? (
                 <>
-                  <Check className="w-4 h-4 text-slate-950" />
+                  <Check className="w-4 h-4 text-white" />
                   <span>Applied to Portfolio!</span>
                 </>
               ) : (

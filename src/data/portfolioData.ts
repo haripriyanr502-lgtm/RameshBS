@@ -7,7 +7,7 @@ export const initialPortfolioData: PortfolioData = {
     tagline: 'Empowering Enterprise Technology, Talent Acquisition, Youth Wellness & Community Leadership across Karnataka & Globally',
     shortIntro: 'A distinguished social entrepreneur, IT executive, and dedicated Dual Affiliated Service Leader with over 22 years of experience in enterprise solutions, contract staffing, clean water CSR initiatives, and community empowerment.',
     email: 'bsr@bsrits.com',
-    phone: '+91 98450 00000', // Placeholder contact number
+    phone: '', // Contact numbers kept private per privacy policy; email is primary contact
     location: 'Bengaluru, Karnataka, India',
     linkedin: 'https://linkedin.com/in/bsramesh',
     website: 'https://WIN5M.com',

@@ -2,16 +2,16 @@
 
 @layer base {
   :root {
-    --bg-primary: #050814;
+    --bg-primary: #070C1E;
     --bg-secondary: #0A1128;
-    --bg-card: #0F172A;
-    --bg-light: #F8FAFC;
-    --gold-primary: #D4AF37;
-    --gold-light: #F3E5AB;
-    --gold-dark: #AA7C11;
-    --gold-gradient: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 50%, #AA7C11 100%);
-    --navy-deep: #0B132B;
-    --text-primary: #F8FAFC;
+    --bg-card: rgba(15, 23, 42, 0.85);
+    --blue-royale: #2563EB;
+    --blue-vibrant: #3B82F6;
+    --gold-imperial: #F59E0B;
+    --gold-bright: #FDE047;
+    --amber-dark: #D97706;
+    --text-primary: #FFFFFF;
+    --text-secondary: #E0F2FE;
     --text-muted: #94A3B8;
   }
 
@@ -21,106 +21,152 @@
   }
 
   body {
-    background-color: #050814;
-    color: #F8FAFC;
+    background-color: #070C1E;
+    color: #FFFFFF;
     overflow-x: hidden;
   }
 
-  /* Custom scrollbar */
+  /* Custom Royal Gold & Blue Scrollbar */
   ::-webkit-scrollbar {
     width: 8px;
   }
   ::-webkit-scrollbar-track {
-    background: #050814;
+    background: #040714;
   }
   ::-webkit-scrollbar-thumb {
     background: #1E293B;
     border-radius: 4px;
-    border: 1px solid rgba(212, 175, 55, 0.2);
+    border: 1px solid rgba(245, 158, 11, 0.4);
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #D4AF37;
+    background: #F59E0B;
   }
 }
 
-/* Custom Executive Gold & Glass Utilities */
-.text-gold-gradient {
-  background: linear-gradient(135deg, #FFF5C0 0%, #D4AF37 40%, #E5C158 70%, #AA7C11 100%);
+/* Gradient Text Utilities */
+.text-blue-gradient {
+  background: linear-gradient(135deg, #FFFFFF 0%, #93C5FD 50%, #3B82F6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.border-gold-glow {
-  border: 1px solid rgba(212, 175, 55, 0.25);
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
+.text-gold-gradient,
+.text-vibrant-gradient,
+.text-amber-gradient {
+  background: linear-gradient(135deg, #FFFFFF 0%, #FDE047 50%, #F59E0B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.border-gold-glow:hover {
-  border-color: rgba(212, 175, 55, 0.6);
-  box-shadow: 0 0 25px rgba(212, 175, 55, 0.25);
-}
-
+/* Glassmorphism Cards with Gold / Blue Neon Hover */
 .glass-nav {
-  background: rgba(5, 8, 20, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  background: rgba(7, 12, 30, 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(245, 158, 11, 0.25);
 }
 
 .glass-card {
-  background: rgba(15, 23, 42, 0.65);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(30, 41, 59, 0.8);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.8);
 }
 
-.glass-card-light {
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(212, 175, 55, 0.2);
+.glass-card:hover {
+  border-color: rgba(245, 158, 11, 0.5);
+  box-shadow: 0 0 30px rgba(245, 158, 11, 0.2), 0 10px 40px -5px rgba(0, 0, 0, 0.9);
 }
 
-.gold-badge {
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(170, 124, 17, 0.05) 100%);
-  border: 1px solid rgba(212, 175, 55, 0.35);
-  color: #F3E5AB;
+/* Glowing Badges */
+.blue-badge,
+.cyan-badge {
+  background: rgba(37, 99, 235, 0.18);
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  color: #93C5FD;
 }
 
-/* Metallic gold button effect */
-.btn-gold {
-  background: linear-gradient(135deg, #E5C158 0%, #D4AF37 50%, #AA7C11 100%);
-  color: #050814;
-  font-weight: 600;
+.gold-badge,
+.amber-badge,
+.red-badge {
+  background: rgba(245, 158, 11, 0.18);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #FDE047;
+}
+
+/* Vibrant CTA Button - Gold & Blue Gradients */
+.btn-blue {
+  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 50%, #1E40AF 100%);
+  color: #FFFFFF;
+  font-weight: 700;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.btn-gold:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.5);
-  filter: brightness(1.1);
+.btn-blue:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 0 35px rgba(59, 130, 246, 0.65), 0 10px 20px -5px rgba(29, 78, 216, 0.6);
+  background: linear-gradient(135deg, #3B82F6 0%, #2563EB 50%, #1E3A8A 100%);
 }
 
-.btn-outline-gold {
-  border: 1px solid rgba(212, 175, 55, 0.6);
-  color: #F3E5AB;
-  background: transparent;
+.btn-gold,
+.btn-vibrant,
+.btn-red {
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%);
+  color: #FFFFFF;
+  font-weight: 700;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.btn-gold:hover,
+.btn-vibrant:hover,
+.btn-red:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 0 35px rgba(245, 158, 11, 0.65), 0 10px 20px -5px rgba(180, 83, 9, 0.6);
+  background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 50%, #92400E 100%);
+}
+
+.btn-outline-gold,
+.btn-outline-blue,
+.btn-outline-vibrant,
+.btn-outline-red {
+  border: 1.5px solid rgba(245, 158, 11, 0.6);
+  color: #FDE047;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(12px);
+  font-weight: 600;
   transition: all 0.3s ease;
 }
 
-.btn-outline-gold:hover {
-  background: rgba(212, 175, 55, 0.12);
-  border-color: #D4AF37;
+.btn-outline-gold:hover,
+.btn-outline-blue:hover,
+.btn-outline-vibrant:hover,
+.btn-outline-red:hover {
+  background: rgba(245, 158, 11, 0.2);
   color: #FFFFFF;
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+  border-color: #F59E0B;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.35);
+  transform: translateY(-1px);
 }
 
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  50% { transform: translateY(-8px); }
 }
 
 .animate-float {
   animation: float 6s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.75; transform: scale(1.08); }
+}
+
+.animate-glow {
+  animation: pulseGlow 8s ease-in-out infinite;
 }

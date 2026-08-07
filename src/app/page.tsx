@@ -9,8 +9,8 @@ import { About } from '../components/About';
 import { LionisticJourney } from '../components/LionisticJourney';
 import { Services } from '../components/Services';
 import { Activities } from '../components/Activities';
-import { Hobbies } from '../components/Hobbies';
 import { Career } from '../components/Career';
+import { ContactSection } from '../components/ContactSection';
 import { Footer } from '../components/Footer';
 import { DocumentImporterModal } from '../components/DocumentImporterModal';
 
@@ -23,7 +23,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-[#050814] text-[#F8FAFC] relative selection:bg-[#D4AF37] selection:text-[#050814]">
+    <main className="min-h-screen bg-[#070C1E] text-slate-100 relative selection:bg-amber-400 selection:text-slate-950">
       {/* Sticky Executive Navbar */}
       <Navbar
         personalInfo={data.personalInfo}
@@ -48,14 +48,14 @@ export default function Home() {
       {/* Section 4: MY ACTIVITIES */}
       <Activities activitiesData={data.activities} />
 
-      {/* Section 5: HOBBIES */}
-      <Hobbies hobbiesData={data.hobbies} />
-
       {/* Section 5: CAREER */}
       <Career
         careerData={data.career}
         personalInfoName={data.personalInfo.name}
       />
+
+      {/* Section 6: CONTACT HERO BANNER */}
+      <ContactSection personalInfo={data.personalInfo} />
 
       {/* Corporate Footer */}
       <Footer personalInfo={data.personalInfo} />

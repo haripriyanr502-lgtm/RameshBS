@@ -22,9 +22,9 @@ const getHobbyIcon = (iconName: string) => {
 
 export const Hobbies: React.FC<HobbiesProps> = ({ hobbiesData }) => {
   return (
-    <section id="hobbies" className="py-24 bg-[#050814] relative overflow-hidden">
-      {/* Subtle Background Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-[#D4AF37]/5 rounded-full blur-[150px] pointer-events-none" />
+    <section id="hobbies" className="py-24 bg-[#070C1E] relative overflow-hidden">
+      {/* Background Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-blue-600/10 rounded-full blur-[160px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
@@ -50,32 +50,32 @@ export const Hobbies: React.FC<HobbiesProps> = ({ hobbiesData }) => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: idx * 0.12 }}
-                className="group relative rounded-3xl overflow-hidden glass-card border border-[#D4AF37]/20 hover:border-[#D4AF37]/60 hover:shadow-[0_15px_40px_rgba(212,175,55,0.2)] transition-all duration-500 flex flex-col"
+                className="group relative rounded-3xl overflow-hidden glass-card border border-slate-800 hover:border-amber-500/50 hover:shadow-2xl transition-all duration-300 flex flex-col"
               >
                 {/* Hobby Header Banner */}
-                <div className="relative h-48 overflow-hidden bg-gradient-to-br from-[#0F172A] via-[#0A1128] to-[#050814] flex items-center justify-center border-b border-slate-800">
+                <div className="relative h-48 overflow-hidden bg-gradient-to-br from-[#0F172A] via-[#0A1128] to-[#040714] flex items-center justify-center border-b border-slate-800">
                   {hobby.image ? (
                     <img
                       src={hobby.image}
                       alt={hobby.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80"
                     />
                   ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center p-4">
-                      <div className="w-14 h-14 rounded-2xl bg-[#D4AF37]/15 border border-[#D4AF37]/40 flex items-center justify-center text-[#D4AF37] mb-2 group-hover:scale-110 transition-transform">
+                      <div className="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 mb-2 group-hover:scale-110 transition-transform">
                         <IconComp className="w-7 h-7" />
                       </div>
                     </div>
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-transparent to-transparent opacity-60 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#070C1E] via-transparent to-transparent pointer-events-none" />
                   
                   {/* Category Pill */}
-                  <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-[#050814]/80 backdrop-blur-md border border-[#D4AF37]/30 text-[10px] uppercase font-bold tracking-wider text-[#D4AF37]">
+                  <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-slate-950/90 backdrop-blur-md border border-amber-500/40 text-[10px] uppercase font-bold tracking-wider text-amber-300 shadow-md">
                     {hobby.category}
                   </span>
 
                   {/* Floating Icon Badge */}
-                  <div className="absolute bottom-3 right-4 w-10 h-10 rounded-xl bg-[#D4AF37] text-[#050814] flex items-center justify-center shadow-lg">
+                  <div className="absolute bottom-3 right-4 w-10 h-10 rounded-xl btn-gold text-white flex items-center justify-center shadow-lg">
                     <IconComp className="w-5 h-5" />
                   </div>
                 </div>
@@ -83,7 +83,7 @@ export const Hobbies: React.FC<HobbiesProps> = ({ hobbiesData }) => {
                 {/* Content Box */}
                 <div className="p-6 flex-1 flex flex-col justify-between">
                   <div>
-                    <h3 className="text-xl font-serif font-bold text-white mb-2 group-hover:text-gold-gradient transition-colors">
+                    <h3 className="text-xl font-serif font-bold text-white mb-2 group-hover:text-amber-300 transition-colors">
                       {hobby.title}
                     </h3>
                     <p className="text-slate-300 text-xs leading-relaxed mb-4">
@@ -95,8 +95,8 @@ export const Hobbies: React.FC<HobbiesProps> = ({ hobbiesData }) => {
                   {hobby.highlights && hobby.highlights.length > 0 && (
                     <div className="pt-3 border-t border-slate-800 space-y-1.5">
                       {hobby.highlights.map((h, hIdx) => (
-                        <div key={hIdx} className="flex items-center gap-1.5 text-[11px] text-[#F3E5AB]">
-                          <Sparkles className="w-3 h-3 text-[#D4AF37] shrink-0" />
+                        <div key={hIdx} className="flex items-center gap-1.5 text-[11px] text-amber-300 font-medium">
+                          <Sparkles className="w-3 h-3 text-amber-400 shrink-0" />
                           <span>{h}</span>
                         </div>
                       ))}

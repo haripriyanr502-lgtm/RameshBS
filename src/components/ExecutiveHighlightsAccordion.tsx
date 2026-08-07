@@ -3,100 +3,61 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ChevronDown,
   Award,
+  ChevronDown,
   Building2,
+  FileText,
+  Compass,
+  CheckCircle2,
   Users,
   HeartHandshake,
-  FileText,
   Calendar,
   TrendingUp,
-  Compass,
   Globe,
-  Target,
-  ShieldCheck,
-  Zap,
-  CheckCircle2,
-  Sparkles,
   Droplets,
+  Zap,
+  ShieldCheck,
+  Target,
+  Sparkles,
   Activity,
-  Rocket,
-  Layout,
-  Layers
+  Rocket
 } from 'lucide-react';
 import { RegionChairDropdown } from './RegionChairDropdown';
 
-/* ==========================================================================
-   INTEGRATED LOGO BADGES (Placed inside headers/overview cards)
-   ========================================================================== */
-
-// 1. Lions Clubs International Logo Badge
-const LionsLogoSVG: React.FC = () => (
-  <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-[#002B49]/90 border border-[#D4AF37]/40 shadow-md">
-    <div className="w-7 h-7 rounded-full bg-[#003366] border border-[#D4AF37] flex items-center justify-center text-[#D4AF37] font-bold font-serif text-xs shrink-0">
-      L
-    </div>
-    <div className="flex flex-col">
-      <span className="text-[11px] font-bold text-white tracking-wide uppercase leading-none">Lions Clubs</span>
-      <span className="text-[9px] font-semibold text-[#D4AF37] leading-none mt-0.5">Dist. 317F</span>
-    </div>
-  </div>
+/* SVG Logos */
+const LionsLogoSVG = () => (
+  <svg className="w-5 h-5 fill-[#F59E0B]" viewBox="0 0 24 24">
+    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+  </svg>
 );
 
-// 2. Leo Club Logo Badge
-const LeoLogoSVG: React.FC = () => (
-  <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-[#1E1B4B]/90 border border-indigo-500/40 shadow-md">
-    <div className="w-7 h-7 rounded-full bg-[#312E81] border border-amber-400 flex items-center justify-center text-amber-300 font-bold font-serif text-xs shrink-0">
-      LEO
-    </div>
-    <div className="flex flex-col">
-      <span className="text-[11px] font-bold text-white tracking-wide uppercase leading-none">Leo Club</span>
-      <span className="text-[9px] font-semibold text-indigo-300 leading-none mt-0.5">Youth Leadership</span>
-    </div>
-  </div>
+const LCBBrigadeLogoSVG = () => (
+  <span className="text-[10px] font-extrabold tracking-wider bg-blue-900 border border-blue-400/50 text-blue-200 px-2 py-0.5 rounded shadow-sm">
+    LCB BRIGADE
+  </span>
 );
 
-// 3. LCB Brigade Logo Badge
-const LCBBrigadeLogoSVG: React.FC = () => (
-  <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-emerald-500/40 shadow-md">
-    <div className="w-7 h-7 rounded-full bg-emerald-950 border border-emerald-400 flex items-center justify-center text-emerald-400 font-bold font-serif text-[10px] leading-tight shrink-0">
-      LCB
-    </div>
-    <div className="flex flex-col">
-      <span className="text-[11px] font-bold text-white tracking-wide uppercase leading-none">LCB Brigade</span>
-      <span className="text-[9px] font-semibold text-emerald-400 leading-none mt-0.5">Charter Flagship</span>
-    </div>
-  </div>
+const RotaryLogoSVG = () => (
+  <svg className="w-5 h-5 fill-[#F59E0B]" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" stroke="#F59E0B" strokeWidth="2" fill="none" />
+    <path d="M12 6v12M6 12h12" stroke="#F59E0B" strokeWidth="2" />
+  </svg>
 );
 
-// 4. Rotary International Logo Badge
-const RotaryLogoSVG: React.FC = () => (
-  <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-[#001D4A]/90 border border-[#F7A81B]/40 shadow-md">
-    <div className="w-7 h-7 rounded-full bg-[#00246C] border border-[#F7A81B] flex items-center justify-center text-[#F7A81B] text-xs shrink-0">
-      ⚙️
-    </div>
-    <div className="flex flex-col">
-      <span className="text-[11px] font-bold text-white tracking-wide uppercase leading-none">Rotary Intl</span>
-      <span className="text-[9px] font-semibold text-[#F7A81B] leading-none mt-0.5">Dist. 3190</span>
-    </div>
-  </div>
+const ServiceAboveSelfBadge = () => (
+  <span className="text-[10px] font-bold tracking-widest bg-amber-950 border border-amber-500/40 text-amber-300 px-2 py-0.5 rounded">
+    SERVICE ABOVE SELF
+  </span>
 );
 
-// 5. Service Above Self Motto Badge
-const ServiceAboveSelfBadge: React.FC = () => (
-  <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-amber-950/50 border border-[#D4AF37]/50 shadow-md">
-    <HeartHandshake className="w-4 h-4 text-[#D4AF37] shrink-0" />
-    <span className="text-[11px] font-bold text-[#D4AF37] tracking-wider uppercase">Service Above Self</span>
-  </div>
+const LeoLogoSVG = () => (
+  <span className="text-[10px] font-extrabold tracking-wider bg-amber-500 text-slate-950 px-2 py-0.5 rounded shadow-sm">
+    LEO CLUB
+  </span>
 );
-
-/* ==========================================================================
-   MAIN ACCORDION COMPONENT WITH HOVER AUTOMATIC DROPDOWN
-   ========================================================================== */
 
 export const ExecutiveHighlightsAccordion: React.FC = () => {
-  // Open dropdown index (0, 1, or 2). Defaults to null so it expands on hover and collapses on mouse leave.
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   const handleMouseEnter = (index: number) => {
     setOpenIndex(index);
@@ -116,7 +77,7 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
       {/* Section Title Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div className="flex items-center gap-3">
-          <div className="p-3 rounded-2xl bg-[#D4AF37]/10 border border-[#D4AF37]/40 text-[#D4AF37]">
+          <div className="p-3 rounded-2xl bg-amber-950/80 border border-amber-500/40 text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
             <Award className="w-6 h-6" />
           </div>
           <div>
@@ -140,24 +101,24 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
             ================================================================== */}
         <div 
           onMouseEnter={() => handleMouseEnter(0)}
-          className={`rounded-2xl glass-card border transition-all duration-300 overflow-hidden shadow-xl ${
-            openIndex === 0 ? 'border-[#D4AF37]/60 bg-slate-900/90 shadow-[#D4AF37]/5' : 'border-slate-800 hover:border-[#D4AF37]/40'
+          className={`rounded-2xl bg-slate-900/85 border transition-all duration-300 overflow-hidden shadow-xl ${
+            openIndex === 0 ? 'border-amber-500 shadow-[0_0_25px_rgba(245,158,11,0.25)]' : 'border-slate-800 hover:border-amber-500/50'
           }`}
         >
           {/* Accordion Header */}
           <button
             onClick={() => handleClick(0)}
-            className="w-full p-6 text-left flex items-center justify-between gap-4 bg-gradient-to-r from-slate-900/90 via-[#0A1128]/80 to-slate-900/90 transition-colors group cursor-pointer"
+            className="w-full p-6 text-left flex items-center justify-between gap-4 bg-gradient-to-r from-[#0F172A] via-[#0A1128] to-[#040714] transition-colors group cursor-pointer"
           >
             <div className="flex items-center gap-4 flex-wrap sm:flex-nowrap">
               <span className={`w-10 h-10 rounded-xl border flex items-center justify-center font-serif text-base font-bold transition-all ${
-                openIndex === 0 ? 'bg-[#D4AF37] text-slate-950 border-[#D4AF37]' : 'bg-[#D4AF37]/10 text-[#D4AF37] border-[#D4AF37]/40 group-hover:scale-105'
+                openIndex === 0 ? 'btn-gold text-white border-transparent' : 'bg-slate-900 text-amber-400 border-slate-700 group-hover:scale-105'
               }`}>
                 01
               </span>
               <div>
                 <div className="flex items-center gap-3 flex-wrap">
-                  <h4 className="text-lg sm:text-xl font-serif font-bold text-white group-hover:text-[#D4AF37] transition-colors">
+                  <h4 className="text-lg sm:text-xl font-serif font-bold text-white group-hover:text-amber-300 transition-colors">
                     Charter Secretary & President – LCB Brigade
                   </h4>
                   {/* Integrated Logos in Header */}
@@ -171,7 +132,7 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
                 </p>
               </div>
             </div>
-            <div className={`p-2 rounded-xl bg-slate-800 border border-slate-700 text-[#D4AF37] transition-transform duration-300 ${openIndex === 0 ? 'rotate-180 bg-[#D4AF37]/20 border-[#D4AF37]/40' : ''}`}>
+            <div className={`p-2 rounded-xl bg-slate-800 border border-slate-700 text-amber-400 transition-transform duration-300 ${openIndex === 0 ? 'rotate-180 bg-amber-950 border-amber-500' : ''}`}>
               <ChevronDown className="w-5 h-5" />
             </div>
           </button>
@@ -187,14 +148,14 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
                 transition={{ duration: 0.35, ease: 'easeInOut' }}
                 className="overflow-hidden"
               >
-                <div className="p-6 sm:p-8 space-y-8 border-t border-slate-800/80 bg-[#050814]/90 text-slate-300">
+                <div className="p-6 sm:p-8 space-y-8 border-t border-slate-800 bg-[#070C1E] text-slate-300">
                   
                   {/* Overview & Role Explanations with integrated badges */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {/* Overview Box */}
                     <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 relative">
                       <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-2 text-[#D4AF37]">
+                        <div className="flex items-center gap-2 text-amber-400">
                           <Building2 className="w-5 h-5" />
                           <h5 className="text-xs font-bold uppercase tracking-wider text-white">What is LCB Brigade?</h5>
                         </div>
@@ -207,7 +168,7 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
 
                     {/* Charter Secretary Box */}
                     <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
-                      <div className="flex items-center gap-2 mb-3 text-[#D4AF37]">
+                      <div className="flex items-center gap-2 mb-3 text-amber-400">
                         <FileText className="w-5 h-5" />
                         <h5 className="text-xs font-bold uppercase tracking-wider text-white">Role of Charter Secretary</h5>
                       </div>
@@ -218,7 +179,7 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
 
                     {/* Charter President Box */}
                     <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
-                      <div className="flex items-center gap-2 mb-3 text-[#D4AF37]">
+                      <div className="flex items-center gap-2 mb-3 text-amber-400">
                         <Compass className="w-5 h-5" />
                         <h5 className="text-xs font-bold uppercase tracking-wider text-white">Role of Charter President</h5>
                       </div>
@@ -230,7 +191,7 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
 
                   {/* Key Responsibilities Grid */}
                   <div>
-                    <h5 className="text-sm font-bold uppercase tracking-wider text-[#D4AF37] mb-4 flex items-center gap-2">
+                    <h5 className="text-sm font-bold uppercase tracking-wider text-amber-400 mb-4 flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4" />
                       <span>Key Responsibilities</span>
                     </h5>
@@ -247,8 +208,8 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
                       ].map((item, idx) => {
                         const IconComponent = item.icon;
                         return (
-                          <div key={idx} className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 flex items-start gap-3 hover:border-[#D4AF37]/30 transition-colors">
-                            <div className="p-2 rounded-lg bg-[#D4AF37]/10 text-[#D4AF37] shrink-0 mt-0.5">
+                          <div key={idx} className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 flex items-start gap-3 hover:border-amber-500/50 transition-colors">
+                            <div className="p-2 rounded-lg bg-amber-500/15 text-amber-400 shrink-0 mt-0.5">
                               <IconComponent className="w-4 h-4" />
                             </div>
                             <div>
@@ -262,14 +223,14 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
                   </div>
 
                   {/* Leadership Impact */}
-                  <div className="p-6 rounded-2xl bg-gradient-to-r from-slate-900 via-[#0A1128] to-slate-900 border border-[#D4AF37]/30 relative overflow-hidden">
+                  <div className="p-6 rounded-2xl bg-amber-950/40 border border-amber-500/40 relative overflow-hidden">
                     <div className="flex items-center gap-3 mb-3">
-                      <div className="p-2.5 rounded-xl bg-[#D4AF37]/20 text-[#D4AF37]">
+                      <div className="p-2.5 rounded-xl bg-amber-500 text-slate-950 shadow-md">
                         <Droplets className="w-6 h-6" />
                       </div>
                       <div>
                         <h5 className="text-base font-serif font-bold text-white">Leadership Impact & Flagship CSR Clean Water</h5>
-                        <p className="text-xs text-[#D4AF37] font-medium">₹31+ Lakhs CSR Funding • 3 Rural RO Water Plants Handed Over</p>
+                        <p className="text-xs text-amber-400 font-bold">₹31+ Lakhs CSR Funding • 3 Rural RO Water Plants Handed Over</p>
                       </div>
                     </div>
                     <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
@@ -289,24 +250,24 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
             ================================================================== */}
         <div 
           onMouseEnter={() => handleMouseEnter(1)}
-          className={`rounded-2xl glass-card border transition-all duration-300 overflow-hidden shadow-xl ${
-            openIndex === 1 ? 'border-[#D4AF37]/60 bg-slate-900/90 shadow-[#D4AF37]/5' : 'border-slate-800 hover:border-[#D4AF37]/40'
+          className={`rounded-2xl bg-slate-900/85 border transition-all duration-300 overflow-hidden shadow-xl ${
+            openIndex === 1 ? 'border-amber-500 shadow-[0_0_25px_rgba(245,158,11,0.25)]' : 'border-slate-800 hover:border-amber-500/50'
           }`}
         >
           {/* Accordion Header */}
           <button
             onClick={() => handleClick(1)}
-            className="w-full p-6 text-left flex items-center justify-between gap-4 bg-gradient-to-r from-slate-900/90 via-[#0A1128]/80 to-slate-900/90 transition-colors group cursor-pointer"
+            className="w-full p-6 text-left flex items-center justify-between gap-4 bg-gradient-to-r from-[#0F172A] via-[#0A1128] to-[#040714] transition-colors group cursor-pointer"
           >
             <div className="flex items-center gap-4 flex-wrap sm:flex-nowrap">
               <span className={`w-10 h-10 rounded-xl border flex items-center justify-center font-serif text-base font-bold transition-all ${
-                openIndex === 1 ? 'bg-[#D4AF37] text-slate-950 border-[#D4AF37]' : 'bg-[#D4AF37]/10 text-[#D4AF37] border-[#D4AF37]/40 group-hover:scale-105'
+                openIndex === 1 ? 'btn-gold text-white border-transparent' : 'bg-slate-900 text-amber-400 border-slate-700 group-hover:scale-105'
               }`}>
                 02
               </span>
               <div>
                 <div className="flex items-center gap-3 flex-wrap">
-                  <h4 className="text-lg sm:text-xl font-serif font-bold text-white group-hover:text-[#D4AF37] transition-colors">
+                  <h4 className="text-lg sm:text-xl font-serif font-bold text-white group-hover:text-amber-300 transition-colors">
                     Rotary Club President & Transformation Leader
                   </h4>
                   {/* Integrated Logos in Header */}
@@ -320,7 +281,7 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
                 </p>
               </div>
             </div>
-            <div className={`p-2 rounded-xl bg-slate-800 border border-slate-700 text-[#D4AF37] transition-transform duration-300 ${openIndex === 1 ? 'rotate-180 bg-[#D4AF37]/20 border-[#D4AF37]/40' : ''}`}>
+            <div className={`p-2 rounded-xl bg-slate-800 border border-slate-700 text-amber-400 transition-transform duration-300 ${openIndex === 1 ? 'rotate-180 bg-amber-950 border-amber-500' : ''}`}>
               <ChevronDown className="w-5 h-5" />
             </div>
           </button>
@@ -336,13 +297,13 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
                 transition={{ duration: 0.35, ease: 'easeInOut' }}
                 className="overflow-hidden"
               >
-                <div className="p-6 sm:p-8 space-y-8 border-t border-slate-800/80 bg-[#050814]/90 text-slate-300">
+                <div className="p-6 sm:p-8 space-y-8 border-t border-slate-800 bg-[#070C1E] text-slate-300">
                   
                   {/* Rotary & President Overviews */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
                       <div className="flex items-center gap-2 mb-3 text-[#F7A81B]">
-                        <Globe className="w-5 h-5" />
+                        <Globe className="w-5 h-5 text-amber-400" />
                         <h5 className="text-xs font-bold uppercase tracking-wider text-white">What is Rotary International?</h5>
                       </div>
                       <p className="text-xs leading-relaxed text-slate-300">
@@ -351,7 +312,7 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
                     </div>
 
                     <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
-                      <div className="flex items-center gap-2 mb-3 text-[#F7A81B]">
+                      <div className="flex items-center gap-2 mb-3 text-amber-400">
                         <ShieldCheck className="w-5 h-5" />
                         <h5 className="text-xs font-bold uppercase tracking-wider text-white">Role of Rotary Club President</h5>
                       </div>
@@ -364,8 +325,8 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
                   {/* 5 Core Pillars Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {/* Mission */}
-                    <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800">
-                      <div className="flex items-center gap-2 mb-2 text-[#D4AF37]">
+                    <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
+                      <div className="flex items-center gap-2 mb-2 text-amber-400">
                         <Target className="w-5 h-5" />
                         <h6 className="text-xs font-bold uppercase text-white">Mission</h6>
                       </div>
@@ -375,8 +336,8 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
                     </div>
 
                     {/* Community Development */}
-                    <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800">
-                      <div className="flex items-center gap-2 mb-2 text-[#D4AF37]">
+                    <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
+                      <div className="flex items-center gap-2 mb-2 text-amber-400">
                         <Users className="w-5 h-5" />
                         <h6 className="text-xs font-bold uppercase text-white">Community Development</h6>
                       </div>
@@ -386,8 +347,8 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
                     </div>
 
                     {/* Transformation Initiatives */}
-                    <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800">
-                      <div className="flex items-center gap-2 mb-2 text-[#D4AF37]">
+                    <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
+                      <div className="flex items-center gap-2 mb-2 text-amber-400">
                         <Sparkles className="w-5 h-5" />
                         <h6 className="text-xs font-bold uppercase text-white">Transformation Initiatives</h6>
                       </div>
@@ -399,7 +360,7 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
 
                   {/* Leadership Responsibilities Section with Elegant Icons */}
                   <div>
-                    <h5 className="text-sm font-bold uppercase tracking-wider text-[#D4AF37] mb-4 flex items-center gap-2">
+                    <h5 className="text-sm font-bold uppercase tracking-wider text-amber-400 mb-4 flex items-center gap-2">
                       <Zap className="w-4 h-4" />
                       <span>Leadership Responsibilities</span>
                     </h5>
@@ -417,7 +378,7 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
                         const IconComponent = resp.icon;
                         return (
                           <div key={idx} className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center gap-2.5">
-                            <div className="p-1.5 rounded-lg bg-[#F7A81B]/15 text-[#F7A81B]">
+                            <div className="p-1.5 rounded-lg bg-amber-500/15 text-amber-400">
                               <IconComponent className="w-4 h-4" />
                             </div>
                             <span className="text-xs font-semibold text-slate-200">{resp.label}</span>
@@ -428,9 +389,9 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
                   </div>
 
                   {/* Impact Created */}
-                  <div className="p-6 rounded-2xl bg-slate-900/90 border border-amber-500/30">
+                  <div className="p-6 rounded-2xl bg-amber-950/40 border border-amber-500/40">
                     <h5 className="text-sm font-bold text-white mb-2 flex items-center gap-2">
-                      <Award className="w-5 h-5 text-[#F7A81B]" />
+                      <Award className="w-5 h-5 text-amber-400" />
                       <span>Impact Created – President of Rotary Bangalore Banashankari (RBB 2013-14)</span>
                     </h5>
                     <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
@@ -450,23 +411,23 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
             ================================================================== */}
         <div 
           onMouseEnter={() => handleMouseEnter(2)}
-          className={`rounded-2xl glass-card border transition-all duration-300 overflow-hidden shadow-xl ${
-            openIndex === 2 ? 'border-[#D4AF37]/60 bg-slate-900/90 shadow-[#D4AF37]/5' : 'border-slate-800 hover:border-[#D4AF37]/40'
+          className={`rounded-2xl bg-slate-900/85 border transition-all duration-300 overflow-hidden shadow-xl ${
+            openIndex === 2 ? 'border-amber-500 shadow-[0_0_25px_rgba(245,158,11,0.25)]' : 'border-slate-800 hover:border-amber-500/50'
           }`}
         >
           {/* Accordion Header */}
           <button
             onClick={() => handleClick(2)}
-            className="w-full p-6 text-left flex items-center justify-between gap-4 bg-gradient-to-r from-slate-900/90 via-[#0A1128]/80 to-slate-900/90 transition-colors group cursor-pointer"
+            className="w-full p-6 text-left flex items-center justify-between gap-4 bg-gradient-to-r from-[#0F172A] via-[#0A1128] to-[#040714] transition-colors group cursor-pointer"
           >
             <div className="flex items-center gap-4 flex-wrap sm:flex-nowrap">
               <span className={`w-10 h-10 rounded-xl border flex items-center justify-center font-serif text-base font-bold transition-all ${
-                openIndex === 2 ? 'bg-[#D4AF37] text-slate-950 border-[#D4AF37]' : 'bg-[#D4AF37]/10 text-[#D4AF37] border-[#D4AF37]/40 group-hover:scale-105'
+                openIndex === 2 ? 'btn-gold text-white border-transparent' : 'bg-slate-900 text-amber-400 border-slate-700 group-hover:scale-105'
               }`}>
                 03
               </span>
               <div>
-                <h4 className="text-lg sm:text-xl font-serif font-bold text-white group-hover:text-[#D4AF37] transition-colors">
+                <h4 className="text-lg sm:text-xl font-serif font-bold text-white group-hover:text-amber-300 transition-colors">
                   Founder of Bangalorean.com & WIN5M.com
                 </h4>
                 <p className="text-xs text-slate-400 mt-1">
@@ -474,7 +435,7 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
                 </p>
               </div>
             </div>
-            <div className={`p-2 rounded-xl bg-slate-800 border border-slate-700 text-[#D4AF37] transition-transform duration-300 ${openIndex === 2 ? 'rotate-180 bg-[#D4AF37]/20 border-[#D4AF37]/40' : ''}`}>
+            <div className={`p-2 rounded-xl bg-slate-800 border border-slate-700 text-amber-400 transition-transform duration-300 ${openIndex === 2 ? 'rotate-180 bg-amber-950 border-amber-500' : ''}`}>
               <ChevronDown className="w-5 h-5" />
             </div>
           </button>
@@ -490,21 +451,21 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
                 transition={{ duration: 0.35, ease: 'easeInOut' }}
                 className="overflow-hidden"
               >
-                <div className="p-6 sm:p-8 space-y-8 border-t border-slate-800/80 bg-[#050814]/90 text-slate-300">
+                <div className="p-6 sm:p-8 space-y-8 border-t border-slate-800 bg-[#070C1E] text-slate-300">
                   
                   {/* SUBSECTION A: Bangalorean.com */}
-                  <div className="p-6 rounded-2xl bg-slate-900/80 border border-cyan-500/30 space-y-6">
+                  <div className="p-6 rounded-2xl bg-blue-950/40 border border-blue-500/40 space-y-6">
                     <div className="flex items-center justify-between border-b border-slate-800 pb-4">
                       <div className="flex items-center gap-3">
-                        <div className="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
+                        <div className="p-2.5 rounded-xl bg-blue-500/20 text-blue-300 border border-blue-500/40">
                           <Globe className="w-6 h-6" />
                         </div>
                         <div>
                           <h5 className="text-lg font-serif font-bold text-white">A. Bangalorean.com</h5>
-                          <p className="text-xs text-cyan-400 font-semibold">Global Community & Civic Digital Platform</p>
+                          <p className="text-xs text-blue-400 font-bold">Global Community & Civic Digital Platform</p>
                         </div>
                       </div>
-                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-cyan-950/60 border border-cyan-500/40 text-xs font-semibold text-cyan-300">
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-blue-950 border border-blue-500/50 text-xs font-bold text-blue-300">
                         <Globe className="w-3.5 h-3.5" />
                         <span>Bangalorean.com Badge</span>
                       </div>
@@ -512,36 +473,36 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
 
                     {/* Key Information Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                      <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800">
-                        <h6 className="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-1">Vision</h6>
+                      <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+                        <h6 className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">Vision</h6>
                         <p className="text-xs text-slate-300 leading-relaxed">
                           To be the global digital bridge connecting Bangaloreans worldwide while advocating for local civic and humanitarian causes.
                         </p>
                       </div>
 
-                      <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800">
-                        <h6 className="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-1">Purpose</h6>
+                      <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+                        <h6 className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">Purpose</h6>
                         <p className="text-xs text-slate-300 leading-relaxed">
                           Upgrading traditional yellow page listings into a value-driven social network focused on community empowerment and city pride.
                         </p>
                       </div>
 
-                      <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800">
-                        <h6 className="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-1">Mission</h6>
+                      <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+                        <h6 className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">Mission</h6>
                         <p className="text-xs text-slate-300 leading-relaxed">
                           Connecting citizens, entrepreneurs, and global ex-pats with Bengaluru's vibrant cultural, enterprise, and social ecosystem.
                         </p>
                       </div>
 
-                      <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800">
-                        <h6 className="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-1">Target Audience</h6>
+                      <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+                        <h6 className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">Target Audience</h6>
                         <p className="text-xs text-slate-300 leading-relaxed">
                           Bengaluru residents, global NRI diaspora, local business owners, startup founders, and non-profit change-makers.
                         </p>
                       </div>
 
-                      <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800 lg:col-span-2">
-                        <h6 className="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-1">Community Impact & Digital Initiatives</h6>
+                      <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 lg:col-span-2">
+                        <h6 className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">Community Impact & Digital Initiatives</h6>
                         <p className="text-xs text-slate-300 leading-relaxed">
                           Facilitating local humanitarian outreach, business networking, NGO support hubs, civic news portals, and social cause advocacy across metros.
                         </p>
@@ -551,18 +512,18 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
 
 
                   {/* SUBSECTION B: WIN5M.com */}
-                  <div className="p-6 rounded-2xl bg-slate-900/80 border border-orange-500/30 space-y-6">
+                  <div className="p-6 rounded-2xl bg-amber-950/40 border border-amber-500/40 space-y-6">
                     <div className="flex items-center justify-between border-b border-slate-800 pb-4">
                       <div className="flex items-center gap-3">
-                        <div className="p-2.5 rounded-xl bg-orange-500/10 text-orange-400 border border-orange-500/30">
+                        <div className="p-2.5 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/40">
                           <Activity className="w-6 h-6" />
                         </div>
                         <div>
                           <h5 className="text-lg font-serif font-bold text-white">B. WIN5M.com</h5>
-                          <p className="text-xs text-orange-400 font-semibold">Youth Sports Talent & Family Calorie Balance Platform</p>
+                          <p className="text-xs text-amber-400 font-bold">Youth Sports Talent & Family Calorie Balance Platform</p>
                         </div>
                       </div>
-                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-orange-950/60 border border-orange-500/40 text-xs font-semibold text-orange-300">
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-amber-950 border border-amber-500/50 text-xs font-bold text-amber-300">
                         <Rocket className="w-3.5 h-3.5" />
                         <span>WIN5M Startup Badge</span>
                       </div>
@@ -570,36 +531,36 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
 
                     {/* Key Information Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                      <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800">
-                        <h6 className="text-xs font-bold text-orange-400 uppercase tracking-wider mb-1">Vision</h6>
+                      <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+                        <h6 className="text-xs font-bold text-amber-400 uppercase tracking-wider mb-1">Vision</h6>
                         <p className="text-xs text-slate-300 leading-relaxed">
                           To cultivate a healthier, active nation by encouraging youth sports participation and physical wellness across Indian families.
                         </p>
                       </div>
 
-                      <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800">
-                        <h6 className="text-xs font-bold text-orange-400 uppercase tracking-wider mb-1">Objectives</h6>
+                      <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+                        <h6 className="text-xs font-bold text-amber-400 uppercase tracking-wider mb-1">Objectives</h6>
                         <p className="text-xs text-slate-300 leading-relaxed">
                           Help families achieve "Calories In, Calories Out" balance, manage daily stress levels, and discover young sports talent.
                         </p>
                       </div>
 
-                      <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800">
-                        <h6 className="text-xs font-bold text-orange-400 uppercase tracking-wider mb-1">Innovation</h6>
+                      <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+                        <h6 className="text-xs font-bold text-amber-400 uppercase tracking-wider mb-1">Innovation</h6>
                         <p className="text-xs text-slate-300 leading-relaxed">
                           Combining digital tracking tools, sports activity incentives, and grassroots event partnerships to make fitness daily.
                         </p>
                       </div>
 
-                      <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800">
-                        <h6 className="text-xs font-bold text-orange-400 uppercase tracking-wider mb-1">Entrepreneurship</h6>
+                      <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+                        <h6 className="text-xs font-bold text-amber-400 uppercase tracking-wider mb-1">Entrepreneurship</h6>
                         <p className="text-xs text-slate-300 leading-relaxed">
                           Conceived and spearheaded as an innovative community partnership unit under BSR IT Solutions Private Limited.
                         </p>
                       </div>
 
-                      <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800 lg:col-span-2">
-                        <h6 className="text-xs font-bold text-orange-400 uppercase tracking-wider mb-1">Future Goals & Platform Overview</h6>
+                      <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 lg:col-span-2">
+                        <h6 className="text-xs font-bold text-amber-400 uppercase tracking-wider mb-1">Future Goals & Platform Overview</h6>
                         <p className="text-xs text-slate-300 leading-relaxed">
                           Expanding community partnerships nationwide to reach 5 Million participating kids and active families through digital fitness toolkits and sports event management.
                         </p>

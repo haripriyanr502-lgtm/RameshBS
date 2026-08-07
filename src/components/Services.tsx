@@ -22,9 +22,9 @@ const getServiceIcon = (iconName: string) => {
 
 export const Services: React.FC<ServicesProps> = ({ servicesData }) => {
   return (
-    <section id="services" className="py-24 bg-[#0A1128] relative overflow-hidden">
-      {/* Background Decorative Accent */}
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#D4AF37]/5 rounded-full blur-[140px] pointer-events-none" />
+    <section id="services" className="py-24 bg-[#070C1E] relative overflow-hidden">
+      {/* Background Decorative Ambient Glow */}
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-[160px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
@@ -50,20 +50,18 @@ export const Services: React.FC<ServicesProps> = ({ servicesData }) => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: idx * 0.15 }}
-                className="p-8 rounded-3xl glass-card border border-[#D4AF37]/20 hover:border-[#D4AF37]/60 hover:shadow-[0_10px_35px_rgba(212,175,55,0.15)] transition-all duration-500 group flex flex-col justify-between"
+                className="p-8 rounded-3xl glass-card border border-slate-800 hover:border-amber-500/50 shadow-xl transition-all duration-300 group flex flex-col justify-between"
               >
                 <div>
                   {/* Top Bar: Icon & Experience Pill */}
                   <div className="flex items-center justify-between mb-6">
-                    <div className="w-14 h-14 rounded-2xl bg-[#D4AF37]/10 border border-[#D4AF37]/30 flex items-center justify-center text-[#D4AF37] group-hover:scale-110 group-hover:bg-[#D4AF37] group-hover:text-[#050814] transition-all duration-300">
+                    <div className="w-14 h-14 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-300 group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-slate-950 transition-all duration-300 shadow-[0_0_20px_rgba(245,158,11,0.25)]">
                       <IconComp className="w-7 h-7" />
                     </div>
-
-
                   </div>
 
                   {/* Service Title */}
-                  <h3 className="text-2xl font-serif font-bold text-white mb-3 group-hover:text-gold-gradient transition-colors">
+                  <h3 className="text-2xl font-serif font-bold text-white mb-3 group-hover:text-amber-300 transition-colors">
                     {service.title}
                   </h3>
 
@@ -75,13 +73,13 @@ export const Services: React.FC<ServicesProps> = ({ servicesData }) => {
                   {/* Key Deliverables / Features */}
                   {service.features && service.features.length > 0 && (
                     <div className="space-y-2.5 pt-4 border-t border-slate-800">
-                      <p className="text-xs uppercase tracking-wider text-slate-400 font-bold">
+                      <p className="text-xs uppercase tracking-wider text-amber-400 font-bold">
                         Key Advisory Deliverables:
                       </p>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         {service.features.map((feat, fIdx) => (
                           <div key={fIdx} className="flex items-center gap-2 text-xs text-slate-300">
-                            <CheckCircle className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
+                            <CheckCircle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
                             <span>{feat}</span>
                           </div>
                         ))}
@@ -92,11 +90,11 @@ export const Services: React.FC<ServicesProps> = ({ servicesData }) => {
 
                 {/* Bottom Tag */}
                 {service.tag && (
-                  <div className="mt-8 pt-4 border-t border-slate-800/80 flex items-center justify-between">
-                    <span className="text-[10px] uppercase tracking-widest text-[#D4AF37] font-bold">
+                  <div className="mt-8 pt-4 border-t border-slate-800 flex items-center justify-between">
+                    <span className="text-[10px] uppercase tracking-widest text-amber-400 font-bold">
                       {service.tag}
                     </span>
-                    <span className="text-xs text-slate-400 group-hover:text-white transition-colors flex items-center gap-1 font-semibold">
+                    <span className="text-xs text-slate-400 group-hover:text-amber-300 transition-colors flex items-center gap-1 font-semibold">
                       Inquire Advisory &rarr;
                     </span>
                   </div>

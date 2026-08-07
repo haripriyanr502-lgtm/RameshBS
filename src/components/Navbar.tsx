@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, FileUp, Crown } from 'lucide-react';
+import { Menu, X, Crown } from 'lucide-react';
 import { PersonalInfo } from '../types/portfolio';
 import { RegionChairDropdown } from './RegionChairDropdown';
 
@@ -16,8 +16,8 @@ const navItems = [
   { label: 'MY LIONISTIC JOURNEY', href: '#lionistic-journey' },
   { label: 'SERVICES INVOLVED IN', href: '#services' },
   { label: 'MY ACTIVITIES', href: '#activities' },
-  { label: 'HOBBIES', href: '#hobbies' },
   { label: 'CAREER', href: '#career' },
+  { label: 'CONTACT ME', href: '#contact' },
 ];
 
 export const Navbar: React.FC<NavbarProps> = ({ personalInfo, onOpenImporter }) => {
@@ -73,8 +73,8 @@ export const Navbar: React.FC<NavbarProps> = ({ personalInfo, onOpenImporter }) 
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'py-3.5 bg-[#050814]/90 backdrop-blur-md border-b border-[#D4AF37]/20 shadow-2xl'
-          : 'py-6 bg-transparent'
+          ? 'py-3.5 bg-[#070C1E]/90 backdrop-blur-xl border-b border-amber-500/30 shadow-[0_10px_30px_rgba(0,0,0,0.9)]'
+          : 'py-5 bg-transparent border-b border-slate-800/40'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -86,14 +86,14 @@ export const Navbar: React.FC<NavbarProps> = ({ personalInfo, onOpenImporter }) 
               className="flex items-center gap-3 group focus:outline-none"
               onClick={(e) => handleNavClick(e, '#home')}
             >
-              <div className="w-10 h-10 rounded-full border border-[#D4AF37]/40 bg-[#0A1128] flex items-center justify-center text-[#D4AF37] group-hover:border-[#D4AF37] group-hover:shadow-[0_0_15px_rgba(212,175,55,0.3)] transition-all">
+              <div className="w-10 h-10 rounded-xl border border-amber-500/50 bg-amber-950/60 flex items-center justify-center text-amber-300 group-hover:border-amber-400 group-hover:shadow-[0_0_20px_rgba(245,158,11,0.5)] transition-all">
                 <Crown className="w-5 h-5" />
               </div>
               <div>
-                <span className="font-serif text-lg font-bold tracking-tight text-white group-hover:text-gold-gradient transition-colors">
+                <span className="font-serif text-lg font-bold tracking-tight text-white group-hover:text-amber-300 transition-colors">
                   {personalInfo.name}
                 </span>
-                <span className="block text-[10px] uppercase tracking-widest text-[#D4AF37]">
+                <span className="block text-[10px] font-bold uppercase tracking-widest text-amber-400">
                   Executive Portfolio
                 </span>
               </div>
@@ -116,14 +116,14 @@ export const Navbar: React.FC<NavbarProps> = ({ personalInfo, onOpenImporter }) 
                   href={item.href}
                   onClick={(e) => handleNavClick(e, item.href)}
                   className={`relative px-2.5 xl:px-3.5 py-2 text-[11px] xl:text-xs font-semibold uppercase tracking-wider whitespace-nowrap transition-colors duration-200 ${
-                    isActive ? 'text-[#F3E5AB]' : 'text-slate-300 hover:text-white'
+                    isActive ? 'text-amber-400 font-bold' : 'text-slate-300 hover:text-white'
                   }`}
                 >
                   {item.label}
                   {isActive && (
                     <motion.div
                       layoutId="activeNavUnderline"
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#D4AF37] via-[#F3E5AB] to-[#AA7C11]"
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 via-amber-400 to-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.8)]"
                       transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                     />
                   )}
@@ -136,7 +136,7 @@ export const Navbar: React.FC<NavbarProps> = ({ personalInfo, onOpenImporter }) 
           <div className="flex lg:hidden items-center">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2.5 rounded-lg text-slate-200 hover:text-white border border-slate-700 bg-[#0A1128]"
+              className="p-2.5 rounded-lg text-slate-200 hover:text-amber-400 border border-slate-800 bg-slate-900"
               aria-label="Toggle navigation menu"
             >
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -153,7 +153,7 @@ export const Navbar: React.FC<NavbarProps> = ({ personalInfo, onOpenImporter }) 
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="lg:hidden bg-[#0A1128]/95 backdrop-blur-xl border-b border-[#D4AF37]/20 px-6 py-6"
+            className="lg:hidden bg-[#070C1E]/95 backdrop-blur-2xl border-b border-slate-800 px-6 py-6 shadow-2xl"
           >
             <div className="flex flex-col space-y-4">
               {navItems.map((item) => {
@@ -165,12 +165,12 @@ export const Navbar: React.FC<NavbarProps> = ({ personalInfo, onOpenImporter }) 
                     key={item.label}
                     href={item.href}
                     onClick={(e) => handleNavClick(e, item.href)}
-                    className={`text-sm font-semibold tracking-wider uppercase py-2 border-b border-slate-800 flex items-center justify-between ${
-                      isActive ? 'text-[#D4AF37]' : 'text-slate-300'
+                    className={`text-sm font-semibold tracking-wider uppercase py-2 border-b border-slate-800/80 flex items-center justify-between ${
+                      isActive ? 'text-amber-400 font-bold' : 'text-slate-300 hover:text-white'
                     }`}
                   >
                     <span>{item.label}</span>
-                    {isActive && <span className="w-2 h-2 rounded-full bg-[#D4AF37]" />}
+                    {isActive && <span className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.8)]" />}
                   </a>
                 );
               })}

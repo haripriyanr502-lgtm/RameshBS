@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { ArrowUp, Crown, Mail, Phone, Globe, MapPin, HeartHandshake } from 'lucide-react';
+import { ArrowUp, Crown, Mail, Globe, MapPin, HeartHandshake } from 'lucide-react';
 import { PersonalInfo } from '../types/portfolio';
 
 interface FooterProps {
@@ -17,9 +17,9 @@ export const Footer: React.FC<FooterProps> = ({ personalInfo }) => {
   };
 
   return (
-    <footer className="bg-[#050814] text-slate-300 border-t border-[#D4AF37]/20 pt-16 pb-12 relative overflow-hidden">
-      {/* Background Accent */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-64 bg-gradient-to-t from-[#D4AF37]/5 to-transparent pointer-events-none" />
+    <footer className="bg-[#040714] text-slate-300 border-t border-slate-800 pt-16 pb-12 relative overflow-hidden">
+      {/* Background Ambient Gradient */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-64 bg-gradient-to-t from-amber-950/20 via-transparent to-transparent pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
@@ -29,14 +29,14 @@ export const Footer: React.FC<FooterProps> = ({ personalInfo }) => {
           {/* Brand Info (5 cols) */}
           <div className="md:col-span-5 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full border border-[#D4AF37] bg-[#0A1128] flex items-center justify-center text-[#D4AF37]">
+              <div className="w-10 h-10 rounded-xl border border-amber-500/50 bg-amber-950/60 flex items-center justify-center text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.3)]">
                 <Crown className="w-5 h-5" />
               </div>
               <div>
                 <h3 className="font-serif text-xl font-bold text-white tracking-tight">
                   {personalInfo.name}
                 </h3>
-                <p className="text-xs uppercase tracking-widest text-[#D4AF37]">
+                <p className="text-xs uppercase tracking-widest text-amber-400 font-semibold">
                   Executive & Social Leader
                 </p>
               </div>
@@ -46,8 +46,8 @@ export const Footer: React.FC<FooterProps> = ({ personalInfo }) => {
               {personalInfo.tagline}
             </p>
 
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900 border border-slate-800 text-xs text-[#D4AF37]">
-              <HeartHandshake className="w-4 h-4 text-[#D4AF37]" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 border border-amber-500/30 text-xs text-amber-300">
+              <HeartHandshake className="w-4 h-4 text-amber-400" />
               <span>Lions Clubs International Director</span>
             </div>
           </div>
@@ -59,28 +59,33 @@ export const Footer: React.FC<FooterProps> = ({ personalInfo }) => {
             </h4>
             <ul className="space-y-2.5 text-xs uppercase tracking-wider font-semibold">
               <li>
-                <a href="#about" className="hover:text-[#D4AF37] transition-colors">
+                <a href="#about" className="hover:text-amber-400 transition-colors">
                   1. About Me
                 </a>
               </li>
               <li>
-                <a href="#lionistic-journey" className="hover:text-[#D4AF37] transition-colors">
+                <a href="#lionistic-journey" className="hover:text-amber-400 transition-colors">
                   2. My Lionistic Journey
                 </a>
               </li>
               <li>
-                <a href="#services" className="hover:text-[#D4AF37] transition-colors">
+                <a href="#services" className="hover:text-amber-400 transition-colors">
                   3. Services Involved In
                 </a>
               </li>
               <li>
-                <a href="#hobbies" className="hover:text-[#D4AF37] transition-colors">
-                  4. Hobbies
+                <a href="#activities" className="hover:text-amber-400 transition-colors">
+                  4. Activities
                 </a>
               </li>
               <li>
-                <a href="#career" className="hover:text-[#D4AF37] transition-colors">
+                <a href="#career" className="hover:text-amber-400 transition-colors">
                   5. Career
+                </a>
+              </li>
+              <li>
+                <a href="#contact" className="hover:text-amber-400 transition-colors">
+                  6. Contact Me
                 </a>
               </li>
             </ul>
@@ -97,24 +102,14 @@ export const Footer: React.FC<FooterProps> = ({ personalInfo }) => {
                 href={`mailto:${personalInfo.email}`}
                 className="flex items-center gap-3 text-slate-300 hover:text-white group"
               >
-                <div className="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-[#D4AF37] group-hover:border-[#D4AF37] transition-colors">
+                <div className="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-amber-400 group-hover:border-amber-400 transition-colors">
                   <Mail className="w-4 h-4" />
                 </div>
-                <span>{personalInfo.email}</span>
-              </a>
-
-              <a
-                href={`tel:${personalInfo.phone}`}
-                className="flex items-center gap-3 text-slate-300 hover:text-white group"
-              >
-                <div className="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-[#D4AF37] group-hover:border-[#D4AF37] transition-colors">
-                  <Phone className="w-4 h-4" />
-                </div>
-                <span>{personalInfo.phone}</span>
+                <span>{personalInfo.email} (Exclusive Contact)</span>
               </a>
 
               <div className="flex items-center gap-3 text-slate-300">
-                <div className="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-[#D4AF37]">
+                <div className="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-amber-400">
                   <MapPin className="w-4 h-4" />
                 </div>
                 <span>{personalInfo.location}</span>
@@ -125,7 +120,7 @@ export const Footer: React.FC<FooterProps> = ({ personalInfo }) => {
                   href={personalInfo.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-300 hover:text-[#D4AF37] hover:border-[#D4AF37] transition-colors"
+                  className="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-300 hover:text-amber-400 hover:border-amber-500/50 transition-colors cursor-pointer"
                   aria-label="LinkedIn Profile"
                 >
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -137,7 +132,7 @@ export const Footer: React.FC<FooterProps> = ({ personalInfo }) => {
                   href={personalInfo.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-300 hover:text-[#D4AF37] hover:border-[#D4AF37] transition-colors"
+                  className="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-300 hover:text-amber-400 hover:border-amber-500/50 transition-colors cursor-pointer"
                   aria-label="Personal Website"
                 >
                   <Globe className="w-4 h-4" />
@@ -157,7 +152,7 @@ export const Footer: React.FC<FooterProps> = ({ personalInfo }) => {
           {/* Back to Top Button */}
           <button
             onClick={scrollToTop}
-            className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900 border border-slate-800 text-slate-300 hover:text-[#D4AF37] hover:border-[#D4AF37] transition-all font-semibold"
+            className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900 border border-slate-800 text-slate-300 hover:text-amber-400 hover:border-amber-500/50 transition-all font-semibold cursor-pointer"
           >
             <span>Back to Top</span>
             <ArrowUp className="w-4 h-4" />

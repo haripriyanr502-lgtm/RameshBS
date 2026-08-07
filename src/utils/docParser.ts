@@ -28,6 +28,9 @@ const KEYWORDS: Record<SectionKey, string[]> = {
     'director', 'managing director', 'work history', 'employment', 'responsibilities', 
     'achievements', 'awards', 'certificates', 'resume', 'cv', 'vanguard', 'helvetia',
     'tenure', 'corporate', 'company', 'company name', 'honors'
+  ],
+  contact: [
+    'contact', 'email', 'inquiry', 'reach out', 'message', 'phone', 'address', 'communication'
   ]
 };
 
@@ -48,7 +51,8 @@ export function classifyTextParagraph(paragraphText: string): { suggestedSection
     lionistic: 0,
     services: 0,
     hobbies: 0,
-    career: 0
+    career: 0,
+    contact: 0
   };
 
   for (const [section, words] of Object.entries(KEYWORDS) as [SectionKey, string[]][]) {
@@ -112,6 +116,7 @@ export function applyParsedContentToPortfolio(
   const servicesParagraphs: string[] = [];
   const hobbiesParagraphs: string[] = [];
   const careerParagraphs: string[] = [];
+  const contactParagraphs: string[] = [];
 
   for (const item of categorized) {
     switch (item.suggestedSection) {
@@ -130,6 +135,9 @@ export function applyParsedContentToPortfolio(
       case 'career':
         careerParagraphs.push(item.text);
         break;
+      case 'contact':
+        contactParagraphs.push(item.text);
+        break;
     }
   }
 
@@ -142,7 +150,7 @@ export function applyParsedContentToPortfolio(
   if (servicesParagraphs.length > 0) {
     updated.services.description = servicesParagraphs.join('\n\n');
   }
-  if (hobbiesParagraphs.length > 0) {
+  if (hobbiesParagraphs.length > 0 && updated.hobbies) {
     updated.hobbies.description = hobbiesParagraphs.join('\n\n');
   }
   if (careerParagraphs.length > 0) {

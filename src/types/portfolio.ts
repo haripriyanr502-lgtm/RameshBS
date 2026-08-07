@@ -182,12 +182,12 @@ export interface PortfolioData {
   about: AboutSectionData;
   lionisticJourney: LionisticSectionData;
   services: ServicesSectionData;
-  hobbies: HobbiesSectionData;
+  hobbies?: HobbiesSectionData;
   career: CareerSectionData;
   activities: ActivitiesSectionData;
 }
 
-export type SectionKey = 'about' | 'lionistic' | 'services' | 'hobbies' | 'career';
+export type SectionKey = 'about' | 'lionistic' | 'services' | 'hobbies' | 'career' | 'contact';
 
 export interface CategorizedParagraph {
   text: string;
