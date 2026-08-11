@@ -11,7 +11,7 @@ export const initialPortfolioData: PortfolioData = {
     location: 'Bengaluru, Karnataka, India',
     linkedin: 'https://linkedin.com/in/bsramesh',
     website: 'https://WIN5M.com',
-    heroImage: '', // Kept blank per user request
+    heroImage: '/images/bs_ramesh_profile.jpg',
   },
 
   about: {
@@ -78,7 +78,7 @@ export const initialPortfolioData: PortfolioData = {
         description: 'Pioneered global community networking platforms for Bengaluru and nationwide youth physical activity initiatives.'
       }
     ],
-    image: '' // Kept blank per user request
+    image: '/images/bs_ramesh_profile.jpg'
   },
 
   lionisticJourney: {

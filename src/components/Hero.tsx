@@ -119,7 +119,7 @@ export const Hero: React.FC<HeroProps> = ({ personalInfo, onOpenImporter }) => {
                   <img
                     src={personalInfo.heroImage}
                     alt={personalInfo.name}
-                    className="w-full h-[480px] sm:h-[540px] object-cover object-top hover:scale-105 transition-transform duration-700 opacity-95"
+                    className="w-full h-[480px] sm:h-[540px] object-cover object-center hover:scale-105 transition-transform duration-700 opacity-95"
                   />
                 ) : (
                   /* Blank Executive Photo Placeholder Frame */
