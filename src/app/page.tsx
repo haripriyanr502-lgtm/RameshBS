@@ -23,7 +23,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-[#070C1E] text-slate-100 relative selection:bg-amber-400 selection:text-slate-950">
+    <main className="min-h-screen bg-[#F8FAFC] text-slate-900 relative selection:bg-amber-400 selection:text-slate-950">
       {/* Sticky Executive Navbar */}
       <Navbar
         personalInfo={data.personalInfo}

@@ -73,8 +73,8 @@ export const Navbar: React.FC<NavbarProps> = ({ personalInfo, onOpenImporter }) 
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'py-3.5 bg-[#070C1E]/90 backdrop-blur-xl border-b border-amber-500/30 shadow-[0_10px_30px_rgba(0,0,0,0.9)]'
-          : 'py-5 bg-transparent border-b border-slate-800/40'
+          ? 'py-3.5 bg-white/90 backdrop-blur-xl border-b border-slate-200 shadow-md'
+          : 'py-5 bg-transparent border-b border-slate-200/40'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -86,14 +86,14 @@ export const Navbar: React.FC<NavbarProps> = ({ personalInfo, onOpenImporter }) 
               className="flex items-center gap-3 group focus:outline-none"
               onClick={(e) => handleNavClick(e, '#home')}
             >
-              <div className="w-10 h-10 rounded-xl border border-amber-500/50 bg-amber-950/60 flex items-center justify-center text-amber-300 group-hover:border-amber-400 group-hover:shadow-[0_0_20px_rgba(245,158,11,0.5)] transition-all">
+              <div className="w-10 h-10 rounded-xl border border-amber-300 bg-amber-50 flex items-center justify-center text-amber-700 group-hover:border-amber-400 group-hover:shadow-md transition-all">
                 <Crown className="w-5 h-5" />
               </div>
               <div>
-                <span className="font-serif text-lg font-bold tracking-tight text-white group-hover:text-amber-300 transition-colors">
+                <span className="font-serif text-lg font-bold tracking-tight text-slate-900 group-hover:text-amber-700 transition-colors">
                   {personalInfo.name}
                 </span>
-                <span className="block text-[10px] font-bold uppercase tracking-widest text-amber-400">
+                <span className="block text-[10px] font-bold uppercase tracking-widest text-amber-700">
                   Executive Portfolio
                 </span>
               </div>
@@ -116,14 +116,14 @@ export const Navbar: React.FC<NavbarProps> = ({ personalInfo, onOpenImporter }) 
                   href={item.href}
                   onClick={(e) => handleNavClick(e, item.href)}
                   className={`relative px-2.5 xl:px-3.5 py-2 text-[11px] xl:text-xs font-semibold uppercase tracking-wider whitespace-nowrap transition-colors duration-200 ${
-                    isActive ? 'text-amber-400 font-bold' : 'text-slate-300 hover:text-white'
+                    isActive ? 'text-amber-700 font-bold' : 'text-slate-700 hover:text-slate-900'
                   }`}
                 >
                   {item.label}
                   {isActive && (
                     <motion.div
                       layoutId="activeNavUnderline"
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 via-amber-400 to-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.8)]"
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 via-amber-500 to-amber-600 shadow-sm"
                       transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                     />
                   )}
@@ -136,7 +136,7 @@ export const Navbar: React.FC<NavbarProps> = ({ personalInfo, onOpenImporter }) 
           <div className="flex lg:hidden items-center">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2.5 rounded-lg text-slate-200 hover:text-amber-400 border border-slate-800 bg-slate-900"
+              className="p-2.5 rounded-lg text-slate-700 hover:text-amber-700 border border-slate-200 bg-white shadow-sm"
               aria-label="Toggle navigation menu"
             >
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -153,7 +153,7 @@ export const Navbar: React.FC<NavbarProps> = ({ personalInfo, onOpenImporter }) 
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="lg:hidden bg-[#070C1E]/95 backdrop-blur-2xl border-b border-slate-800 px-6 py-6 shadow-2xl"
+            className="lg:hidden bg-white/95 backdrop-blur-2xl border-b border-slate-200 px-6 py-6 shadow-xl"
           >
             <div className="flex flex-col space-y-4">
               {navItems.map((item) => {
@@ -165,12 +165,12 @@ export const Navbar: React.FC<NavbarProps> = ({ personalInfo, onOpenImporter }) 
                     key={item.label}
                     href={item.href}
                     onClick={(e) => handleNavClick(e, item.href)}
-                    className={`text-sm font-semibold tracking-wider uppercase py-2 border-b border-slate-800/80 flex items-center justify-between ${
-                      isActive ? 'text-amber-400 font-bold' : 'text-slate-300 hover:text-white'
+                    className={`text-sm font-semibold tracking-wider uppercase py-2 border-b border-slate-100 flex items-center justify-between ${
+                      isActive ? 'text-amber-700 font-bold' : 'text-slate-700 hover:text-slate-900'
                     }`}
                   >
                     <span>{item.label}</span>
-                    {isActive && <span className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.8)]" />}
+                    {isActive && <span className="w-2 h-2 rounded-full bg-amber-600 shadow-sm" />}
                   </a>
                 );
               })}

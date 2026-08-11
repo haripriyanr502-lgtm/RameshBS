@@ -2,17 +2,17 @@
 
 @layer base {
   :root {
-    --bg-primary: #070C1E;
-    --bg-secondary: #0A1128;
-    --bg-card: rgba(15, 23, 42, 0.85);
+    --bg-primary: #F8FAFC;
+    --bg-secondary: #F1F5F9;
+    --bg-card: rgba(255, 255, 255, 0.95);
     --blue-royale: #2563EB;
     --blue-vibrant: #3B82F6;
-    --gold-imperial: #F59E0B;
-    --gold-bright: #FDE047;
-    --amber-dark: #D97706;
-    --text-primary: #FFFFFF;
-    --text-secondary: #E0F2FE;
-    --text-muted: #94A3B8;
+    --gold-imperial: #D97706;
+    --gold-bright: #B45309;
+    --amber-dark: #B45309;
+    --text-primary: #0F172A;
+    --text-secondary: #334155;
+    --text-muted: #64748B;
   }
 
   html {
@@ -21,31 +21,31 @@
   }
 
   body {
-    background-color: #070C1E;
-    color: #FFFFFF;
+    background-color: #F8FAFC;
+    color: #0F172A;
     overflow-x: hidden;
   }
 
-  /* Custom Royal Gold & Blue Scrollbar */
+  /* Custom Royal Gold & Blue Scrollbar for Light Theme */
   ::-webkit-scrollbar {
     width: 8px;
   }
   ::-webkit-scrollbar-track {
-    background: #040714;
+    background: #F1F5F9;
   }
   ::-webkit-scrollbar-thumb {
-    background: #1E293B;
+    background: #CBD5E1;
     border-radius: 4px;
-    border: 1px solid rgba(245, 158, 11, 0.4);
+    border: 1px solid rgba(217, 119, 6, 0.4);
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #F59E0B;
+    background: #D97706;
   }
 }
 
 /* Gradient Text Utilities */
 .text-blue-gradient {
-  background: linear-gradient(135deg, #FFFFFF 0%, #93C5FD 50%, #3B82F6 100%);
+  background: linear-gradient(135deg, #0F172A 0%, #1D4ED8 50%, #2563EB 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -53,62 +53,62 @@
 .text-gold-gradient,
 .text-vibrant-gradient,
 .text-amber-gradient {
-  background: linear-gradient(135deg, #FFFFFF 0%, #FDE047 50%, #F59E0B 100%);
+  background: linear-gradient(135deg, #1E293B 0%, #D97706 50%, #B45309 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* Glassmorphism Cards with Gold / Blue Neon Hover */
+/* Glassmorphism Cards for Light Theme */
 .glass-nav {
-  background: rgba(7, 12, 30, 0.9);
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(245, 158, 11, 0.25);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
 }
 
 .glass-card {
-  background: rgba(15, 23, 42, 0.85);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(30, 41, 59, 0.8);
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
 }
 
 .glass-card:hover {
-  border-color: rgba(245, 158, 11, 0.5);
-  box-shadow: 0 0 30px rgba(245, 158, 11, 0.2), 0 10px 40px -5px rgba(0, 0, 0, 0.9);
+  border-color: rgba(217, 119, 6, 0.5);
+  box-shadow: 0 0 30px rgba(217, 119, 6, 0.15), 0 10px 40px -5px rgba(0, 0, 0, 0.08);
 }
 
 /* Glowing Badges */
 .blue-badge,
 .cyan-badge {
-  background: rgba(37, 99, 235, 0.18);
-  border: 1px solid rgba(59, 130, 246, 0.4);
-  color: #93C5FD;
+  background: rgba(37, 99, 235, 0.1);
+  border: 1px solid rgba(37, 99, 235, 0.3);
+  color: #1D4ED8;
 }
 
 .gold-badge,
 .amber-badge,
 .red-badge {
-  background: rgba(245, 158, 11, 0.18);
-  border: 1px solid rgba(245, 158, 11, 0.4);
-  color: #FDE047;
+  background: rgba(217, 119, 6, 0.12);
+  border: 1px solid rgba(217, 119, 6, 0.35);
+  color: #B45309;
 }
 
-/* Vibrant CTA Button - Gold & Blue Gradients */
+/* Buttons */
 .btn-blue {
   background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 50%, #1E40AF 100%);
   color: #FFFFFF;
   font-weight: 700;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+  border: 1px solid rgba(37, 99, 235, 0.2);
 }
 
 .btn-blue:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 0 35px rgba(59, 130, 246, 0.65), 0 10px 20px -5px rgba(29, 78, 216, 0.6);
-  background: linear-gradient(135deg, #3B82F6 0%, #2563EB 50%, #1E3A8A 100%);
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.45);
+  background: linear-gradient(135deg, #3B82F6 0%, #2563EB 50%, #1D4ED8 100%);
 }
 
 .btn-gold,
@@ -118,25 +118,25 @@
   color: #FFFFFF;
   font-weight: 700;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 15px rgba(217, 119, 6, 0.3);
+  border: 1px solid rgba(217, 119, 6, 0.2);
 }
 
 .btn-gold:hover,
 .btn-vibrant:hover,
 .btn-red:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 0 35px rgba(245, 158, 11, 0.65), 0 10px 20px -5px rgba(180, 83, 9, 0.6);
-  background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 50%, #92400E 100%);
+  box-shadow: 0 8px 25px rgba(217, 119, 6, 0.45);
+  background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 50%, #D97706 100%);
 }
 
 .btn-outline-gold,
 .btn-outline-blue,
 .btn-outline-vibrant,
 .btn-outline-red {
-  border: 1.5px solid rgba(245, 158, 11, 0.6);
-  color: #FDE047;
-  background: rgba(15, 23, 42, 0.85);
+  border: 1.5px solid rgba(217, 119, 6, 0.6);
+  color: #B45309;
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(12px);
   font-weight: 600;
   transition: all 0.3s ease;
@@ -146,10 +146,10 @@
 .btn-outline-blue:hover,
 .btn-outline-vibrant:hover,
 .btn-outline-red:hover {
-  background: rgba(245, 158, 11, 0.2);
-  color: #FFFFFF;
-  border-color: #F59E0B;
-  box-shadow: 0 0 20px rgba(245, 158, 11, 0.35);
+  background: rgba(217, 119, 6, 0.12);
+  color: #78350F;
+  border-color: #D97706;
+  box-shadow: 0 4px 15px rgba(217, 119, 6, 0.2);
   transform: translateY(-1px);
 }
 
@@ -170,3 +170,4 @@
 .animate-glow {
   animation: pulseGlow 8s ease-in-out infinite;
 }
+

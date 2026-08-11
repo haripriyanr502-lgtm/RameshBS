@@ -22,9 +22,9 @@ const getServiceIcon = (iconName: string) => {
 
 export const Services: React.FC<ServicesProps> = ({ servicesData }) => {
   return (
-    <section id="services" className="py-24 bg-[#070C1E] relative overflow-hidden">
+    <section id="services" className="py-24 bg-[#F8FAFC] relative overflow-hidden">
       {/* Background Decorative Ambient Glow */}
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-amber-400/10 rounded-full blur-[160px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
@@ -34,7 +34,7 @@ export const Services: React.FC<ServicesProps> = ({ servicesData }) => {
           subtitle={servicesData.subheading}
         />
 
-        <p className="text-center text-slate-300 max-w-3xl mx-auto mb-16 text-base leading-relaxed">
+        <p className="text-center text-slate-600 max-w-3xl mx-auto mb-16 text-base leading-relaxed">
           {servicesData.description}
         </p>
 
@@ -50,36 +50,36 @@ export const Services: React.FC<ServicesProps> = ({ servicesData }) => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: idx * 0.15 }}
-                className="p-8 rounded-3xl glass-card border border-slate-800 hover:border-amber-500/50 shadow-xl transition-all duration-300 group flex flex-col justify-between"
+                className="p-8 rounded-3xl glass-card border border-slate-200 hover:border-amber-400 bg-white shadow-md hover:shadow-lg transition-all duration-300 group flex flex-col justify-between"
               >
                 <div>
                   {/* Top Bar: Icon & Experience Pill */}
                   <div className="flex items-center justify-between mb-6">
-                    <div className="w-14 h-14 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-300 group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-slate-950 transition-all duration-300 shadow-[0_0_20px_rgba(245,158,11,0.25)]">
+                    <div className="w-14 h-14 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-white transition-all duration-300 shadow-sm">
                       <IconComp className="w-7 h-7" />
                     </div>
                   </div>
 
                   {/* Service Title */}
-                  <h3 className="text-2xl font-serif font-bold text-white mb-3 group-hover:text-amber-300 transition-colors">
+                  <h3 className="text-2xl font-serif font-bold text-slate-900 mb-3 group-hover:text-amber-700 transition-colors">
                     {service.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-slate-300 text-sm leading-relaxed mb-6">
+                  <p className="text-slate-600 text-sm leading-relaxed mb-6">
                     {service.description}
                   </p>
 
                   {/* Key Deliverables / Features */}
                   {service.features && service.features.length > 0 && (
-                    <div className="space-y-2.5 pt-4 border-t border-slate-800">
-                      <p className="text-xs uppercase tracking-wider text-amber-400 font-bold">
+                    <div className="space-y-2.5 pt-4 border-t border-slate-200">
+                      <p className="text-xs uppercase tracking-wider text-amber-700 font-bold">
                         Key Advisory Deliverables:
                       </p>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         {service.features.map((feat, fIdx) => (
-                          <div key={fIdx} className="flex items-center gap-2 text-xs text-slate-300">
-                            <CheckCircle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                          <div key={fIdx} className="flex items-center gap-2 text-xs text-slate-700">
+                            <CheckCircle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
                             <span>{feat}</span>
                           </div>
                         ))}
@@ -90,11 +90,11 @@ export const Services: React.FC<ServicesProps> = ({ servicesData }) => {
 
                 {/* Bottom Tag */}
                 {service.tag && (
-                  <div className="mt-8 pt-4 border-t border-slate-800 flex items-center justify-between">
-                    <span className="text-[10px] uppercase tracking-widest text-amber-400 font-bold">
+                  <div className="mt-8 pt-4 border-t border-slate-200 flex items-center justify-between">
+                    <span className="text-[10px] uppercase tracking-widest text-amber-700 font-bold">
                       {service.tag}
                     </span>
-                    <span className="text-xs text-slate-400 group-hover:text-amber-300 transition-colors flex items-center gap-1 font-semibold">
+                    <span className="text-xs text-slate-500 group-hover:text-amber-700 transition-colors flex items-center gap-1 font-semibold">
                       Inquire Advisory &rarr;
                     </span>
                   </div>

@@ -97,24 +97,24 @@ export const DocumentImporterModal: React.FC<DocumentImporterModalProps> = ({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 bg-[#070C1E]/90 backdrop-blur-xl flex items-center justify-center p-4 overflow-y-auto">
+      <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xl flex items-center justify-center p-4 overflow-y-auto">
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative w-full max-w-4xl bg-[#0B1536] border border-amber-500/40 rounded-3xl p-6 sm:p-8 shadow-2xl overflow-hidden my-8"
+          className="relative w-full max-w-4xl bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-2xl overflow-hidden my-8 text-slate-800"
         >
           {/* Top Bar Header */}
-          <div className="flex items-center justify-between pb-6 border-b border-slate-800">
+          <div className="flex items-center justify-between pb-6 border-b border-slate-200">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300">
+              <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-300 flex items-center justify-center text-amber-700 shadow-sm">
                 <FileUp className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-xl font-serif font-bold text-white">
+                <h3 className="text-xl font-serif font-bold text-slate-900">
                   DOC / DOCX Content Ingestion Engine
                 </h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-slate-500">
                   Upload your document or paste text to automatically categorize into portfolio sections
                 </p>
               </div>
@@ -122,7 +122,7 @@ export const DocumentImporterModal: React.FC<DocumentImporterModalProps> = ({
 
             <button
               onClick={onClose}
-              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+              className="p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
             >
               <X className="w-6 h-6" />
             </button>
@@ -137,7 +137,7 @@ export const DocumentImporterModal: React.FC<DocumentImporterModalProps> = ({
               {/* Left: Upload DOCX File */}
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-amber-500/40 hover:border-amber-400 bg-amber-950/30 rounded-2xl p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-colors group"
+                className="border-2 border-dashed border-amber-300 hover:border-amber-400 bg-amber-50/70 rounded-2xl p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-colors group shadow-sm"
               >
                 <input
                   type="file"
@@ -146,16 +146,16 @@ export const DocumentImporterModal: React.FC<DocumentImporterModalProps> = ({
                   accept=".docx,.txt,.doc"
                   className="hidden"
                 />
-                <FileText className="w-10 h-10 text-amber-400 mb-3 group-hover:scale-110 transition-transform" />
-                <p className="text-sm font-bold text-white mb-1">
+                <FileText className="w-10 h-10 text-amber-600 mb-3 group-hover:scale-110 transition-transform" />
+                <p className="text-sm font-bold text-slate-900 mb-1">
                   {fileName ? fileName : 'Click to Upload .DOCX or .TXT File'}
                 </p>
-                <p className="text-xs text-slate-400">Supports Word documents and plain text files</p>
+                <p className="text-xs text-slate-500">Supports Word documents and plain text files</p>
               </div>
 
               {/* Right: Paste Text Box */}
               <div className="space-y-2">
-                <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider block">
+                <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider block">
                   Or Paste Document Text Directly:
                 </label>
                 <textarea
@@ -165,7 +165,7 @@ export const DocumentImporterModal: React.FC<DocumentImporterModalProps> = ({
                     processText(e.target.value);
                   }}
                   placeholder="Paste your biography, Lionistic journey notes, services, career history, or hobbies content here..."
-                  className="w-full h-32 p-3.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white focus:outline-none focus:border-amber-400 resize-none shadow-inner"
+                  className="w-full h-32 p-3.5 rounded-xl bg-slate-50 border border-slate-300 text-xs text-slate-900 focus:outline-none focus:border-amber-500 resize-none shadow-inner"
                 />
               </div>
 
@@ -173,17 +173,17 @@ export const DocumentImporterModal: React.FC<DocumentImporterModalProps> = ({
 
             {/* Classification Results Section */}
             {categorizedItems.length > 0 && (
-              <div className="pt-4 border-t border-slate-800 space-y-4">
+              <div className="pt-4 border-t border-slate-200 space-y-4">
                 
                 <div className="flex items-center justify-between">
-                  <span className="text-xs uppercase font-bold tracking-widest text-amber-400 flex items-center gap-1.5">
-                    <Sparkles className="w-4 h-4 text-amber-400" />
+                  <span className="text-xs uppercase font-bold tracking-widest text-amber-700 flex items-center gap-1.5">
+                    <Sparkles className="w-4 h-4 text-amber-600" />
                     Categorized {categorizedItems.length} Paragraphs Across 6 Sections:
                   </span>
 
                   <button
                     onClick={() => processText(rawText)}
-                    className="text-xs text-slate-400 hover:text-white flex items-center gap-1 cursor-pointer"
+                    className="text-xs text-slate-600 hover:text-slate-900 flex items-center gap-1 cursor-pointer"
                   >
                     <RefreshCw className={`w-3.5 h-3.5 ${isProcessing ? 'animate-spin' : ''}`} />
                     <span>Re-Analyze</span>
@@ -199,11 +199,11 @@ export const DocumentImporterModal: React.FC<DocumentImporterModalProps> = ({
                       className={`px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer ${
                         activePreviewTab === secKey
                           ? 'btn-gold text-white shadow-md'
-                          : 'bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800'
+                          : 'bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200'
                       }`}
                     >
                       <span>{sectionLabels[secKey]}</span>
-                      <span className={`px-1.5 py-0.5 rounded-full text-[10px] ${activePreviewTab === secKey ? 'bg-white text-slate-950 font-extrabold' : 'bg-amber-950 text-amber-300'}`}>
+                      <span className={`px-1.5 py-0.5 rounded-full text-[10px] ${activePreviewTab === secKey ? 'bg-white text-slate-950 font-extrabold' : 'bg-amber-100 text-amber-800'}`}>
                         {sectionCounts[secKey]}
                       </span>
                     </button>
@@ -211,19 +211,19 @@ export const DocumentImporterModal: React.FC<DocumentImporterModalProps> = ({
                 </div>
 
                 {/* Classified Items List Preview */}
-                <div className="max-h-48 overflow-y-auto p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+                <div className="max-h-48 overflow-y-auto p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
                   {categorizedItems
                     .filter((item) => item.suggestedSection === activePreviewTab)
                     .map((item, idx) => (
                       <div
                         key={idx}
-                        className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs space-y-1 shadow-inner"
+                        className="p-3 rounded-xl bg-white border border-slate-200 text-xs space-y-1 shadow-sm"
                       >
-                        <div className="flex items-center justify-between text-[10px] text-amber-400 font-semibold">
+                        <div className="flex items-center justify-between text-[10px] text-amber-700 font-semibold">
                           <span>Suggested Match: {sectionLabels[item.suggestedSection]}</span>
                           <span>Confidence: {item.confidence}%</span>
                         </div>
-                        <p className="text-slate-300 leading-relaxed">{item.text}</p>
+                        <p className="text-slate-700 leading-relaxed">{item.text}</p>
                       </div>
                     ))}
 
@@ -240,10 +240,10 @@ export const DocumentImporterModal: React.FC<DocumentImporterModalProps> = ({
           </div>
 
           {/* Modal Footer Controls */}
-          <div className="pt-6 border-t border-slate-800 flex items-center justify-between">
+          <div className="pt-6 border-t border-slate-200 flex items-center justify-between">
             <button
               onClick={onClose}
-              className="px-5 py-2.5 rounded-xl border border-slate-800 text-slate-300 text-xs font-bold uppercase hover:bg-slate-800 cursor-pointer"
+              className="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 text-xs font-bold uppercase hover:bg-slate-100 cursor-pointer transition-colors"
             >
               Cancel
             </button>

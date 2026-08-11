@@ -52,9 +52,9 @@ ${careerData.certificatesAndAwards
   };
 
   return (
-    <section id="career" className="py-24 bg-[#070C1E] relative overflow-hidden">
+    <section id="career" className="py-24 bg-white relative overflow-hidden">
       {/* Background Glow */}
-      <div className="absolute top-0 left-1/3 w-96 h-96 bg-blue-600/10 rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute top-0 left-1/3 w-96 h-96 bg-blue-400/10 rounded-full blur-[160px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
@@ -68,13 +68,13 @@ ${careerData.certificatesAndAwards
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-16">
           
           {/* Tab Switcher */}
-          <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-slate-900 border border-slate-800 shadow-lg">
+          <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-slate-100 border border-slate-200 shadow-sm">
             <button
               onClick={() => setActiveTab('experience')}
               className={`flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                 activeTab === 'experience'
                   ? 'btn-gold text-white shadow-md'
-                  : 'text-slate-400 hover:text-white'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <Briefcase className="w-4 h-4" />
@@ -86,7 +86,7 @@ ${careerData.certificatesAndAwards
               className={`flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                 activeTab === 'awards'
                   ? 'btn-gold text-white shadow-md'
-                  : 'text-slate-400 hover:text-white'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <Award className="w-4 h-4" />
@@ -97,7 +97,7 @@ ${careerData.certificatesAndAwards
           {/* Download Resume Button */}
           <button
             onClick={handleDownloadResume}
-            className="btn-gold flex items-center gap-2 px-6 py-3.5 rounded-full text-xs font-bold uppercase tracking-widest cursor-pointer"
+            className="btn-gold flex items-center gap-2 px-6 py-3.5 rounded-full text-xs font-bold uppercase tracking-widest cursor-pointer shadow-md"
           >
             <Download className="w-4 h-4" />
             <span>Download Executive Resume</span>
@@ -114,27 +114,27 @@ ${careerData.certificatesAndAwards
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: idx * 0.1 }}
-                className="p-8 rounded-3xl glass-card border border-slate-800 hover:border-amber-500/50 transition-all duration-300 shadow-xl relative"
+                className="p-8 rounded-3xl glass-card border border-slate-200 hover:border-amber-400 bg-white transition-all duration-300 shadow-md relative"
               >
                 {/* Header Info */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-6 border-b border-slate-800">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-6 border-b border-slate-200">
                   <div>
-                    <span className="text-xs uppercase tracking-widest font-bold text-amber-400">
+                    <span className="text-xs uppercase tracking-widest font-bold text-amber-700">
                       {exp.organization}
                     </span>
-                    <h3 className="text-2xl font-serif font-bold text-white mt-1">
+                    <h3 className="text-2xl font-serif font-bold text-slate-900 mt-1">
                       {exp.designation}
                     </h3>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-3 text-xs font-semibold text-slate-300">
-                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-950/60 border border-amber-500/30 text-amber-300">
-                      <Calendar className="w-3.5 h-3.5 text-amber-400" />
+                  <div className="flex flex-wrap items-center gap-3 text-xs font-semibold text-slate-700">
+                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800">
+                      <Calendar className="w-3.5 h-3.5 text-amber-600" />
                       <span>{exp.duration}</span>
                     </div>
 
-                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300">
-                      <MapPin className="w-3.5 h-3.5 text-amber-400" />
+                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200 text-slate-700">
+                      <MapPin className="w-3.5 h-3.5 text-amber-600" />
                       <span>{exp.location}</span>
                     </div>
                   </div>
@@ -142,14 +142,14 @@ ${careerData.certificatesAndAwards
 
                 {/* Responsibilities */}
                 <div className="mb-6 space-y-2">
-                  <h4 className="text-xs uppercase tracking-wider text-amber-400 font-bold flex items-center gap-1.5">
-                    <FileText className="w-3.5 h-3.5 text-amber-400" />
+                  <h4 className="text-xs uppercase tracking-wider text-amber-700 font-bold flex items-center gap-1.5">
+                    <FileText className="w-3.5 h-3.5 text-amber-600" />
                     Key Executive Responsibilities:
                   </h4>
                   <ul className="space-y-2 pl-2">
                     {exp.responsibilities.map((resp, rIdx) => (
-                      <li key={rIdx} className="text-sm text-slate-300 flex items-start gap-2.5">
-                        <ChevronRight className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                      <li key={rIdx} className="text-sm text-slate-700 flex items-start gap-2.5">
+                        <ChevronRight className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                         <span>{resp}</span>
                       </li>
                     ))}
@@ -158,18 +158,18 @@ ${careerData.certificatesAndAwards
 
                 {/* Key Accomplishments */}
                 {exp.keyAchievements && exp.keyAchievements.length > 0 && (
-                  <div className="pt-4 border-t border-slate-800">
-                    <h4 className="text-xs uppercase tracking-wider text-amber-400 font-bold mb-2 flex items-center gap-1.5">
-                      <Award className="w-3.5 h-3.5 text-amber-400" />
+                  <div className="pt-4 border-t border-slate-200">
+                    <h4 className="text-xs uppercase tracking-wider text-amber-700 font-bold mb-2 flex items-center gap-1.5">
+                      <Award className="w-3.5 h-3.5 text-amber-600" />
                       Strategic Accomplishments:
                     </h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {exp.keyAchievements.map((ach, aIdx) => (
                         <div
                           key={aIdx}
-                          className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-xs text-slate-300 flex items-start gap-2"
+                          className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 flex items-start gap-2"
                         >
-                          <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                          <CheckCircle2 className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                           <span>{ach}</span>
                         </div>
                       ))}
@@ -192,25 +192,25 @@ ${careerData.certificatesAndAwards
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
-                className="p-6 rounded-3xl glass-card border border-slate-800 hover:border-amber-500/50 transition-all shadow-xl flex items-start gap-4"
+                className="p-6 rounded-3xl glass-card border border-slate-200 hover:border-amber-400 bg-white transition-all shadow-md flex items-start gap-4"
               >
-                <div className="w-12 h-12 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-300 shrink-0">
+                <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 shrink-0">
                   <ShieldCheck className="w-6 h-6" />
                 </div>
 
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-1">
-                    <span className="text-[10px] uppercase font-bold tracking-widest text-amber-300 bg-amber-950 px-2 py-0.5 rounded border border-amber-500/30">
+                    <span className="text-[10px] uppercase font-bold tracking-widest text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
                       {item.type}
                     </span>
-                    <span className="text-xs font-semibold text-slate-400">{item.year}</span>
+                    <span className="text-xs font-semibold text-slate-500">{item.year}</span>
                   </div>
 
-                  <h4 className="text-lg font-serif font-bold text-white mb-1">{item.title}</h4>
-                  <p className="text-xs text-amber-400 font-semibold mb-2">{item.issuer}</p>
+                  <h4 className="text-lg font-serif font-bold text-slate-900 mb-1">{item.title}</h4>
+                  <p className="text-xs text-amber-700 font-semibold mb-2">{item.issuer}</p>
 
                   {item.description && (
-                    <p className="text-xs text-slate-300 leading-relaxed">{item.description}</p>
+                    <p className="text-xs text-slate-600 leading-relaxed">{item.description}</p>
                   )}
                 </div>
               </motion.div>

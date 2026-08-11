@@ -43,7 +43,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`scroll-smooth ${plusJakartaSans.variable} ${playfairDisplay.variable}`}>
-      <body className="bg-[#050814] text-[#F8FAFC] antialiased selection:bg-[#D4AF37] selection:text-[#050814]">
+      <body className="bg-[#F8FAFC] text-[#0F172A] antialiased selection:bg-amber-400 selection:text-slate-950">
         {children}
       </body>
     </html>
