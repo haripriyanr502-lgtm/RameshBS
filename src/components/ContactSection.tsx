@@ -107,41 +107,41 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ personalInfo }) 
 
                   <button
                     onClick={handleCopyEmail}
-                    className="p-1.5 rounded-lg bg-slate-900/80 hover:bg-slate-800 border border-slate-700 text-amber-300 text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer"
+                    className="p-1.5 rounded-lg bg-white hover:bg-amber-100 border border-amber-300 text-amber-800 text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer shadow-sm"
                     title="Copy Email to Clipboard"
                   >
-                    {copiedEmail ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    {copiedEmail ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                     <span>{copiedEmail ? 'Copied!' : 'Copy Email'}</span>
                   </button>
                 </div>
 
                 <a
                   href={`mailto:${personalInfo.email}`}
-                  className="text-lg sm:text-xl font-bold font-mono text-amber-300 hover:text-white block transition-colors break-all"
+                  className="text-lg sm:text-xl font-bold font-mono text-amber-800 hover:text-slate-900 block transition-colors break-all"
                 >
                   {personalInfo.email}
                 </a>
 
-                <div className="pt-2 border-t border-slate-800 flex items-center gap-2 text-[11px] text-slate-300">
-                  <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                <div className="pt-2 border-t border-amber-200/80 flex items-center gap-2 text-[11px] text-slate-600">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
                   <span>Phone numbers are not disclosed to prevent spam & protect privacy.</span>
                 </div>
               </div>
 
               {/* 3 Categories Summary Badges */}
               <div className="space-y-2 pt-2">
-                <p className="text-xs font-bold text-amber-400 uppercase tracking-wider">Inquiry Channels Accepted:</p>
+                <p className="text-xs font-bold text-amber-800 uppercase tracking-wider">Inquiry Channels Accepted:</p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs font-semibold">
-                  <div className="p-2.5 rounded-xl bg-slate-800/90 border border-slate-700 text-slate-200 flex items-center gap-2">
-                    <Briefcase className="w-4 h-4 text-amber-400 shrink-0" />
+                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 flex items-center gap-2 shadow-sm">
+                    <Briefcase className="w-4 h-4 text-amber-600 shrink-0" />
                     <span>Professional</span>
                   </div>
-                  <div className="p-2.5 rounded-xl bg-slate-800/90 border border-slate-700 text-slate-200 flex items-center gap-2">
-                    <Users className="w-4 h-4 text-amber-400 shrink-0" />
+                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 flex items-center gap-2 shadow-sm">
+                    <Users className="w-4 h-4 text-amber-600 shrink-0" />
                     <span>Community</span>
                   </div>
-                  <div className="p-2.5 rounded-xl bg-slate-800/90 border border-slate-700 text-slate-200 flex items-center gap-2">
-                    <Heart className="w-4 h-4 text-rose-400 shrink-0" />
+                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 flex items-center gap-2 shadow-sm">
+                    <Heart className="w-4 h-4 text-rose-500 shrink-0" />
                     <span>As a Friend</span>
                   </div>
                 </div>

@@ -155,17 +155,17 @@ export const LionisticJourney: React.FC<LionisticJourneyProps> = ({ journeyData 
               <div className="flex items-center gap-4 pt-2">
                 <button
                   onClick={prevSlide}
-                  className="p-3 rounded-full bg-slate-800 border border-slate-700 hover:border-amber-400 hover:text-amber-300 text-white transition-all hover:scale-105 cursor-pointer"
+                  className="p-3 rounded-full bg-white border border-slate-200 hover:border-amber-400 hover:text-amber-700 text-slate-700 transition-all hover:scale-105 cursor-pointer shadow-sm"
                   title="Previous Banner Slide"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
-                <span className="text-xs font-bold text-amber-400 font-mono">
+                <span className="text-xs font-bold text-amber-700 font-mono">
                   0{currentSlideIndex + 1} / 0{gallerySlides.length}
                 </span>
                 <button
                   onClick={nextSlide}
-                  className="p-3 rounded-full bg-slate-800 border border-slate-700 hover:border-amber-400 hover:text-amber-300 text-white transition-all hover:scale-105 cursor-pointer"
+                  className="p-3 rounded-full bg-white border border-slate-200 hover:border-amber-400 hover:text-amber-700 text-slate-700 transition-all hover:scale-105 cursor-pointer shadow-sm"
                   title="Next Banner Slide"
                 >
                   <ChevronRight className="w-5 h-5" />
@@ -175,38 +175,38 @@ export const LionisticJourney: React.FC<LionisticJourneyProps> = ({ journeyData 
 
             {/* Quick Stats Badges Container */}
             <div className="lg:col-span-4 grid grid-cols-2 lg:grid-cols-1 gap-4">
-              <div className="p-4 rounded-2xl bg-slate-950/80 border border-amber-500/40 backdrop-blur-md">
+              <div className="p-4 rounded-2xl bg-white border border-slate-200 backdrop-blur-md shadow-sm">
                 <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-xl bg-amber-500/20 text-amber-300">
+                  <div className="p-2.5 rounded-xl bg-amber-50 text-amber-700 border border-amber-200">
                     <Award className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-[10px] uppercase font-bold text-amber-400">LCIF International Honor</p>
-                    <p className="text-sm font-bold text-white">MJF (2025 - 2026)</p>
+                    <p className="text-[10px] uppercase font-bold text-amber-800">LCIF International Honor</p>
+                    <p className="text-sm font-bold text-slate-900">MJF (2025 - 2026)</p>
                   </div>
                 </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-slate-950/80 border border-blue-500/40 backdrop-blur-md">
+              <div className="p-4 rounded-2xl bg-white border border-slate-200 backdrop-blur-md shadow-sm">
                 <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-xl bg-blue-500/20 text-blue-300">
+                  <div className="p-2.5 rounded-xl bg-blue-50 text-blue-700 border border-blue-200">
                     <Globe className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-[10px] uppercase font-bold text-blue-400">International Exposure</p>
-                    <p className="text-sm font-bold text-white">Nepal & Singapore</p>
+                    <p className="text-[10px] uppercase font-bold text-blue-700">International Exposure</p>
+                    <p className="text-sm font-bold text-slate-900">Nepal & Singapore</p>
                   </div>
                 </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-slate-950/80 border border-amber-500/40 backdrop-blur-md col-span-2 lg:col-span-1">
+              <div className="p-4 rounded-2xl bg-white border border-slate-200 backdrop-blur-md col-span-2 lg:col-span-1 shadow-sm">
                 <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-xl bg-amber-500/20 text-amber-300">
+                  <div className="p-2.5 rounded-xl bg-amber-50 text-amber-700 border border-amber-200">
                     <Crown className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-[10px] uppercase font-bold text-amber-400">Governance & Youth</p>
-                    <p className="text-sm font-bold text-white">Region Chair & 12 Leo Clubs</p>
+                    <p className="text-[10px] uppercase font-bold text-amber-800">Governance & Youth</p>
+                    <p className="text-sm font-bold text-slate-900">Region Chair & 12 Leo Clubs</p>
                   </div>
                 </div>
               </div>
