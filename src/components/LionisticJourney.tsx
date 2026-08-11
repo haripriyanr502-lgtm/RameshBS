@@ -121,7 +121,7 @@ export const LionisticJourney: React.FC<LionisticJourneyProps> = ({ journeyData 
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="relative rounded-3xl overflow-hidden border border-slate-200 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 shadow-xl"
+          className="relative rounded-3xl overflow-hidden border border-slate-200 bg-gradient-to-br from-slate-100 via-white to-amber-50/60 shadow-lg text-slate-900"
         >
           {/* Ambient Glow */}
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(245,158,11,0.15)_0%,transparent_60%)] pointer-events-none" />
@@ -131,23 +131,23 @@ export const LionisticJourney: React.FC<LionisticJourneyProps> = ({ journeyData 
             {/* Slide Info & Controls */}
             <div className="lg:col-span-8 space-y-6">
               <div className="flex items-center gap-3 flex-wrap">
-                <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-amber-950 border border-amber-500/40 text-amber-300 text-xs font-bold uppercase tracking-wider shadow-sm">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-spin" style={{ animationDuration: '6s' }} />
+                <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-amber-50 border border-amber-300 text-amber-800 text-xs font-bold uppercase tracking-wider shadow-sm">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-600 animate-spin" style={{ animationDuration: '6s' }} />
                   {gallerySlides[currentSlideIndex].category}
                 </span>
 
-                <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-700 text-xs font-bold text-slate-200">
+                <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700">
                   {gallerySlides[currentSlideIndex].badge}
                 </span>
 
                 <RegionChairDropdown buttonText="Region Chair & 12 Leo Clubs" variant="badge" />
               </div>
 
-              <h3 className="text-2xl sm:text-4xl font-serif font-bold text-white tracking-tight leading-tight">
+              <h3 className="text-2xl sm:text-4xl font-serif font-bold text-slate-900 tracking-tight leading-tight">
                 {gallerySlides[currentSlideIndex].title}
               </h3>
 
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl">
+              <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-2xl">
                 {gallerySlides[currentSlideIndex].subtitle}
               </p>
 

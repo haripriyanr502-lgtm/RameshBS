@@ -74,7 +74,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ personalInfo }) 
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="relative rounded-3xl overflow-hidden border border-slate-200 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 shadow-xl text-white"
+          className="relative rounded-3xl overflow-hidden border border-slate-200 bg-white shadow-xl text-slate-900"
         >
           {/* Ambient Glow */}
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -85,23 +85,23 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ personalInfo }) 
             <div className="lg:col-span-5 space-y-6">
               
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full gold-badge text-xs font-bold uppercase tracking-wider shadow-sm">
-                <Lock className="w-3.5 h-3.5 text-amber-400" />
+                <Lock className="w-3.5 h-3.5 text-amber-600" />
                 <span>Privacy Protected Contact Policy</span>
               </div>
 
-              <h3 className="text-2xl sm:text-4xl font-serif font-bold text-white tracking-tight leading-tight">
+              <h3 className="text-2xl sm:text-4xl font-serif font-bold text-slate-900 tracking-tight leading-tight">
                 Connect Directly via Email
               </h3>
 
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+              <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
                 Whether you are seeking enterprise IT solutions, contract staffing delivery, Lions/Leo community governance collaboration, or personal fellowship, please submit your inquiry below.
               </p>
 
               {/* Exclusive Email Card */}
-              <div className="p-5 rounded-2xl bg-amber-950/80 border border-amber-500/50 text-white space-y-3 shadow-xl">
+              <div className="p-5 rounded-2xl bg-amber-50 border border-amber-300 text-slate-900 space-y-3 shadow-sm">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
-                    <Mail className="w-4 h-4 text-amber-400" />
+                  <span className="text-[11px] font-bold text-amber-800 uppercase tracking-wider flex items-center gap-1.5">
+                    <Mail className="w-4 h-4 text-amber-600" />
                     Official Primary Contact Email
                   </span>
 

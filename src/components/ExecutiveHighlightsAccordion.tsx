@@ -77,14 +77,14 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
       {/* Section Title Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div className="flex items-center gap-3">
-          <div className="p-3 rounded-2xl bg-amber-950/80 border border-amber-500/40 text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+          <div className="p-3 rounded-2xl bg-amber-50 border border-amber-300 text-amber-700 shadow-sm">
             <Award className="w-6 h-6" />
           </div>
           <div>
-            <h3 className="text-2xl font-serif font-bold text-white tracking-tight">
+            <h3 className="text-2xl font-serif font-bold text-slate-900 tracking-tight">
               Executive & Leadership Highlights
             </h3>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-slate-500 mt-1">
               Move cursor over any header to inspect details • Automatically closes on mouse leave
             </p>
           </div>
