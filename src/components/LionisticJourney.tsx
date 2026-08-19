@@ -17,9 +17,13 @@ import {
   ChevronLeft,
   ArrowRight,
   Droplets,
-  CheckCircle2
+  CheckCircle2,
+  FileText,
+  Building2
 } from 'lucide-react';
 import { RegionChairDropdown } from './RegionChairDropdown';
+import { ZoneChairReportModal } from './ZoneChairReportModal';
+import { ZoneChairReportSection } from './ZoneChairReportSection';
 
 interface LionisticJourneyProps {
   journeyData: LionisticSectionData;
@@ -27,8 +31,17 @@ interface LionisticJourneyProps {
 
 export const LionisticJourney: React.FC<LionisticJourneyProps> = ({ journeyData }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
-  const [activeTab, setActiveTab] = useState<'timeline' | 'international' | 'blog'>('timeline');
+  const [activeTab, setActiveTab] = useState<'timeline' | 'zone-report' | 'international' | 'blog'>('timeline');
   const [activeBlogPost, setActiveBlogPost] = useState<LionisticBlogPost | null>(null);
+
+  // Zone Chairperson Report Modal State
+  const [isZoneReportModalOpen, setIsZoneReportModalOpen] = useState<boolean>(false);
+  const [zoneReportInitialTab, setZoneReportInitialTab] = useState<'overview' | 'events' | 'clubs' | 'dgams' | 'gallery' | 'reflections'>('overview');
+
+  const handleOpenZoneReport = (tab: 'overview' | 'events' | 'clubs' | 'dgams' | 'gallery' | 'reflections' = 'overview') => {
+    setZoneReportInitialTab(tab);
+    setIsZoneReportModalOpen(true);
+  };
 
   // Gallery Hero Banner Slide State
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
@@ -61,6 +74,13 @@ export const LionisticJourney: React.FC<LionisticJourneyProps> = ({ journeyData 
       category: 'International Forum',
       badge: 'Singapore Visit',
       icon: Crown
+    },
+    {
+      title: 'Zone Chairperson (2024–2025) Region VI, Zone I',
+      subtitle: 'Conducted 4 DGAMs, Governed 4 Active Clubs, Handed Over ₹31+ Lakhs CSR Water Plants & Mentored Youth',
+      category: 'Zone Governance Report',
+      badge: 'Zone Chair 2024–25',
+      icon: Award
     },
     {
       title: 'Region Chairperson Leadership & 12 Advisory Leo Clubs',
@@ -139,6 +159,14 @@ export const LionisticJourney: React.FC<LionisticJourneyProps> = ({ journeyData 
                 <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700">
                   {gallerySlides[currentSlideIndex].badge}
                 </span>
+
+                <button
+                  onClick={() => handleOpenZoneReport('overview')}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 text-xs font-bold uppercase tracking-wider shadow-sm hover:scale-105 transition-all cursor-pointer"
+                >
+                  <FileText className="w-3.5 h-3.5 text-slate-950" />
+                  <span>Zone Chair Report (2024–25)</span>
+                </button>
 
                 <RegionChairDropdown buttonText="Region Chair & 12 Leo Clubs" variant="badge" />
               </div>
@@ -273,11 +301,12 @@ export const LionisticJourney: React.FC<LionisticJourneyProps> = ({ journeyData 
         )}
 
         {/* ==================================================================
-            NAVIGATION SWITCHER (Timeline vs International Exposure vs Blog)
+            NAVIGATION SWITCHER (Timeline vs Zone Report vs International vs Blog)
             ================================================================== */}
         <div className="flex flex-wrap items-center justify-center gap-3">
           {[
             { id: 'timeline', label: 'Lionistic Milestones Timeline', icon: Calendar },
+            { id: 'zone-report', label: 'Zone Chairperson Report (2024–25)', icon: Award },
             { id: 'international', label: 'International Lions Exposure', icon: Globe },
             { id: 'blog', label: 'International Visits & Service Blog', icon: BookOpen }
           ].map((tab) => {
@@ -366,9 +395,20 @@ export const LionisticJourney: React.FC<LionisticJourneyProps> = ({ journeyData 
                             <h3 className="text-xl md:text-2xl font-serif font-bold text-slate-900 group-hover:text-amber-700 transition-colors">
                               {milestone.position}
                             </h3>
-                            {milestone.position.toLowerCase().includes('region chairperson') && (
-                              <RegionChairDropdown buttonText="More Info" variant="badge" />
-                            )}
+                            <div className="flex items-center gap-2 flex-wrap">
+                              {milestone.position.toLowerCase().includes('zone chairperson') && (
+                                <button
+                                  onClick={() => handleOpenZoneReport('overview')}
+                                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 text-xs font-bold uppercase tracking-wider shadow-sm hover:scale-105 transition-all cursor-pointer"
+                                >
+                                  <FileText className="w-3.5 h-3.5" />
+                                  <span>View Zone Report</span>
+                                </button>
+                              )}
+                              {milestone.position.toLowerCase().includes('region chairperson') && (
+                                <RegionChairDropdown buttonText="More Info" variant="badge" />
+                              )}
+                            </div>
                           </div>
 
                           <div className="flex flex-wrap items-center gap-3 text-xs text-amber-700 font-semibold">
@@ -405,6 +445,54 @@ export const LionisticJourney: React.FC<LionisticJourneyProps> = ({ journeyData 
                             </div>
                           )}
 
+                          {/* Dedicated Action Box for Zone Chairperson Milestone */}
+                          {milestone.position.toLowerCase().includes('zone chairperson') && (
+                            <div className="p-4 rounded-2xl bg-gradient-to-br from-amber-50 via-white to-amber-50/80 border border-amber-300 space-y-3 pt-3 shadow-sm">
+                              <div className="flex items-center justify-between gap-2 flex-wrap">
+                                <span className="text-xs font-bold text-amber-900 uppercase tracking-wider flex items-center gap-1.5">
+                                  <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                                  Zone Chairperson Report (2024–2025)
+                                </span>
+                                <span className="text-[10px] font-bold bg-white px-2 py-0.5 rounded border border-amber-200 text-amber-800">
+                                  4 Clubs • 4 DGAMs • 41 Events
+                                </span>
+                              </div>
+                              <p className="text-xs text-slate-600 leading-relaxed">
+                                Complete documentation including 41 chronological events, evaluations of 4 clubs (LCB Brigade, Cosmos, Zen, Suraksha), DGAM audit outcomes, and the international meeting with 2nd IVP Ln. Mark Lyon.
+                              </p>
+                              <div className="flex flex-wrap gap-2 pt-1">
+                                <button
+                                  onClick={() => handleOpenZoneReport('overview')}
+                                  className="btn-gold px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm cursor-pointer"
+                                >
+                                  <FileText className="w-3.5 h-3.5" />
+                                  <span>Open Complete Report</span>
+                                </button>
+                                <button
+                                  onClick={() => handleOpenZoneReport('events')}
+                                  className="bg-white hover:bg-slate-50 border border-slate-200 hover:border-amber-400 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1 transition-all cursor-pointer shadow-sm"
+                                >
+                                  <Calendar className="w-3.5 h-3.5 text-amber-600" />
+                                  <span>All 41 Events</span>
+                                </button>
+                                <button
+                                  onClick={() => handleOpenZoneReport('clubs')}
+                                  className="bg-white hover:bg-slate-50 border border-slate-200 hover:border-amber-400 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1 transition-all cursor-pointer shadow-sm"
+                                >
+                                  <Building2 className="w-3.5 h-3.5 text-amber-600" />
+                                  <span>Clubs Review</span>
+                                </button>
+                                <button
+                                  onClick={() => handleOpenZoneReport('gallery')}
+                                  className="bg-white hover:bg-slate-50 border border-slate-200 hover:border-amber-400 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1 transition-all cursor-pointer shadow-sm"
+                                >
+                                  <Award className="w-3.5 h-3.5 text-amber-600" />
+                                  <span>Photos</span>
+                                </button>
+                              </div>
+                            </div>
+                          )}
+
                         </div>
                       </div>
                     </motion.div>
@@ -417,7 +505,14 @@ export const LionisticJourney: React.FC<LionisticJourneyProps> = ({ journeyData 
         )}
 
         {/* ==================================================================
-            TAB CONTENT 2: INTERNATIONAL LIONS EXPOSURE GRID
+            TAB CONTENT 2: ZONE CHAIRPERSON REPORT (2024–2025)
+            ================================================================== */}
+        {activeTab === 'zone-report' && (
+          <ZoneChairReportSection onOpenModal={handleOpenZoneReport} />
+        )}
+
+        {/* ==================================================================
+            TAB CONTENT 3: INTERNATIONAL LIONS EXPOSURE GRID
             ================================================================== */}
         {activeTab === 'international' && journeyData.internationalExposures && (
           <div className="space-y-8">
@@ -544,6 +639,13 @@ export const LionisticJourney: React.FC<LionisticJourneyProps> = ({ journeyData 
         )}
 
       </div>
+
+      {/* ZONE CHAIRPERSON REPORT MODAL */}
+      <ZoneChairReportModal
+        isOpen={isZoneReportModalOpen}
+        onClose={() => setIsZoneReportModalOpen(false)}
+        initialTab={zoneReportInitialTab}
+      />
 
       {/* BLOG POST READER MODAL */}
       <AnimatePresence>

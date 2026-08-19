@@ -142,12 +142,17 @@ export const initialPortfolioData: PortfolioData = {
       {
         id: 'lion-3',
         year: '2024 - 2025',
-        position: 'Zone Chairperson',
+        position: 'Zone Chairperson (Region VI, Zone I)',
         organization: 'Lions International District 317F',
-        description: 'Led Zone governance, club support, and membership retention for Lions clubs in the assigned region.',
+        location: 'Bengaluru Region VI',
+        description: 'Led Zone 1 governance, club support, and administrative stewardship for 4 Lions clubs (LCB Brigade, LCB Cosmos, LCB Zen, and LCB Suraksha) under District Governor Ln. Narayanaswamy and Region Chairperson Ln. A.V. Nagaraj.',
         achievements: [
-          'Strengthened club administration and community service engagement.',
-          'Coordinated joint district humanitarian drives.'
+          'Conducted 4 District Governor Advisory Meetings (DGAMs) & 1 ZAM with 100% service activity and membership compliance.',
+          'High-level interaction with 2nd International Vice President Ln. Mark Lyon & spouse at LDSF 10 Dialysis Machine Project.',
+          'Spearheaded ₹31+ Lakhs CSR clean water plants and ₹3+ Lakhs direct aid (2,500 kg rice, medical flasks, 5,000 notebooks, pediatric diapers).',
+          'Completed 4-day residential Regional Lions Leadership Institute (RLLI) executive training in Goa from Multiple Council 317.',
+          'Champions Trophy winner representing Zone 1 in Multiple District 317 Cricket Tournament as an All-Rounder.',
+          'Conducted signature Zone Socials featuring keynote on "Balance Work-Life-Lions" by Psychologist Mrs. Vani Mitta.'
         ],
         category: 'District'
       },
