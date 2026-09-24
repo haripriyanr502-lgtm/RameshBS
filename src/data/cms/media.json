@@ -1,0 +1,42 @@
+[
+  {
+    "id": "med-1",
+    "fileName": "bs_ramesh_profile.jpg",
+    "url": "/images/bs_ramesh_profile.jpg",
+    "category": "Hero",
+    "mimeType": "image/jpeg",
+    "sizeBytes": 38437,
+    "uploadedAt": "2026-09-24T17:04:24.051Z",
+    "altText": "B.S. Ramesh Portrait"
+  },
+  {
+    "id": "med-2",
+    "fileName": "bs_ramesh_full.jpg",
+    "url": "/images/bs_ramesh_full.jpg",
+    "category": "Hero",
+    "mimeType": "image/jpeg",
+    "sizeBytes": 78881,
+    "uploadedAt": "2026-09-24T17:04:24.051Z",
+    "altText": "B.S. Ramesh Executive Full Photo"
+  },
+  {
+    "id": "med-3",
+    "fileName": "bangalorean_platform.png",
+    "url": "/images/bangalorean_platform.png",
+    "category": "Services",
+    "mimeType": "image/png",
+    "sizeBytes": 902919,
+    "uploadedAt": "2026-09-24T17:04:24.051Z",
+    "altText": "Bangalorean Platform Banner"
+  },
+  {
+    "id": "med-4",
+    "fileName": "win5m_sports.png",
+    "url": "/images/win5m_sports.png",
+    "category": "Achievements",
+    "mimeType": "image/png",
+    "sizeBytes": 876191,
+    "uploadedAt": "2026-09-24T17:04:24.051Z",
+    "altText": "WIN5M Youth Sports Talent Banner"
+  }
+]

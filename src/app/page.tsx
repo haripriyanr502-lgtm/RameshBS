@@ -1,8 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { initialPortfolioData } from '../data/portfolioData';
 import { PortfolioData } from '../types/portfolio';
+import { FullCmsDatabase } from '../lib/cms/types';
+import { mergeCmsIntoPortfolio } from '../lib/cms/transformer';
 import { Navbar } from '../components/Navbar';
 import { Hero } from '../components/Hero';
 import { About } from '../components/About';
@@ -12,28 +14,40 @@ import { Activities } from '../components/Activities';
 import { Career } from '../components/Career';
 import { ContactSection } from '../components/ContactSection';
 import { Footer } from '../components/Footer';
-import { DocumentImporterModal } from '../components/DocumentImporterModal';
 
 export default function Home() {
   const [data, setData] = useState<PortfolioData>(initialPortfolioData);
-  const [isImporterOpen, setIsImporterOpen] = useState(false);
 
-  const handleUpdatePortfolio = (updatedData: PortfolioData) => {
-    setData(updatedData);
-  };
+  // Synchronize with CMS published data on mount
+  useEffect(() => {
+    const fetchPublishedContent = async () => {
+      try {
+        const res = await fetch('/api/content', { cache: 'no-store' });
+        if (res.ok) {
+          const cmsData = (await res.json()) as FullCmsDatabase;
+          const merged = mergeCmsIntoPortfolio(initialPortfolioData, cmsData);
+          setData(merged);
+        }
+      } catch (err) {
+        console.error('Content fetch error, using built-in portfolio data:', err);
+      }
+    };
+
+    fetchPublishedContent();
+  }, []);
 
   return (
     <main className="min-h-screen bg-[#F8FAFC] text-slate-900 relative selection:bg-amber-400 selection:text-slate-950">
       {/* Sticky Executive Navbar */}
       <Navbar
         personalInfo={data.personalInfo}
-        onOpenImporter={() => setIsImporterOpen(true)}
+        onOpenImporter={() => {}}
       />
 
       {/* Hero Section */}
       <Hero
         personalInfo={data.personalInfo}
-        onOpenImporter={() => setIsImporterOpen(true)}
+        onOpenImporter={() => {}}
       />
 
       {/* Section 1: ABOUT ME */}
@@ -59,14 +73,6 @@ export default function Home() {
 
       {/* Corporate Footer */}
       <Footer personalInfo={data.personalInfo} />
-
-      {/* Dynamic DOC/DOCX Content Ingestion Modal */}
-      <DocumentImporterModal
-        isOpen={isImporterOpen}
-        onClose={() => setIsImporterOpen(false)}
-        portfolioData={data}
-        onUpdatePortfolio={handleUpdatePortfolio}
-      />
     </main>
   );
 }

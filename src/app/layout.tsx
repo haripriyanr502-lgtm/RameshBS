@@ -1,36 +1,25 @@
 import type { Metadata } from 'next';
-import { Plus_Jakarta_Sans, Playfair_Display } from 'next/font/google';
 import './globals.css';
 
-const plusJakartaSans = Plus_Jakarta_Sans({
-  subsets: ['latin'],
-  variable: '--font-sans',
-  display: 'swap',
-});
-
-const playfairDisplay = Playfair_Display({
-  subsets: ['latin'],
-  variable: '--font-serif',
-  display: 'swap',
-});
-
 export const metadata: Metadata = {
-  title: 'Ramesh B.S | Executive Portfolio & Service Leader',
-  description: 'Official Executive Portfolio of Bangalore Siddegowda Ramesh (Ramesh B.S) - Entrepreneur, CEO, and Dual Affiliated Service Leader.',
+  title: 'Ramesh B.S | Executive Portfolio & LCB Brigade',
+  description:
+    'Official Executive Portfolio of Bangalore Siddegowda Ramesh (Ramesh B.S) - Entrepreneur, CEO BSR IT Solutions, Charter Secretary Lions Club of Bangalore Brigade, Region Chairperson District 317F, Melvin Jones Fellow (MJF).',
   keywords: [
     'Ramesh B.S',
     'Bangalore Siddegowda Ramesh',
+    'Lions Club of Bangalore Brigade',
+    'LCB Brigade',
     'BSR IT Solutions',
-    'Executive Leader',
-    'Lions Clubs International',
-    'Rotary Social Leader',
-    'Dual Affiliated Service Leader',
+    'Region Chairperson',
+    'Melvin Jones Fellow',
     'Corporate Governance',
-    'Philanthropy'
+    'Philanthropy',
+    'CSR Clean Water',
   ],
   authors: [{ name: 'Ramesh B.S' }],
   openGraph: {
-    title: 'Ramesh B.S | Executive Portfolio',
+    title: 'Ramesh B.S | Executive Portfolio & LCB Brigade',
     description: 'Corporate Leadership, IT Solutions, and Dual Affiliated Service Leadership.',
     type: 'website',
   },
@@ -42,8 +31,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`scroll-smooth ${plusJakartaSans.variable} ${playfairDisplay.variable}`}>
-      <body className="bg-[#F8FAFC] text-[#0F172A] antialiased selection:bg-amber-400 selection:text-slate-950">
+    <html lang="en" className="scroll-smooth">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@200..800&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="bg-[#F8FAFC] text-[#0F172A] antialiased selection:bg-amber-400 selection:text-slate-950 font-sans">
         {children}
       </body>
     </html>

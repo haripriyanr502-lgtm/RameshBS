@@ -1,0 +1,10 @@
+[
+  {
+    "id": "admin-1",
+    "email": "admin@portfolio.com",
+    "role": "owner",
+    "salt": "e51c993079312b9dd9bdab1f572ee8f4",
+    "passwordHash": "6d57679ad608728d5c24d96178c29fd9c0df9c054d4a75c54cb3c97c52a67a80cfb46b23d5396a8323dfb333bf698f5339dc8b9a733864cd65065e87518be946",
+    "updatedAt": "2026-09-24T16:57:32.686Z"
+  }
+]
