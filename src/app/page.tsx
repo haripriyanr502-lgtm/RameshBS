@@ -1,9 +1,6 @@
-'use client';
-
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { initialPortfolioData } from '../data/portfolioData';
-import { PortfolioData } from '../types/portfolio';
-import { FullCmsDatabase } from '../lib/cms/types';
+import { getPublishedCmsData } from '../lib/cms/storage';
 import { mergeCmsIntoPortfolio } from '../lib/cms/transformer';
 import { Navbar } from '../components/Navbar';
 import { Hero } from '../components/Hero';
@@ -15,40 +12,20 @@ import { Career } from '../components/Career';
 import { ContactSection } from '../components/ContactSection';
 import { Footer } from '../components/Footer';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default function Home() {
-  const [data, setData] = useState<PortfolioData>(initialPortfolioData);
-
-  // Synchronize with CMS published data on mount
-  useEffect(() => {
-    const fetchPublishedContent = async () => {
-      try {
-        const res = await fetch('/api/content', { cache: 'no-store' });
-        if (res.ok) {
-          const cmsData = (await res.json()) as FullCmsDatabase;
-          const merged = mergeCmsIntoPortfolio(initialPortfolioData, cmsData);
-          setData(merged);
-        }
-      } catch (err) {
-        console.error('Content fetch error, using built-in portfolio data:', err);
-      }
-    };
-
-    fetchPublishedContent();
-  }, []);
+  const cmsData = getPublishedCmsData();
+  const data = mergeCmsIntoPortfolio(initialPortfolioData, cmsData);
 
   return (
     <main className="min-h-screen bg-[#F8FAFC] text-slate-900 relative selection:bg-amber-400 selection:text-slate-950">
       {/* Sticky Executive Navbar */}
-      <Navbar
-        personalInfo={data.personalInfo}
-        onOpenImporter={() => {}}
-      />
+      <Navbar personalInfo={data.personalInfo} />
 
       {/* Hero Section */}
-      <Hero
-        personalInfo={data.personalInfo}
-        onOpenImporter={() => {}}
-      />
+      <Hero personalInfo={data.personalInfo} />
 
       {/* Section 1: ABOUT ME */}
       <About aboutData={data.about} />

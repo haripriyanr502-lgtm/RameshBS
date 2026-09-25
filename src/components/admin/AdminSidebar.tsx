@@ -3,28 +3,27 @@
 import React from 'react';
 import {
   LayoutDashboard,
-  Home,
-  Calendar,
+  FolderKanban,
   Briefcase,
-  Scroll,
-  Users,
+  UserCheck,
+  History,
+  Crown,
   Award,
   Image as ImageIcon,
   Settings,
   ExternalLink,
   LogOut,
-  Crown,
   X,
 } from 'lucide-react';
 import { FullCmsDatabase } from '../../lib/cms/types';
 
 export type AdminTab =
   | 'overview'
-  | 'home'
-  | 'meetings'
+  | 'projects'
   | 'services'
-  | 'charter'
-  | 'team'
+  | 'about'
+  | 'career'
+  | 'lionistic'
   | 'achievements'
   | 'media'
   | 'settings';
@@ -48,30 +47,32 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
 }) => {
   const navItems = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
-    { id: 'home', label: 'Home', icon: Home },
     {
-      id: 'meetings',
-      label: 'Meetings',
-      icon: Calendar,
-      count: cmsData?.meetings?.length,
+      id: 'projects',
+      label: 'Projects & Activities',
+      icon: FolderKanban,
+      count: cmsData?.projects?.length,
     },
     {
       id: 'services',
-      label: 'Services',
+      label: 'Services Involved',
       icon: Briefcase,
       count: cmsData?.services?.length,
     },
+    { id: 'about', label: 'About Me', icon: UserCheck },
     {
-      id: 'charter',
-      label: 'Charter',
-      icon: Scroll,
-      count: cmsData?.charter?.length,
+      id: 'career',
+      label: 'Career & Experience',
+      icon: History,
+      count:
+        (cmsData?.career?.experiences?.length || 0) +
+        (cmsData?.career?.certificatesAndAwards?.length || 0),
     },
     {
-      id: 'team',
-      label: 'Team',
-      icon: Users,
-      count: cmsData?.team?.length,
+      id: 'lionistic',
+      label: 'Lionistic Journey',
+      icon: Crown,
+      count: cmsData?.lionisticJourney?.milestones?.length,
     },
     {
       id: 'achievements',

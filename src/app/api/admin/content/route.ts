@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { getSessionFromRequest } from '../../../../lib/auth';
 import { ensureCmsDatabase, saveCmsDatabase } from '../../../../lib/cms/storage';
 import { FullCmsDatabase } from '../../../../lib/cms/types';
@@ -34,6 +35,15 @@ export async function POST(request: NextRequest) {
     }
 
     saveCmsDatabase(body);
+
+    // Invalidate static caches so public pages immediately render latest CMS data
+    try {
+      revalidatePath('/', 'page');
+      revalidatePath('/api/content');
+    } catch (revalErr) {
+      console.warn('Revalidation warning:', revalErr);
+    }
+
     return NextResponse.json({
       success: true,
       message: 'Website content updated and published successfully',

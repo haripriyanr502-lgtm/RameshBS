@@ -1,5 +1,35 @@
 [
   {
+    "id": "med-1790360173186",
+    "fileName": "whatsapp-image-2026-09-25-at-11.11.48-pm.jpeg",
+    "url": "/uploads/general/1790360173186-whatsapp-image-2026-09-25-at-11.11.48-pm.jpeg",
+    "category": "General",
+    "mimeType": "image/jpeg",
+    "sizeBytes": 143689,
+    "uploadedAt": "2026-09-25T18:16:13.219Z",
+    "altText": "whatsapp-image-2026-09-25-at-11.11.48-pm.jpeg"
+  },
+  {
+    "id": "med-1790360061840",
+    "fileName": "whatsapp-image-2026-09-25-at-11.11.48-pm.jpeg",
+    "url": "/uploads/hero/1790360061840-whatsapp-image-2026-09-25-at-11.11.48-pm.jpeg",
+    "category": "Hero",
+    "mimeType": "image/jpeg",
+    "sizeBytes": 143689,
+    "uploadedAt": "2026-09-25T18:14:21.844Z",
+    "altText": "whatsapp-image-2026-09-25-at-11.11.48-pm.jpeg"
+  },
+  {
+    "id": "med-1790358192332",
+    "fileName": "whatsapp-image-2026-09-25-at-11.11.48-pm.jpeg",
+    "url": "/uploads/general/1790358192332-whatsapp-image-2026-09-25-at-11.11.48-pm.jpeg",
+    "category": "General",
+    "mimeType": "image/jpeg",
+    "sizeBytes": 143689,
+    "uploadedAt": "2026-09-25T17:43:12.337Z",
+    "altText": "whatsapp-image-2026-09-25-at-11.11.48-pm.jpeg"
+  },
+  {
     "id": "med-1",
     "fileName": "bs_ramesh_profile.jpg",
     "url": "/images/bs_ramesh_profile.jpg",

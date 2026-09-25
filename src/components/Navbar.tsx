@@ -8,7 +8,7 @@ import { RegionChairDropdown } from './RegionChairDropdown';
 
 interface NavbarProps {
   personalInfo: PersonalInfo;
-  onOpenImporter: () => void;
+  onOpenImporter?: () => void;
 }
 
 const navItems = [

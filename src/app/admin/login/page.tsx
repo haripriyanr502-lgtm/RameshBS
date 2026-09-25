@@ -6,8 +6,8 @@ import { Crown, Lock, Mail, ArrowRight, ShieldCheck, AlertCircle, Eye, EyeOff } 
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('admin@portfolio.com');
-  const [password, setPassword] = useState('admin123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -73,7 +73,7 @@ export default function AdminLoginPage() {
           <form onSubmit={handleLogin} className="space-y-5">
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
-                Owner Email
+                Email
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
@@ -84,7 +84,8 @@ export default function AdminLoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@portfolio.com"
+                  placeholder="Enter your email"
+                  autoComplete="email"
                   className="w-full pl-10 pr-4 py-3 bg-slate-950/80 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
                 />
               </div>
@@ -103,7 +104,8 @@ export default function AdminLoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder="Enter your password"
+                  autoComplete="current-password"
                   className="w-full pl-10 pr-11 py-3 bg-slate-950/80 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
                 />
                 <button
@@ -125,30 +127,12 @@ export default function AdminLoginPage() {
                 <div className="w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
-                  <span>Sign In to Dashboard</span>
+                  <span>Sign In</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </>
               )}
             </button>
           </form>
-
-          {/* Development credentials box */}
-          <div className="mt-6 pt-5 border-t border-slate-800">
-            <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/80">
-              <div className="flex items-center gap-2 text-[11px] font-bold text-amber-400 uppercase tracking-wider mb-1.5">
-                <ShieldCheck className="w-3.5 h-3.5" />
-                <span>Development Credentials</span>
-              </div>
-              <div className="text-xs text-slate-400 space-y-1 font-mono">
-                <div>
-                  Email: <span className="text-slate-200 font-semibold">admin@portfolio.com</span>
-                </div>
-                <div>
-                  Password: <span className="text-slate-200 font-semibold">admin123</span>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Security footnote */}

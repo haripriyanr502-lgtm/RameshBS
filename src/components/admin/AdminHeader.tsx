@@ -28,32 +28,32 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
       case 'overview':
         return {
           title: 'CMS Dashboard Overview',
-          subtitle: 'Welcome to your private LCB Brigade & portfolio management hub.',
+          subtitle: 'Welcome to your executive portfolio management and content hub.',
         };
-      case 'home':
+      case 'projects':
         return {
-          title: 'Home & Hero Content',
-          subtitle: 'Manage hero banner, titles, introductions, core values, and section headings.',
-        };
-      case 'meetings':
-        return {
-          title: 'Meetings & Assemblies',
-          subtitle: 'Add, edit, or delete DGAM meetings, zone socials, and club assemblies.',
+          title: 'Projects & Field Activities',
+          subtitle: 'Add, edit, or delete service missions, meetings, videos, and field initiatives.',
         };
       case 'services':
         return {
           title: 'Services Involved In',
           subtitle: 'Manage enterprise platforms, CSR water projects, and talent staffing offerings.',
         };
-      case 'charter':
+      case 'about':
         return {
-          title: 'LCB Brigade Charter Editor',
-          subtitle: 'Structured governance editor for club charter, bylaws, and community protocols.',
+          title: 'About Me Management',
+          subtitle: 'Manage biography narrative, vision, mission, core values, and executive highlights.',
         };
-      case 'team':
+      case 'career':
         return {
-          title: 'Team & Leadership Roster',
-          subtitle: 'Manage club officers, district advisors, and corporate executive personnel.',
+          title: 'Career & Experience',
+          subtitle: 'Manage corporate trajectory, executive positions, and academic/service honors.',
+        };
+      case 'lionistic':
+        return {
+          title: 'Lionistic Journey & Governance',
+          subtitle: 'Manage Melvin Jones Fellow (MJF) honor, district milestones, and delegation articles.',
         };
       case 'achievements':
         return {
@@ -69,6 +69,11 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
         return {
           title: 'Website Settings & SEO',
           subtitle: 'Configure contact details, SEO meta tags, and change account passwords.',
+        };
+      default:
+        return {
+          title: 'Executive CMS Dashboard',
+          subtitle: 'Manage your portfolio website content.',
         };
     }
   };

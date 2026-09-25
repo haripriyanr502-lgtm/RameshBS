@@ -14,6 +14,9 @@ import {
   CheckCircle2,
   Clock,
   Sparkles,
+  FolderKanban,
+  History,
+  Crown,
 } from 'lucide-react';
 import { FullCmsDatabase } from '../../../lib/cms/types';
 import { AdminTab } from '../AdminSidebar';
@@ -29,57 +32,62 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
   onNavigateTab,
   onSave,
 }) => {
-  const publishedMeetings = cmsData.meetings.filter((m) => m.status === 'published').length;
-  const publishedServices = cmsData.services.filter((s) => s.status === 'published').length;
-  const publishedTeam = cmsData.team.filter((t) => t.status === 'published').length;
-  const publishedAchievements = cmsData.achievements.filter((a) => a.status === 'published').length;
-  const publishedCharter = cmsData.charter.filter((c) => c.status === 'published').length;
+  const totalProjects = cmsData.projects?.length || 0;
+  const publishedProjects = (cmsData.projects || []).filter((p) => p.status === 'published').length;
+  const totalServices = cmsData.services?.length || 0;
+  const publishedServices = (cmsData.services || []).filter((s) => s.status === 'published').length;
+  const totalCareer =
+    (cmsData.career?.experiences?.length || 0) +
+    (cmsData.career?.certificatesAndAwards?.length || 0);
+  const totalMilestones = cmsData.lionisticJourney?.milestones?.length || 0;
+  const totalAchievements = cmsData.achievements?.length || 0;
+  const totalMedia = cmsData.media?.length || 0;
 
   const statCards = [
     {
-      title: 'Meetings & DGAMs',
-      count: cmsData.meetings.length,
-      published: publishedMeetings,
-      icon: Calendar,
-      tab: 'meetings' as AdminTab,
-      color: 'from-blue-500/20 to-indigo-500/20 text-blue-400 border-blue-500/30',
-    },
-    {
-      title: 'Services Involved',
-      count: cmsData.services.length,
-      published: publishedServices,
-      icon: Briefcase,
-      tab: 'services' as AdminTab,
+      title: 'Projects & Activities',
+      count: totalProjects,
+      published: publishedProjects,
+      icon: FolderKanban,
+      tab: 'projects' as AdminTab,
       color: 'from-amber-500/20 to-yellow-500/20 text-amber-400 border-amber-500/30',
     },
     {
-      title: 'Charter Sections',
-      count: cmsData.charter.length,
-      published: publishedCharter,
-      icon: Scroll,
-      tab: 'charter' as AdminTab,
-      color: 'from-emerald-500/20 to-teal-500/20 text-emerald-400 border-emerald-500/30',
+      title: 'Services Involved',
+      count: totalServices,
+      published: publishedServices,
+      icon: Briefcase,
+      tab: 'services' as AdminTab,
+      color: 'from-blue-500/20 to-indigo-500/20 text-blue-400 border-blue-500/30',
     },
     {
-      title: 'Team & Officers',
-      count: cmsData.team.length,
-      published: publishedTeam,
-      icon: Users,
-      tab: 'team' as AdminTab,
+      title: 'Career & Experience',
+      count: totalCareer,
+      published: totalCareer,
+      icon: History,
+      tab: 'career' as AdminTab,
       color: 'from-purple-500/20 to-pink-500/20 text-purple-400 border-purple-500/30',
     },
     {
-      title: 'Achievements & CSR',
-      count: cmsData.achievements.length,
-      published: publishedAchievements,
+      title: 'Lionistic Journey',
+      count: totalMilestones,
+      published: totalMilestones,
+      icon: Crown,
+      tab: 'lionistic' as AdminTab,
+      color: 'from-emerald-500/20 to-teal-500/20 text-emerald-400 border-emerald-500/30',
+    },
+    {
+      title: 'Achievements & Honors',
+      count: totalAchievements,
+      published: (cmsData.achievements || []).filter((a) => a.status === 'published').length,
       icon: Award,
       tab: 'achievements' as AdminTab,
-      color: 'from-amber-500/20 to-orange-500/20 text-amber-400 border-amber-500/30',
+      color: 'from-orange-500/20 to-amber-500/20 text-orange-400 border-orange-500/30',
     },
     {
       title: 'Media Library Assets',
-      count: cmsData.media.length,
-      published: cmsData.media.length,
+      count: totalMedia,
+      published: totalMedia,
       icon: ImageIcon,
       tab: 'media' as AdminTab,
       color: 'from-cyan-500/20 to-sky-500/20 text-cyan-400 border-cyan-500/30',
@@ -202,47 +210,58 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           <button
-            onClick={() => onNavigateTab('meetings')}
+            onClick={() => onNavigateTab('projects')}
             className="p-4 rounded-2xl bg-slate-950 border border-slate-800 hover:border-amber-400/60 hover:bg-slate-850 text-center transition-all group cursor-pointer"
           >
-            <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
-              <Plus className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
+              <FolderKanban className="w-5 h-5" />
             </div>
-            <span className="text-xs font-bold text-slate-200 block">Add Meeting</span>
-            <span className="text-[10px] text-slate-500">DGAM or Assembly</span>
+            <span className="text-xs font-bold text-slate-200 block">Projects</span>
+            <span className="text-[10px] text-slate-500">Activities & Missions</span>
           </button>
 
           <button
             onClick={() => onNavigateTab('services')}
             className="p-4 rounded-2xl bg-slate-950 border border-slate-800 hover:border-amber-400/60 hover:bg-slate-850 text-center transition-all group cursor-pointer"
           >
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
-              <Plus className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
+              <Briefcase className="w-5 h-5" />
             </div>
-            <span className="text-xs font-bold text-slate-200 block">Add Service</span>
-            <span className="text-[10px] text-slate-500">CSR or IT Offering</span>
+            <span className="text-xs font-bold text-slate-200 block">Services</span>
+            <span className="text-[10px] text-slate-500">CSR & IT Offerings</span>
           </button>
 
           <button
-            onClick={() => onNavigateTab('team')}
+            onClick={() => onNavigateTab('about')}
+            className="p-4 rounded-2xl bg-slate-950 border border-slate-800 hover:border-amber-400/60 hover:bg-slate-850 text-center transition-all group cursor-pointer"
+          >
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <span className="text-xs font-bold text-slate-200 block">About Me</span>
+            <span className="text-[10px] text-slate-500">Bio & Values</span>
+          </button>
+
+          <button
+            onClick={() => onNavigateTab('career')}
             className="p-4 rounded-2xl bg-slate-950 border border-slate-800 hover:border-amber-400/60 hover:bg-slate-850 text-center transition-all group cursor-pointer"
           >
             <div className="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
-              <Plus className="w-5 h-5" />
+              <History className="w-5 h-5" />
             </div>
-            <span className="text-xs font-bold text-slate-200 block">Add Member</span>
-            <span className="text-[10px] text-slate-500">Leadership Roster</span>
+            <span className="text-xs font-bold text-slate-200 block">Career</span>
+            <span className="text-[10px] text-slate-500">Timeline & Awards</span>
           </button>
 
           <button
-            onClick={() => onNavigateTab('achievements')}
+            onClick={() => onNavigateTab('lionistic')}
             className="p-4 rounded-2xl bg-slate-950 border border-slate-800 hover:border-amber-400/60 hover:bg-slate-850 text-center transition-all group cursor-pointer"
           >
             <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
-              <Plus className="w-5 h-5" />
+              <Crown className="w-5 h-5" />
             </div>
-            <span className="text-xs font-bold text-slate-200 block">Add Honor</span>
-            <span className="text-[10px] text-slate-500">Award or Milestone</span>
+            <span className="text-xs font-bold text-slate-200 block">Lionistic</span>
+            <span className="text-[10px] text-slate-500">MJF & Milestones</span>
           </button>
 
           <button
@@ -253,18 +272,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
               <ImageIcon className="w-5 h-5" />
             </div>
             <span className="text-xs font-bold text-slate-200 block">Upload Media</span>
-            <span className="text-[10px] text-slate-500">Posters & Photos</span>
-          </button>
-
-          <button
-            onClick={() => onNavigateTab('home')}
-            className="p-4 rounded-2xl bg-slate-950 border border-slate-800 hover:border-amber-400/60 hover:bg-slate-850 text-center transition-all group cursor-pointer"
-          >
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
-              <Sparkles className="w-5 h-5" />
-            </div>
-            <span className="text-xs font-bold text-slate-200 block">Edit Hero</span>
-            <span className="text-[10px] text-slate-500">Titles & Bio</span>
+            <span className="text-[10px] text-slate-500">Photos & Assets</span>
           </button>
         </div>
       </div>

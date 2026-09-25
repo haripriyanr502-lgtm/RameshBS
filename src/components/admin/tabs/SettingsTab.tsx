@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { SiteSettings } from '../../../lib/cms/types';
 import { useToast } from '../Toast';
+import { ImageUploader } from '../ImageUploader';
 import { Save, Lock, Shield, Globe, Mail, Phone, MapPin, Eye, EyeOff } from 'lucide-react';
 
 interface SettingsTabProps {
@@ -202,6 +203,17 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
               value={settings.website}
               onChange={(e) => handleFieldChange('website', e.target.value)}
               className="w-full px-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+            />
+          </div>
+
+          <div className="md:col-span-2 pt-4 border-t border-slate-800">
+            <ImageUploader
+              label="Hero Banner Profile Photo"
+              imageUrl={settings.heroImage}
+              defaultCategory="Hero"
+              aspectRatio="portrait"
+              helperText="The primary executive photo displayed in the Hero banner at the top of the public homepage."
+              onChange={(url) => handleFieldChange('heroImage', url)}
             />
           </div>
         </div>

@@ -1,17 +1,17 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { FullCmsDatabase } from '../../../lib/cms/types';
 import { ToastProvider, useToast } from '../../../components/admin/Toast';
 import { AdminSidebar, AdminTab } from '../../../components/admin/AdminSidebar';
 import { AdminHeader } from '../../../components/admin/AdminHeader';
 import { OverviewTab } from '../../../components/admin/tabs/OverviewTab';
-import { HomeTab } from '../../../components/admin/tabs/HomeTab';
-import { MeetingsTab } from '../../../components/admin/tabs/MeetingsTab';
+import { ProjectsTab } from '../../../components/admin/tabs/ProjectsTab';
 import { ServicesTab } from '../../../components/admin/tabs/ServicesTab';
-import { CharterTab } from '../../../components/admin/tabs/CharterTab';
-import { TeamTab } from '../../../components/admin/tabs/TeamTab';
+import { AboutTab } from '../../../components/admin/tabs/AboutTab';
+import { CareerTab } from '../../../components/admin/tabs/CareerTab';
+import { LionisticTab } from '../../../components/admin/tabs/LionisticTab';
 import { AchievementsTab } from '../../../components/admin/tabs/AchievementsTab';
 import { MediaTab } from '../../../components/admin/tabs/MediaTab';
 import { SettingsTab } from '../../../components/admin/tabs/SettingsTab';
@@ -55,16 +55,22 @@ function DashboardContent() {
     checkAuthAndLoad();
   }, [router, showToast]);
 
+  const cmsDataRef = useRef<FullCmsDatabase | null>(null);
+  useEffect(() => {
+    cmsDataRef.current = cmsData;
+  }, [cmsData]);
+
   // Save & publish all changes
   const handleSaveAll = useCallback(async () => {
-    if (!cmsData) return;
+    const payload = cmsDataRef.current || cmsData;
+    if (!payload) return;
 
     setIsSaving(true);
     try {
       const res = await fetch('/api/admin/content', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(cmsData),
+        body: JSON.stringify(payload),
       });
 
       const result = await res.json();
@@ -101,46 +107,84 @@ function DashboardContent() {
     }
   };
 
-  // Updaters for specific content domains
-  const handleUpdateHome = (home: FullCmsDatabase['home']) => {
-    if (!cmsData) return;
-    setCmsData({ ...cmsData, home });
+  // Updaters for specific content domains (functional & atomic)
+  const handleUpdateProjects = (projects: FullCmsDatabase['projects']) => {
+    setCmsData((prev) => {
+      if (!prev) return prev;
+      const next = { ...prev, projects };
+      cmsDataRef.current = next;
+      return next;
+    });
     setHasUnsavedChanges(true);
   };
 
-  const handleUpdateMeetings = (meetings: FullCmsDatabase['meetings']) => {
-    if (!cmsData) return;
-    setCmsData({ ...cmsData, meetings });
+  const handleUpdateAbout = (
+    home: FullCmsDatabase['home'],
+    aboutExtras: FullCmsDatabase['aboutExtras']
+  ) => {
+    setCmsData((prev) => {
+      if (!prev) return prev;
+      const next = { ...prev, home, aboutExtras };
+      cmsDataRef.current = next;
+      return next;
+    });
     setHasUnsavedChanges(true);
   };
 
   const handleUpdateServices = (services: FullCmsDatabase['services']) => {
-    if (!cmsData) return;
-    setCmsData({ ...cmsData, services });
+    setCmsData((prev) => {
+      if (!prev) return prev;
+      const next = { ...prev, services };
+      cmsDataRef.current = next;
+      return next;
+    });
     setHasUnsavedChanges(true);
   };
 
-  const handleUpdateCharter = (charter: FullCmsDatabase['charter']) => {
-    if (!cmsData) return;
-    setCmsData({ ...cmsData, charter });
+  const handleUpdateCareer = (career: FullCmsDatabase['career']) => {
+    setCmsData((prev) => {
+      if (!prev) return prev;
+      const next = { ...prev, career };
+      cmsDataRef.current = next;
+      return next;
+    });
     setHasUnsavedChanges(true);
   };
 
-  const handleUpdateTeam = (team: FullCmsDatabase['team']) => {
-    if (!cmsData) return;
-    setCmsData({ ...cmsData, team });
+  const handleUpdateLionistic = (lionisticJourney: FullCmsDatabase['lionisticJourney']) => {
+    setCmsData((prev) => {
+      if (!prev) return prev;
+      const next = { ...prev, lionisticJourney };
+      cmsDataRef.current = next;
+      return next;
+    });
     setHasUnsavedChanges(true);
   };
 
   const handleUpdateAchievements = (achievements: FullCmsDatabase['achievements']) => {
-    if (!cmsData) return;
-    setCmsData({ ...cmsData, achievements });
+    setCmsData((prev) => {
+      if (!prev) return prev;
+      const next = { ...prev, achievements };
+      cmsDataRef.current = next;
+      return next;
+    });
     setHasUnsavedChanges(true);
   };
 
   const handleUpdateSettings = (settings: FullCmsDatabase['settings']) => {
-    if (!cmsData) return;
-    setCmsData({ ...cmsData, settings });
+    setCmsData((prev) => {
+      if (!prev) return prev;
+      const next = {
+        ...prev,
+        settings,
+        home: {
+          ...prev.home,
+          heroImage: settings.heroImage !== undefined ? settings.heroImage : prev.home.heroImage,
+        },
+      };
+      cmsDataRef.current = next;
+      return next;
+    });
     setHasUnsavedChanges(true);
   };
 
@@ -198,50 +242,51 @@ function DashboardContent() {
             />
           )}
 
-          {activeTab === 'home' && (
-            <HomeTab
-              homeData={cmsData.home}
-              onChange={handleUpdateHome}
-              onSave={handleSaveAll}
-              isSaving={isSaving}
-            />
-          )}
-
-          {activeTab === 'meetings' && (
-            <MeetingsTab
-              meetings={cmsData.meetings}
-              onChange={handleUpdateMeetings}
+          {activeTab === 'projects' && (
+            <ProjectsTab
+              projects={cmsData.projects || []}
+              onChange={handleUpdateProjects}
               onSave={handleSaveAll}
             />
           )}
 
           {activeTab === 'services' && (
             <ServicesTab
-              services={cmsData.services}
+              services={cmsData.services || []}
               onChange={handleUpdateServices}
               onSave={handleSaveAll}
             />
           )}
 
-          {activeTab === 'charter' && (
-            <CharterTab
-              charterSections={cmsData.charter}
-              onChange={handleUpdateCharter}
+          {activeTab === 'about' && (
+            <AboutTab
+              cmsData={cmsData}
+              onUpdateAbout={handleUpdateAbout}
+              onSave={handleSaveAll}
+              isSaving={isSaving}
+            />
+          )}
+
+          {activeTab === 'career' && (
+            <CareerTab
+              careerData={cmsData.career}
+              onChange={handleUpdateCareer}
               onSave={handleSaveAll}
             />
           )}
 
-          {activeTab === 'team' && (
-            <TeamTab
-              team={cmsData.team}
-              onChange={handleUpdateTeam}
+          {activeTab === 'lionistic' && (
+            <LionisticTab
+              lionisticData={cmsData.lionisticJourney}
+              onChange={handleUpdateLionistic}
               onSave={handleSaveAll}
+              isSaving={isSaving}
             />
           )}
 
           {activeTab === 'achievements' && (
             <AchievementsTab
-              achievements={cmsData.achievements}
+              achievements={cmsData.achievements || []}
               onChange={handleUpdateAchievements}
               onSave={handleSaveAll}
             />

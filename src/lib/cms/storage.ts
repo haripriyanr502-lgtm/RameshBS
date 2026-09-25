@@ -10,6 +10,10 @@ import {
   AchievementItem,
   CharterSectionItem,
   MediaAsset,
+  CmsProjectItem,
+  CmsCareerData,
+  CmsLionisticData,
+  CmsAboutExtras,
 } from './types';
 import { initialPortfolioData } from '../../data/portfolioData';
 
@@ -407,11 +411,63 @@ function createInitialCmsDatabase(): FullCmsDatabase {
     },
   ];
 
+  const projects: CmsProjectItem[] = (p.activities?.activities || []).map((a, idx) => ({
+    id: a.id,
+    title: a.title,
+    category: a.category,
+    description: a.description,
+    hashtags: a.hashtags || [],
+    date: a.date,
+    location: a.location,
+    image: a.url || (a.youtubeId ? `https://img.youtube.com/vi/${a.youtubeId}/hqdefault.jpg` : ''),
+    url: a.url,
+    youtubeId: a.youtubeId,
+    status: 'published',
+    displayOrder: idx + 1,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  }));
+
+  const career: CmsCareerData = {
+    heading: p.career?.heading || 'CAREER TRAJECTORY & EXPERIENCE',
+    subheading: p.career?.subheading || 'Over 22 Years of Entrepreneurial Leadership',
+    resumeUrl: p.career?.resumeUrl || '#download-resume',
+    experiences: p.career?.experiences || [],
+    certificatesAndAwards: p.career?.certificatesAndAwards || [],
+  };
+
+  const lionisticJourney: CmsLionisticData = {
+    heading: p.lionisticJourney?.heading || 'MY LIONISTIC JOURNEY',
+    subheading: p.lionisticJourney?.subheading || 'Dedicated Service, District Leadership & MJF Honor',
+    overview: p.lionisticJourney?.overview || '',
+    mjfHonor: p.lionisticJourney?.mjfHonor || {
+      year: '2025 - 2026',
+      title: 'Melvin Jones Fellow (MJF)',
+      organization: 'Lions Clubs International Foundation (LCIF)',
+      description: 'Conferred the prestigious Melvin Jones Fellow (MJF) recognition in 2025-2026.',
+      highlights: [],
+    },
+    milestones: p.lionisticJourney?.milestones || [],
+    internationalExposures: p.lionisticJourney?.internationalExposures || [],
+    blogPosts: p.lionisticJourney?.blogPosts || [],
+  };
+
+  const aboutExtras: CmsAboutExtras = {
+    highlights: p.about?.highlights || [],
+    vision: p.about?.vision || '',
+    mission: p.about?.mission || '',
+    coreValues: p.about?.coreValues || [],
+  };
+
   return {
     settings,
     home,
-    meetings,
+    aboutExtras,
+    projects,
     services,
+    career,
+    lionisticJourney,
+    meetings,
     team,
     achievements,
     charter,
@@ -436,6 +492,36 @@ export function ensureCmsDatabase(): FullCmsDatabase {
 
     const raw = fs.readFileSync(CONTENT_FILE, 'utf-8');
     const data = JSON.parse(raw) as FullCmsDatabase;
+
+    // Auto-migrate newly supported sections if missing from existing JSON
+    let modified = false;
+    const initialSeed = createInitialCmsDatabase();
+
+    if (!data.projects || data.projects.length === 0) {
+      data.projects = initialSeed.projects;
+      modified = true;
+    }
+    if (!data.career) {
+      data.career = initialSeed.career;
+      modified = true;
+    }
+    if (!data.lionisticJourney) {
+      data.lionisticJourney = initialSeed.lionisticJourney;
+      modified = true;
+    }
+    if (!data.aboutExtras) {
+      data.aboutExtras = initialSeed.aboutExtras;
+      modified = true;
+    }
+
+    if (modified) {
+      try {
+        fs.writeFileSync(CONTENT_FILE, JSON.stringify(data, null, 2), 'utf-8');
+      } catch (writeErr) {
+        console.error('Failed to update migrated CMS content:', writeErr);
+      }
+    }
+
     return data;
   } catch (err) {
     console.error('Error reading CMS database, resetting to seed data:', err);
@@ -467,6 +553,7 @@ export function getPublishedCmsData(): FullCmsDatabase {
   const data = ensureCmsDatabase();
   return {
     ...data,
+    projects: (data.projects || []).filter((p) => p.status === 'published'),
     meetings: (data.meetings || []).filter((m) => m.status === 'published'),
     services: (data.services || []).filter((s) => s.status === 'published'),
     team: (data.team || []).filter((t) => t.status === 'published'),

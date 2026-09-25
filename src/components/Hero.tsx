@@ -8,7 +8,7 @@ import { RegionChairDropdown } from './RegionChairDropdown';
 
 interface HeroProps {
   personalInfo: PersonalInfo;
-  onOpenImporter: () => void;
+  onOpenImporter?: () => void;
 }
 
 export const Hero: React.FC<HeroProps> = ({ personalInfo, onOpenImporter }) => {

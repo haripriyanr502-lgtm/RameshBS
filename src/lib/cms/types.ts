@@ -1,3 +1,13 @@
+import {
+  Achievement,
+  Highlight,
+  CareerExperience,
+  CertificateAward,
+  LionisticMilestone,
+  InternationalExposureItem,
+  LionisticBlogPost,
+} from '../../types/portfolio';
+
 export type ContentStatus = 'draft' | 'published';
 
 export interface SiteSettings {
@@ -49,6 +59,54 @@ export interface HomeContent {
   aboutCoreValues: string[];
   aboutImage: string;
   sectionHeadings: SectionHeadings;
+}
+
+export interface CmsAboutExtras {
+  highlights: Highlight[];
+  vision: string;
+  mission: string;
+  coreValues: string[];
+}
+
+export interface CmsProjectItem {
+  id: string;
+  title: string;
+  category: string;
+  description: string;
+  hashtags: string[];
+  date?: string;
+  location?: string;
+  image?: string;
+  url?: string;
+  youtubeId?: string;
+  status: ContentStatus;
+  displayOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CmsCareerData {
+  heading: string;
+  subheading: string;
+  resumeUrl: string;
+  experiences: CareerExperience[];
+  certificatesAndAwards: CertificateAward[];
+}
+
+export interface CmsLionisticData {
+  heading: string;
+  subheading: string;
+  overview: string;
+  mjfHonor: {
+    year: string;
+    title: string;
+    organization: string;
+    description: string;
+    highlights: string[];
+  };
+  milestones: LionisticMilestone[];
+  internationalExposures: InternationalExposureItem[];
+  blogPosts: LionisticBlogPost[];
 }
 
 export interface MeetingItem {
@@ -140,8 +198,12 @@ export interface MediaAsset {
 export interface FullCmsDatabase {
   settings: SiteSettings;
   home: HomeContent;
-  meetings: MeetingItem[];
+  aboutExtras?: CmsAboutExtras;
+  projects: CmsProjectItem[];
   services: CmsServiceItem[];
+  career: CmsCareerData;
+  lionisticJourney: CmsLionisticData;
+  meetings: MeetingItem[];
   team: TeamMemberItem[];
   achievements: AchievementItem[];
   charter: CharterSectionItem[];
