@@ -2,7 +2,12 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export const config = {
-  matcher: ['/admin/dashboard/:path*', '/admin/dashboard'],
+  matcher: [
+    '/admin/dashboard/:path*',
+    '/admin/dashboard',
+    '/admin/users/:path*',
+    '/admin/users',
+  ],
 };
 
 export default function proxy(request: NextRequest) {

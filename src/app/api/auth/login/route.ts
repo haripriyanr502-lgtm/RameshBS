@@ -13,15 +13,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const user = authenticateUser(email, password);
+    const { user, error } = authenticateUser(email, password);
     if (!user) {
       return NextResponse.json(
-        { error: 'Invalid email or password' },
+        { error: error || 'Invalid email or password' },
         { status: 401 }
       );
     }
 
-    const token = createSessionToken(user.email, user.role);
+    const token = createSessionToken(user.email, user.role, user.id);
     const response = NextResponse.json({
       success: true,
       message: 'Login successful',

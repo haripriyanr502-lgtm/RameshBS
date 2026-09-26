@@ -11,16 +11,20 @@ export const COOKIE_NAME = 'admin_session';
 export interface AdminUser {
   id: string;
   email: string;
-  role: 'owner' | 'admin';
+  role: 'owner' | 'admin' | 'editor';
+  status: 'active' | 'disabled';
   salt: string;
   passwordHash: string;
+  createdAt: string;
   updatedAt: string;
 }
+
+export type SafeAdminUser = Omit<AdminUser, 'salt' | 'passwordHash'>;
 
 export interface SessionPayload {
   sub: string;
   email: string;
-  role: string;
+  role: 'owner' | 'admin' | 'editor';
   iat: number;
   exp: number;
 }
@@ -56,11 +60,16 @@ function base64UrlDecode(str: string): string {
 }
 
 // Create signed JWT
-export function createSessionToken(email: string, role = 'owner', expiresInDays = 7): string {
+export function createSessionToken(
+  email: string,
+  role: 'owner' | 'admin' | 'editor' = 'owner',
+  id = '',
+  expiresInDays = 7
+): string {
   const header = JSON.stringify({ alg: 'HS256', typ: 'JWT' });
   const now = Math.floor(Date.now() / 1000);
   const payload: SessionPayload = {
-    sub: 'admin-owner',
+    sub: id || email,
     email,
     role,
     iat: now,
@@ -116,7 +125,7 @@ export function verifySessionToken(token: string): SessionPayload | null {
   }
 }
 
-// Ensure users.json exists with default admin credentials
+// Ensure users.json exists with default admin credentials & normalized structure
 export function ensureUsersFile(): AdminUser[] {
   try {
     const dir = path.dirname(USERS_FILE);
@@ -130,8 +139,10 @@ export function ensureUsersFile(): AdminUser[] {
         id: 'admin-1',
         email: 'admin@portfolio.com',
         role: 'owner',
+        status: 'active',
         salt,
         passwordHash: hash,
+        createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
       fs.writeFileSync(USERS_FILE, JSON.stringify([defaultUser], null, 2), 'utf-8');
@@ -139,19 +150,46 @@ export function ensureUsersFile(): AdminUser[] {
     }
 
     const raw = fs.readFileSync(USERS_FILE, 'utf-8');
-    const users = JSON.parse(raw) as AdminUser[];
+    let users = JSON.parse(raw) as AdminUser[];
     if (!users || users.length === 0) {
       const { salt, hash } = hashPassword('admin123');
       const defaultUser: AdminUser = {
         id: 'admin-1',
         email: 'admin@portfolio.com',
         role: 'owner',
+        status: 'active',
         salt,
         passwordHash: hash,
+        createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
       fs.writeFileSync(USERS_FILE, JSON.stringify([defaultUser], null, 2), 'utf-8');
       return [defaultUser];
+    }
+
+    // Auto-normalize legacy records without status or createdAt
+    let modified = false;
+    users = users.map((u, idx) => {
+      let itemChanged = false;
+      const copy = { ...u };
+      if (!copy.status) {
+        copy.status = 'active';
+        itemChanged = true;
+      }
+      if (!copy.role) {
+        copy.role = idx === 0 ? 'owner' : 'admin';
+        itemChanged = true;
+      }
+      if (!copy.createdAt) {
+        copy.createdAt = copy.updatedAt || new Date().toISOString();
+        itemChanged = true;
+      }
+      if (itemChanged) modified = true;
+      return copy;
+    });
+
+    if (modified) {
+      fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf-8');
     }
 
     return users;
@@ -162,20 +200,206 @@ export function ensureUsersFile(): AdminUser[] {
 }
 
 // Authenticate user credentials
-export function authenticateUser(email: string, password: string): AdminUser | null {
+export function authenticateUser(
+  email: string,
+  password: string
+): { user: AdminUser | null; error?: string } {
   const users = ensureUsersFile();
   const user = users.find(
     (u) => u.email.trim().toLowerCase() === email.trim().toLowerCase()
   );
-  if (!user) return null;
+  if (!user) {
+    return { user: null, error: 'Invalid email or password' };
+  }
+
+  if (user.status === 'disabled') {
+    return {
+      user: null,
+      error: 'This administrator account has been disabled. Please contact the site owner.',
+    };
+  }
 
   const isValid = verifyPassword(password, user.salt, user.passwordHash);
-  if (!isValid) return null;
+  if (!isValid) {
+    return { user: null, error: 'Invalid email or password' };
+  }
 
-  return user;
+  return { user };
 }
 
-// Change password
+// Get all administrators without exposing password hashes or salts
+export function getAllAdminUsers(): SafeAdminUser[] {
+  const users = ensureUsersFile();
+  return users.map(({ salt, passwordHash, ...safe }) => safe);
+}
+
+// Create a new administrator account (secured & hashed)
+export function createAdminUser(params: {
+  email: string;
+  password: string;
+  role?: 'owner' | 'admin' | 'editor';
+}): { success: boolean; user?: SafeAdminUser; error?: string } {
+  const email = (params.email || '').trim().toLowerCase();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email || !emailRegex.test(email)) {
+    return { success: false, error: 'Please enter a valid email address' };
+  }
+
+  if (!params.password || params.password.length < 6) {
+    return { success: false, error: 'Password must be at least 6 characters long' };
+  }
+
+  const users = ensureUsersFile();
+  if (users.some((u) => u.email.toLowerCase() === email)) {
+    return { success: false, error: 'An administrator with this email address already exists' };
+  }
+
+  const role = params.role || 'admin';
+  const { salt, hash } = hashPassword(params.password);
+  const newUser: AdminUser = {
+    id: `admin-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+    email,
+    role,
+    status: 'active',
+    salt,
+    passwordHash: hash,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+
+  users.push(newUser);
+  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf-8');
+
+  const { salt: _s, passwordHash: _p, ...safeUser } = newUser;
+  return { success: true, user: safeUser };
+}
+
+// Update an administrator's active/disabled status
+export function updateAdminUserStatus(
+  id: string,
+  newStatus: 'active' | 'disabled',
+  callerEmail: string
+): { success: boolean; error?: string } {
+  const users = ensureUsersFile();
+  const user = users.find((u) => u.id === id);
+  if (!user) {
+    return { success: false, error: 'Administrator account not found' };
+  }
+
+  if (user.email.toLowerCase() === callerEmail.toLowerCase()) {
+    return { success: false, error: 'You cannot disable your own administrator account' };
+  }
+
+  // Prevent disabling if this is the only active owner/admin
+  const activeAdmins = users.filter(
+    (u) => u.status === 'active' && (u.role === 'owner' || u.role === 'admin')
+  );
+  if (
+    (user.role === 'owner' || user.role === 'admin') &&
+    newStatus === 'disabled' &&
+    activeAdmins.length <= 1 &&
+    user.status === 'active'
+  ) {
+    return {
+      success: false,
+      error: 'Cannot disable the last active administrator. At least one active admin must remain.',
+    };
+  }
+
+  user.status = newStatus;
+  user.updatedAt = new Date().toISOString();
+  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf-8');
+  return { success: true };
+}
+
+// Update an administrator's role
+export function updateAdminUserRole(
+  id: string,
+  newRole: 'owner' | 'admin' | 'editor',
+  callerEmail: string
+): { success: boolean; error?: string } {
+  const users = ensureUsersFile();
+  const user = users.find((u) => u.id === id);
+  if (!user) {
+    return { success: false, error: 'Administrator account not found' };
+  }
+
+  if (user.email.toLowerCase() === callerEmail.toLowerCase() && newRole === 'editor') {
+    const activeAdmins = users.filter(
+      (u) => u.status === 'active' && (u.role === 'owner' || u.role === 'admin')
+    );
+    if (activeAdmins.length <= 1) {
+      return {
+        success: false,
+        error: 'Cannot remove administrative permissions from the only remaining administrator.',
+      };
+    }
+  }
+
+  user.role = newRole;
+  user.updatedAt = new Date().toISOString();
+  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf-8');
+  return { success: true };
+}
+
+// Reset an administrator's password
+export function resetAdminUserPassword(
+  id: string,
+  newPassword: string
+): { success: boolean; error?: string } {
+  if (!newPassword || newPassword.length < 6) {
+    return { success: false, error: 'Password must be at least 6 characters long' };
+  }
+
+  const users = ensureUsersFile();
+  const user = users.find((u) => u.id === id);
+  if (!user) {
+    return { success: false, error: 'Administrator account not found' };
+  }
+
+  const { salt, hash } = hashPassword(newPassword);
+  user.salt = salt;
+  user.passwordHash = hash;
+  user.updatedAt = new Date().toISOString();
+  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf-8');
+  return { success: true };
+}
+
+// Delete an administrator account
+export function deleteAdminUser(
+  id: string,
+  callerEmail: string
+): { success: boolean; error?: string } {
+  const users = ensureUsersFile();
+  const user = users.find((u) => u.id === id);
+  if (!user) {
+    return { success: false, error: 'Administrator account not found' };
+  }
+
+  if (user.email.toLowerCase() === callerEmail.toLowerCase()) {
+    return { success: false, error: 'You cannot delete your own administrator account' };
+  }
+
+  const activeAdmins = users.filter(
+    (u) => u.status === 'active' && (u.role === 'owner' || u.role === 'admin')
+  );
+  if (
+    (user.role === 'owner' || user.role === 'admin') &&
+    activeAdmins.length <= 1 &&
+    user.status === 'active'
+  ) {
+    return {
+      success: false,
+      error: 'Cannot delete the last remaining active administrator account.',
+    };
+  }
+
+  const updatedUsers = users.filter((u) => u.id !== id);
+  fs.writeFileSync(USERS_FILE, JSON.stringify(updatedUsers, null, 2), 'utf-8');
+  return { success: true };
+}
+
+// Change current password by email
 export function updatePassword(email: string, newPassword: string): boolean {
   const users = ensureUsersFile();
   const userIndex = users.findIndex(

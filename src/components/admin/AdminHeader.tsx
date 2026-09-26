@@ -70,6 +70,11 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           title: 'Website Settings & SEO',
           subtitle: 'Configure contact details, SEO meta tags, and change account passwords.',
         };
+      case 'users':
+        return {
+          title: 'Admin User Management',
+          subtitle: 'Create administrator accounts, manage access permissions, and reset credentials.',
+        };
       default:
         return {
           title: 'Executive CMS Dashboard',

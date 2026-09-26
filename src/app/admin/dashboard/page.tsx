@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect, useCallback, useRef, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { FullCmsDatabase } from '../../../lib/cms/types';
 import { ToastProvider, useToast } from '../../../components/admin/Toast';
 import { AdminSidebar, AdminTab } from '../../../components/admin/AdminSidebar';
@@ -15,12 +15,15 @@ import { LionisticTab } from '../../../components/admin/tabs/LionisticTab';
 import { AchievementsTab } from '../../../components/admin/tabs/AchievementsTab';
 import { MediaTab } from '../../../components/admin/tabs/MediaTab';
 import { SettingsTab } from '../../../components/admin/tabs/SettingsTab';
+import { UsersTab } from '../../../components/admin/tabs/UsersTab';
 
 function DashboardContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { showToast } = useToast();
 
   const [activeTab, setActiveTab] = useState<AdminTab>('overview');
+  const [currentUser, setCurrentUser] = useState<{ email: string; role: string } | null>(null);
   const [cmsData, setCmsData] = useState<FullCmsDatabase | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -36,6 +39,8 @@ function DashboardContent() {
           router.replace('/admin/login');
           return;
         }
+        const authData = await authRes.json();
+        setCurrentUser(authData.user);
 
         const contentRes = await fetch('/api/admin/content');
         if (contentRes.ok) {
@@ -54,6 +59,13 @@ function DashboardContent() {
 
     checkAuthAndLoad();
   }, [router, showToast]);
+
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam === 'users') {
+      setActiveTab('users');
+    }
+  }, [searchParams]);
 
   const cmsDataRef = useRef<FullCmsDatabase | null>(null);
   useEffect(() => {
@@ -216,6 +228,7 @@ function DashboardContent() {
         activeTab={activeTab}
         onTabChange={(tab) => setActiveTab(tab)}
         cmsData={cmsData}
+        currentUserRole={currentUser?.role}
         onLogout={handleLogout}
         isMobileOpen={isMobileMenuOpen}
         onCloseMobile={() => setIsMobileMenuOpen(false)}
@@ -302,6 +315,13 @@ function DashboardContent() {
               isSaving={isSaving}
             />
           )}
+
+          {activeTab === 'users' && (
+            <UsersTab
+              currentUserEmail={currentUser?.email}
+              currentUserRole={currentUser?.role}
+            />
+          )}
         </main>
       </div>
     </div>
@@ -311,7 +331,18 @@ function DashboardContent() {
 export default function AdminDashboardPage() {
   return (
     <ToastProvider>
-      <DashboardContent />
+      <Suspense
+        fallback={
+          <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-slate-400">
+            <div className="w-12 h-12 border-3 border-amber-400 border-t-transparent rounded-full animate-spin mb-4" />
+            <p className="text-xs uppercase tracking-widest font-bold text-slate-300">
+              Loading Owner Dashboard...
+            </p>
+          </div>
+        }
+      >
+        <DashboardContent />
+      </Suspense>
     </ToastProvider>
   );
 }

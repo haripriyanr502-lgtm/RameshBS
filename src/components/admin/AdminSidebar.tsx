@@ -11,6 +11,7 @@ import {
   Award,
   Image as ImageIcon,
   Settings,
+  ShieldCheck,
   ExternalLink,
   LogOut,
   X,
@@ -26,12 +27,14 @@ export type AdminTab =
   | 'lionistic'
   | 'achievements'
   | 'media'
-  | 'settings';
+  | 'settings'
+  | 'users';
 
 interface AdminSidebarProps {
   activeTab: AdminTab;
   onTabChange: (tab: AdminTab) => void;
   cmsData: FullCmsDatabase | null;
+  currentUserRole?: string;
   onLogout: () => void;
   isMobileOpen: boolean;
   onCloseMobile: () => void;
@@ -41,6 +44,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
   activeTab,
   onTabChange,
   cmsData,
+  currentUserRole,
   onLogout,
   isMobileOpen,
   onCloseMobile,
@@ -87,6 +91,9 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
       count: cmsData?.media?.length,
     },
     { id: 'settings', label: 'Website Settings', icon: Settings },
+    ...(currentUserRole !== 'editor'
+      ? [{ id: 'users' as AdminTab, label: 'Admin Users', icon: ShieldCheck }]
+      : []),
   ];
 
   const handleSelectTab = (tab: AdminTab) => {
