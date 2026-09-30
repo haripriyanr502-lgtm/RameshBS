@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   X,
@@ -44,16 +44,16 @@ export const MediaPickerModal: React.FC<MediaPickerModalProps> = ({
   // Upload tab state
   const [uploadCategory, setUploadCategory] = useState<MediaAsset['category']>(defaultCategory);
   const [customUrlInput, setCustomUrlInput] = useState('');
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
 
-  // Fetch media items on open
-  useEffect(() => {
+  if (isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen);
     if (isOpen) {
       setSelectedUrl(currentImageUrl || '');
-      fetchMedia();
     }
-  }, [isOpen, currentImageUrl]);
+  }
 
-  const fetchMedia = async () => {
+  const fetchMedia = useCallback(async () => {
     setIsLoading(true);
     try {
       const res = await fetch('/api/admin/media');
@@ -66,7 +66,32 @@ export const MediaPickerModal: React.FC<MediaPickerModalProps> = ({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [showToast]);
+
+  // Fetch media items on open
+  useEffect(() => {
+    if (!isOpen) return;
+    let ignore = false;
+    const load = async () => {
+      try {
+        const res = await fetch('/api/admin/media');
+        if (!ignore && res.ok) {
+          const data = await res.json();
+          setMediaList(data);
+        } else if (!ignore) {
+          showToast('Failed to load media assets', 'error');
+        }
+      } catch {
+        if (!ignore) showToast('Failed to load media assets', 'error');
+      } finally {
+        if (!ignore) setIsLoading(false);
+      }
+    };
+    load();
+    return () => {
+      ignore = true;
+    };
+  }, [isOpen, showToast]);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

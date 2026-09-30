@@ -23,9 +23,11 @@ import {
 
 interface ContactSectionProps {
   personalInfo: PersonalInfo;
+  heading?: string;
+  subheading?: string;
 }
 
-export const ContactSection: React.FC<ContactSectionProps> = ({ personalInfo }) => {
+export const ContactSection: React.FC<ContactSectionProps> = ({ personalInfo, heading, subheading }) => {
   const [senderName, setSenderName] = useState('');
   const [senderEmail, setSenderEmail] = useState('');
   const [contactCategory, setContactCategory] = useState<'Professional' | 'Community' | 'Friend'>('Professional');
@@ -62,8 +64,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ personalInfo }) 
         
         <SectionTitle
           badgeText="Direct Communication"
-          title="CONTACT RAMESH B.S"
-          subtitle="Email is the Exclusive Official Point of Contact. Direct phone contact numbers are kept private for executive confidentiality."
+          title={heading || "CONTACT RAMESH B.S"}
+          subtitle={subheading || "Email is the Exclusive Official Point of Contact. Direct phone contact numbers are kept private for executive confidentiality."}
         />
 
         {/* ==================================================================
@@ -211,7 +213,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ personalInfo }) 
                       <div className="relative">
                         <select
                           value={contactCategory}
-                          onChange={(e) => setContactCategory(e.target.value as any)}
+                          onChange={(e) => setContactCategory(e.target.value as 'Professional' | 'Community' | 'Friend')}
                           className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-300 text-xs text-slate-900 focus:outline-none focus:border-amber-500 focus:bg-white appearance-none cursor-pointer pr-10 font-semibold shadow-inner"
                         >
                           <option value="Professional">💼 Professional / Enterprise IT & Staffing</option>

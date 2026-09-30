@@ -119,7 +119,7 @@ export const ZoneChairReportSection: React.FC<ZoneChairReportSectionProps> = ({ 
           return (
             <button
               key={tab.id}
-              onClick={() => setActiveSubTab(tab.id as any)}
+              onClick={() => setActiveSubTab(tab.id as 'overview' | 'events' | 'clubs' | 'dgams' | 'gallery' | 'reflections')}
               className={`px-4 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap flex items-center gap-2 transition-all cursor-pointer ${
                 isActive
                   ? 'bg-slate-900 text-amber-300 shadow-md scale-105'
@@ -372,7 +372,7 @@ export const ZoneChairReportSection: React.FC<ZoneChairReportSectionProps> = ({ 
                   Zone Chairperson Recommendation:
                 </p>
                 <p className="text-slate-700 italic">
-                  "{club.recommendations}"
+                  &ldquo;{club.recommendations}&rdquo;
                 </p>
               </div>
             </div>
@@ -510,12 +510,12 @@ export const ZoneChairReportSection: React.FC<ZoneChairReportSectionProps> = ({ 
           </div>
 
           <div className="p-5 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-slate-800 italic leading-relaxed">
-            "{data.concludingRemarks.personalReflection}"
+            &ldquo;{data.concludingRemarks.personalReflection}&rdquo;
           </div>
 
           <div className="p-5 rounded-2xl bg-slate-900 text-white text-xs leading-relaxed">
             <span className="text-amber-400 font-bold uppercase block mb-1">Ongoing District Commitment</span>
-            "{data.concludingRemarks.availabilityStatement}"
+            &ldquo;{data.concludingRemarks.availabilityStatement}&rdquo;
           </div>
         </div>
       )}

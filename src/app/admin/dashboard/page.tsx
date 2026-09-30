@@ -22,7 +22,16 @@ function DashboardContent() {
   const searchParams = useSearchParams();
   const { showToast } = useToast();
 
-  const [activeTab, setActiveTab] = useState<AdminTab>('overview');
+  const tabParam = searchParams.get('tab');
+  const [activeTab, setActiveTab] = useState<AdminTab>(tabParam === 'users' ? 'users' : 'overview');
+  const [prevTabParam, setPrevTabParam] = useState(tabParam);
+
+  if (tabParam !== prevTabParam) {
+    setPrevTabParam(tabParam);
+    if (tabParam === 'users') {
+      setActiveTab('users');
+    }
+  }
   const [currentUser, setCurrentUser] = useState<{ email: string; role: string } | null>(null);
   const [cmsData, setCmsData] = useState<FullCmsDatabase | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -60,12 +69,6 @@ function DashboardContent() {
     checkAuthAndLoad();
   }, [router, showToast]);
 
-  useEffect(() => {
-    const tabParam = searchParams.get('tab');
-    if (tabParam === 'users') {
-      setActiveTab('users');
-    }
-  }, [searchParams]);
 
   const cmsDataRef = useRef<FullCmsDatabase | null>(null);
   useEffect(() => {

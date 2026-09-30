@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import type { SafeAdminUser } from '../../../lib/auth';
 import { ConfirmDialog } from '../ConfirmDialog';
 import { useToast } from '../Toast';
@@ -19,7 +19,6 @@ import {
   RefreshCw,
   AlertCircle,
   X,
-  User,
 } from 'lucide-react';
 
 interface UsersTabProps {
@@ -29,7 +28,6 @@ interface UsersTabProps {
 
 export const UsersTab: React.FC<UsersTabProps> = ({
   currentUserEmail = '',
-  currentUserRole = 'owner',
 }) => {
   const { showToast } = useToast();
 
@@ -54,11 +52,7 @@ export const UsersTab: React.FC<UsersTabProps> = ({
   // Confirm Delete Dialog State
   const [userToDelete, setUserToDelete] = useState<SafeAdminUser | null>(null);
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     setIsLoading(true);
     try {
       const res = await fetch('/api/admin/users');
@@ -73,7 +67,30 @@ export const UsersTab: React.FC<UsersTabProps> = ({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [showToast]);
+
+  useEffect(() => {
+    let ignore = false;
+    const load = async () => {
+      try {
+        const res = await fetch('/api/admin/users');
+        if (!ignore && res.ok) {
+          const data = await res.json();
+          setUsers(data.users || []);
+        } else if (!ignore) {
+          showToast('Failed to load administrator accounts', 'error');
+        }
+      } catch {
+        if (!ignore) showToast('Network error loading users', 'error');
+      } finally {
+        if (!ignore) setIsLoading(false);
+      }
+    };
+    load();
+    return () => {
+      ignore = true;
+    };
+  }, [showToast]);
 
   const handleCreateAdmin = async (e: React.FormEvent) => {
     e.preventDefault();

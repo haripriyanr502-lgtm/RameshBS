@@ -80,7 +80,7 @@ export const About: React.FC<AboutProps> = ({ aboutData }) => {
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-900">Global Vision</span>
               </div>
               <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed">
-                "{aboutData.vision}"
+                &ldquo;{aboutData.vision}&rdquo;
               </p>
             </div>
           </motion.div>
@@ -212,7 +212,7 @@ export const About: React.FC<AboutProps> = ({ aboutData }) => {
         </div>
 
         {/* Executive & Leadership Highlights Accordion Interface */}
-        <ExecutiveHighlightsAccordion />
+        <ExecutiveHighlightsAccordion highlights={aboutData.highlights} />
 
       </div>
     </section>

@@ -56,7 +56,17 @@ const LeoLogoSVG = () => (
   </span>
 );
 
-export const ExecutiveHighlightsAccordion: React.FC = () => {
+export interface HighlightItem {
+  id: string;
+  title: string;
+  description: string;
+}
+
+interface ExecutiveHighlightsAccordionProps {
+  highlights?: HighlightItem[];
+}
+
+export const ExecutiveHighlightsAccordion: React.FC<ExecutiveHighlightsAccordionProps> = ({ highlights }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   const handleMouseEnter = (index: number) => {
@@ -119,7 +129,7 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
               <div>
                 <div className="flex items-center gap-3 flex-wrap">
                   <h4 className="text-lg sm:text-xl font-serif font-bold text-slate-900 group-hover:text-amber-700 transition-colors">
-                    Charter Secretary & President – LCB Brigade
+                    {highlights?.[0]?.title || 'Charter Secretary & President – LCB Brigade'}
                   </h4>
                   {/* Integrated Logos in Header */}
                   <div className="flex items-center gap-2">
@@ -225,7 +235,8 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
                       <span>Impact Created – LCB Brigade Leadership</span>
                     </h5>
                     <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
-                      As Charter Secretary and later Charter President of LCB Brigade, Ramesh laid the groundwork for one of District 317F's most active clubs. Under his stewardship, the club spearheaded extensive blood donation camps, clean water initiatives, and youth leadership mentorship projects across Bangalore.
+                      {highlights?.[0]?.description ||
+                        "As Charter Secretary and later Charter President of LCB Brigade, Ramesh laid the groundwork for one of District 317F's most active clubs. Under his stewardship, the club spearheaded extensive blood donation camps, clean water initiatives, and youth leadership mentorship projects across Bangalore."}
                     </p>
                   </div>
 
@@ -259,7 +270,7 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
               <div>
                 <div className="flex items-center gap-3 flex-wrap">
                   <h4 className="text-lg sm:text-xl font-serif font-bold text-slate-900 group-hover:text-amber-700 transition-colors">
-                    Rotary Club President & Transformation Leader
+                    {highlights?.[1]?.title || 'Rotary Club President & Transformation Leader'}
                   </h4>
                   {/* Integrated Logos in Header */}
                   <div className="flex items-center gap-2">
@@ -298,7 +309,7 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
                         <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900">What is Rotary International?</h5>
                       </div>
                       <p className="text-xs leading-relaxed text-slate-600">
-                        Rotary International is a global network of 1.4 million business and professional leaders who unite to provide humanitarian service, encourage high ethical standards in all vocations, and advance peace and goodwill worldwide under the motto <em>"Service Above Self."</em>
+                        Rotary International is a global network of 1.4 million business and professional leaders who unite to provide humanitarian service, encourage high ethical standards in all vocations, and advance peace and goodwill worldwide under the motto <em>&quot;Service Above Self.&quot;</em>
                       </p>
                     </div>
 
@@ -386,7 +397,8 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
                       <span>Impact Created – President of Rotary Bangalore Banashankari (RBB 2013-14)</span>
                     </h5>
                     <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
-                      As President of Rotary Bangalore Banashankari (2013-14), Ramesh led from the front, serving as a transformation leader. He revitalized club attendance, expanded humanitarian drives, organized widespread Pulse Polio vaccination campaigns, and established regular voluntary blood donation camps across Bangalore District 3190.
+                      {highlights?.[1]?.description ||
+                        'As President of Rotary Bangalore Banashankari (2013-14), Ramesh led from the front, serving as a transformation leader. He revitalized club attendance, expanded humanitarian drives, organized widespread Pulse Polio vaccination campaigns, and established regular voluntary blood donation camps across Bangalore District 3190.'}
                     </p>
                   </div>
 
@@ -419,7 +431,7 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
               </span>
               <div>
                 <h4 className="text-lg sm:text-xl font-serif font-bold text-slate-900 group-hover:text-amber-700 transition-colors">
-                  Founder of Bangalorean.com & WIN5M.com
+                  {highlights?.[2]?.title || 'Founder of Bangalorean.com & WIN5M.com'}
                 </h4>
                 <p className="text-xs text-slate-500 mt-1">
                   Entrepreneurial Digital Platforms • Civic Engagement & Youth Sports Wellness
@@ -481,7 +493,7 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
                       <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-sm">
                         <h6 className="text-xs font-bold text-blue-700 uppercase tracking-wider mb-1">Mission</h6>
                         <p className="text-xs text-slate-600 leading-relaxed">
-                          Connecting citizens, entrepreneurs, and global ex-pats with Bengaluru's vibrant cultural, enterprise, and social ecosystem.
+                          Connecting citizens, entrepreneurs, and global ex-pats with Bengaluru&apos;s vibrant cultural, enterprise, and social ecosystem.
                         </p>
                       </div>
 
@@ -532,7 +544,7 @@ export const ExecutiveHighlightsAccordion: React.FC = () => {
                       <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-sm">
                         <h6 className="text-xs font-bold text-amber-700 uppercase tracking-wider mb-1">Objectives</h6>
                         <p className="text-xs text-slate-600 leading-relaxed">
-                          Help families achieve "Calories In, Calories Out" balance, manage daily stress levels, and discover young sports talent.
+                          Help families achieve &quot;Calories In, Calories Out&quot; balance, manage daily stress levels, and discover young sports talent.
                         </p>
                       </div>
 

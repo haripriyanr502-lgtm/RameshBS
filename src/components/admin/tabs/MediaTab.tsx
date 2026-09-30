@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { MediaAsset } from '../../../lib/cms/types';
 import { ConfirmDialog } from '../ConfirmDialog';
 import { useToast } from '../Toast';
@@ -37,11 +37,7 @@ export const MediaTab: React.FC<MediaTabProps> = ({ onRefreshCmsData }) => {
   const [assetToReplace, setAssetToReplace] = useState<MediaAsset | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchMedia();
-  }, []);
-
-  const fetchMedia = async () => {
+  const fetchMedia = useCallback(async () => {
     setIsLoading(true);
     try {
       const res = await fetch('/api/admin/media');
@@ -54,7 +50,30 @@ export const MediaTab: React.FC<MediaTabProps> = ({ onRefreshCmsData }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [showToast]);
+
+  useEffect(() => {
+    let ignore = false;
+    const load = async () => {
+      try {
+        const res = await fetch('/api/admin/media');
+        if (!ignore && res.ok) {
+          const data = await res.json();
+          setMediaList(data);
+        } else if (!ignore) {
+          showToast('Failed to load media assets', 'error');
+        }
+      } catch {
+        if (!ignore) showToast('Failed to load media assets', 'error');
+      } finally {
+        if (!ignore) setIsLoading(false);
+      }
+    };
+    load();
+    return () => {
+      ignore = true;
+    };
+  }, [showToast]);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

@@ -65,17 +65,20 @@ export default function CardioGuardPage() {
   const currentDiagnosis = RHYTHM_DIAGNOSES[currentRhythm];
   const isCritical = currentDiagnosis.riskLevel === 'CRITICAL';
 
-  // Synchronize vitals when rhythm changes
-  useEffect(() => {
+  // Synchronize vitals and alarm when rhythm changes
+  const [prevRhythm, setPrevRhythm] = useState(currentRhythm);
+  if (currentRhythm !== prevRhythm) {
+    setPrevRhythm(currentRhythm);
     setVitals(getVitalsForRhythm(currentRhythm));
+    setAlarmActive(isCritical);
+  }
 
-    if (currentDiagnosis.riskLevel === 'CRITICAL') {
-      setAlarmActive(true);
+  // Play alarm sound when in critical condition
+  useEffect(() => {
+    if (isCritical) {
       soundEngine.playAlarmBeep();
-    } else {
-      setAlarmActive(false);
     }
-  }, [currentRhythm, currentDiagnosis.riskLevel]);
+  }, [isCritical]);
 
   // Sync patient initial rhythm when patient changes
   const handleSelectPatient = (patientId: string) => {

@@ -129,7 +129,7 @@ export const LionisticJourney: React.FC<LionisticJourneyProps> = ({ journeyData 
         >
           <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-amber-400/10 rounded-full blur-2xl pointer-events-none" />
           <p className="text-slate-800 text-base md:text-lg italic font-serif leading-relaxed">
-            "{journeyData.overview}"
+            &ldquo;{journeyData.overview}&rdquo;
           </p>
         </motion.div>
 
@@ -315,7 +315,7 @@ export const LionisticJourney: React.FC<LionisticJourneyProps> = ({ journeyData 
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => setActiveTab(tab.id as 'timeline' | 'zone-report' | 'international' | 'blog')}
                 className={`px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all duration-300 cursor-pointer ${
                   isActive
                     ? 'btn-gold shadow-md scale-105'

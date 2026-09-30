@@ -1,12 +1,18 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 const USERS_FILE = path.join(process.cwd(), 'src', 'data', 'cms', 'users.json');
+const TMP_USERS_FILE = path.join(os.tmpdir(), 'ramesh_bs_cms', 'users.json');
 const JWT_SECRET = process.env.ADMIN_JWT_SECRET || 'lcb-brigade-secure-cms-secret-key-2026';
 export const COOKIE_NAME = 'admin_session';
+
+declare global {
+  var __RAMESH_CMS_USERS__: AdminUser[] | undefined;
+}
 
 export interface AdminUser {
   id: string;
@@ -125,78 +131,88 @@ export function verifySessionToken(token: string): SessionPayload | null {
   }
 }
 
-// Ensure users.json exists with default admin credentials & normalized structure
-export function ensureUsersFile(): AdminUser[] {
+// Helper: save users across storage tiers
+export function saveUsers(users: AdminUser[]): boolean {
+  globalThis.__RAMESH_CMS_USERS__ = users;
+  let persisted = false;
+
+  // 1. Serverless writable fallback (/tmp)
+  try {
+    const tmpDir = path.dirname(TMP_USERS_FILE);
+    if (!fs.existsSync(tmpDir)) {
+      fs.mkdirSync(tmpDir, { recursive: true });
+    }
+    fs.writeFileSync(TMP_USERS_FILE, JSON.stringify(users, null, 2), 'utf-8');
+    persisted = true;
+  } catch {}
+
+  // 2. Project data directory (if writable)
   try {
     const dir = path.dirname(USERS_FILE);
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
+    fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf-8');
+    persisted = true;
+  } catch {}
 
-    if (!fs.existsSync(USERS_FILE)) {
-      const { salt, hash } = hashPassword('admin123');
-      const defaultUser: AdminUser = {
-        id: 'admin-1',
-        email: 'admin@portfolio.com',
-        role: 'owner',
-        status: 'active',
-        salt,
-        passwordHash: hash,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      fs.writeFileSync(USERS_FILE, JSON.stringify([defaultUser], null, 2), 'utf-8');
-      return [defaultUser];
-    }
+  return persisted || true;
+}
 
-    const raw = fs.readFileSync(USERS_FILE, 'utf-8');
-    let users = JSON.parse(raw) as AdminUser[];
-    if (!users || users.length === 0) {
-      const { salt, hash } = hashPassword('admin123');
-      const defaultUser: AdminUser = {
-        id: 'admin-1',
-        email: 'admin@portfolio.com',
-        role: 'owner',
-        status: 'active',
-        salt,
-        passwordHash: hash,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      fs.writeFileSync(USERS_FILE, JSON.stringify([defaultUser], null, 2), 'utf-8');
-      return [defaultUser];
-    }
-
-    // Auto-normalize legacy records without status or createdAt
-    let modified = false;
-    users = users.map((u, idx) => {
-      let itemChanged = false;
-      const copy = { ...u };
-      if (!copy.status) {
-        copy.status = 'active';
-        itemChanged = true;
-      }
-      if (!copy.role) {
-        copy.role = idx === 0 ? 'owner' : 'admin';
-        itemChanged = true;
-      }
-      if (!copy.createdAt) {
-        copy.createdAt = copy.updatedAt || new Date().toISOString();
-        itemChanged = true;
-      }
-      if (itemChanged) modified = true;
-      return copy;
-    });
-
-    if (modified) {
-      fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf-8');
-    }
-
-    return users;
-  } catch (err) {
-    console.error('Error ensuring users file:', err);
-    return [];
+// Ensure users.json exists with default admin credentials & normalized structure
+export function ensureUsersFile(): AdminUser[] {
+  // 1. In-memory cache
+  if (globalThis.__RAMESH_CMS_USERS__ && globalThis.__RAMESH_CMS_USERS__.length > 0) {
+    return globalThis.__RAMESH_CMS_USERS__;
   }
+
+  // 2. Check /tmp
+  try {
+    if (fs.existsSync(TMP_USERS_FILE)) {
+      const raw = fs.readFileSync(TMP_USERS_FILE, 'utf-8');
+      const users = JSON.parse(raw) as AdminUser[];
+      if (Array.isArray(users) && users.length > 0) {
+        globalThis.__RAMESH_CMS_USERS__ = users;
+        return users;
+      }
+    }
+  } catch {}
+
+  // 3. Check bundled static file
+  try {
+    if (fs.existsSync(USERS_FILE)) {
+      const raw = fs.readFileSync(USERS_FILE, 'utf-8');
+      let users = JSON.parse(raw) as AdminUser[];
+      if (Array.isArray(users) && users.length > 0) {
+        // Auto-normalize legacy records
+        users = users.map((u, idx) => ({
+          ...u,
+          status: u.status || 'active',
+          role: u.role || (idx === 0 ? 'owner' : 'admin'),
+          createdAt: u.createdAt || u.updatedAt || new Date().toISOString(),
+        }));
+        globalThis.__RAMESH_CMS_USERS__ = users;
+        return users;
+      }
+    }
+  } catch {}
+
+  // 4. Default admin user
+  const { salt, hash } = hashPassword('admin123');
+  const defaultUser: AdminUser = {
+    id: 'admin-1',
+    email: 'admin@portfolio.com',
+    role: 'owner',
+    status: 'active',
+    salt,
+    passwordHash: hash,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+
+  saveUsers([defaultUser]);
+  globalThis.__RAMESH_CMS_USERS__ = [defaultUser];
+  return [defaultUser];
 }
 
 // Authenticate user credentials
@@ -230,7 +246,14 @@ export function authenticateUser(
 // Get all administrators without exposing password hashes or salts
 export function getAllAdminUsers(): SafeAdminUser[] {
   const users = ensureUsersFile();
-  return users.map(({ salt, passwordHash, ...safe }) => safe);
+  return users.map((u) => ({
+    id: u.id,
+    email: u.email,
+    role: u.role,
+    status: u.status,
+    createdAt: u.createdAt,
+    updatedAt: u.updatedAt,
+  }));
 }
 
 // Create a new administrator account (secured & hashed)
@@ -268,9 +291,16 @@ export function createAdminUser(params: {
   };
 
   users.push(newUser);
-  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf-8');
+  saveUsers(users);
 
-  const { salt: _s, passwordHash: _p, ...safeUser } = newUser;
+  const safeUser: SafeAdminUser = {
+    id: newUser.id,
+    email: newUser.email,
+    role: newUser.role,
+    status: newUser.status,
+    createdAt: newUser.createdAt,
+    updatedAt: newUser.updatedAt,
+  };
   return { success: true, user: safeUser };
 }
 
@@ -308,7 +338,7 @@ export function updateAdminUserStatus(
 
   user.status = newStatus;
   user.updatedAt = new Date().toISOString();
-  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf-8');
+  saveUsers(users);
   return { success: true };
 }
 
@@ -338,7 +368,7 @@ export function updateAdminUserRole(
 
   user.role = newRole;
   user.updatedAt = new Date().toISOString();
-  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf-8');
+  saveUsers(users);
   return { success: true };
 }
 
@@ -361,7 +391,7 @@ export function resetAdminUserPassword(
   user.salt = salt;
   user.passwordHash = hash;
   user.updatedAt = new Date().toISOString();
-  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf-8');
+  saveUsers(users);
   return { success: true };
 }
 
@@ -395,7 +425,7 @@ export function deleteAdminUser(
   }
 
   const updatedUsers = users.filter((u) => u.id !== id);
-  fs.writeFileSync(USERS_FILE, JSON.stringify(updatedUsers, null, 2), 'utf-8');
+  saveUsers(updatedUsers);
   return { success: true };
 }
 
@@ -412,9 +442,10 @@ export function updatePassword(email: string, newPassword: string): boolean {
   users[userIndex].passwordHash = hash;
   users[userIndex].updatedAt = new Date().toISOString();
 
-  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf-8');
+  saveUsers(users);
   return true;
 }
+
 
 // Check session in server request or cookies
 export async function getSession(): Promise<SessionPayload | null> {

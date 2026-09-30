@@ -383,7 +383,7 @@ export const RegionChairDropdown: React.FC<RegionChairDropdownProps> = ({
                 return (
                   <button
                     key={tab.id}
-                    onClick={() => setActiveTab(tab.id as any)}
+                    onClick={() => setActiveTab(tab.id as 'clubs' | 'service' | 'fellowship' | 'activities' | 'meetings')}
                     className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
                       isActive
                         ? 'btn-gold text-white shadow-md'
@@ -411,7 +411,7 @@ export const RegionChairDropdown: React.FC<RegionChairDropdownProps> = ({
                   {/* Banner & Search bar */}
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 rounded-2xl bg-amber-50 border border-amber-200">
                     <div>
-                      <p className="font-bold text-slate-900 text-xs">All 12 Leo Clubs under Ramesh's Advisory</p>
+                      <p className="font-bold text-slate-900 text-xs">All 12 Leo Clubs under Ramesh&apos;s Advisory</p>
                       <p className="text-[11px] text-slate-600">Guiding youth leadership development across District 317F</p>
                     </div>
                     
@@ -472,7 +472,7 @@ export const RegionChairDropdown: React.FC<RegionChairDropdownProps> = ({
 
                   {filteredClubs.length === 0 && (
                     <div className="text-center py-8 text-slate-500 text-xs">
-                      No Leo Clubs found matching "{searchQuery}".
+                      No Leo Clubs found matching &ldquo;{searchQuery}&rdquo;.
                     </div>
                   )}
                 </div>

@@ -152,7 +152,7 @@ export const ZoneChairReportModal: React.FC<ZoneChairReportModalProps> = ({
               return (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
+                  onClick={() => setActiveTab(tab.id as 'overview' | 'events' | 'clubs' | 'dgams' | 'gallery' | 'reflections')}
                   className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap flex items-center gap-2 transition-all cursor-pointer ${
                     isActive
                       ? 'bg-slate-900 text-amber-300 shadow-md scale-[1.02]'
@@ -520,7 +520,7 @@ export const ZoneChairReportModal: React.FC<ZoneChairReportModalProps> = ({
                           Zone Chairperson Strategic Recommendation:
                         </p>
                         <p className="text-slate-700 leading-relaxed italic">
-                          "{club.recommendations}"
+                          &ldquo;{club.recommendations}&rdquo;
                         </p>
                       </div>
                     </div>
@@ -712,7 +712,7 @@ export const ZoneChairReportModal: React.FC<ZoneChairReportModalProps> = ({
                   <div className="p-6 rounded-2xl bg-gradient-to-r from-amber-50 to-amber-100/50 border border-amber-300 space-y-2">
                     <p className="text-xs uppercase font-bold text-amber-800 tracking-wider">Personal Leadership Reflection:</p>
                     <p className="text-sm font-serif italic text-slate-800 leading-relaxed">
-                      "{data.concludingRemarks.personalReflection}"
+                      &ldquo;{data.concludingRemarks.personalReflection}&rdquo;
                     </p>
                   </div>
 
@@ -723,7 +723,7 @@ export const ZoneChairReportModal: React.FC<ZoneChairReportModalProps> = ({
                       <span>Commitment to District 317F</span>
                     </div>
                     <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
-                      "{data.concludingRemarks.availabilityStatement}"
+                      &ldquo;{data.concludingRemarks.availabilityStatement}&rdquo;
                     </p>
                   </div>
 

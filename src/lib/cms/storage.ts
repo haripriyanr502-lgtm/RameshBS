@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 import {
   FullCmsDatabase,
   SiteSettings,
@@ -20,6 +21,15 @@ import { initialPortfolioData } from '../../data/portfolioData';
 const DATA_DIR = path.join(process.cwd(), 'src', 'data', 'cms');
 const CONTENT_FILE = path.join(DATA_DIR, 'content.json');
 const MEDIA_FILE = path.join(DATA_DIR, 'media.json');
+
+const TMP_DIR = path.join(os.tmpdir(), 'ramesh_bs_cms');
+const TMP_CONTENT_FILE = path.join(TMP_DIR, 'content.json');
+const TMP_MEDIA_FILE = path.join(TMP_DIR, 'media.json');
+
+declare global {
+  var __RAMESH_CMS_DB__: FullCmsDatabase | undefined;
+  var __RAMESH_CMS_MEDIA__: MediaAsset[] | undefined;
+}
 
 // Default initial state populated from portfolio & LCB Brigade records
 function createInitialCmsDatabase(): FullCmsDatabase {
@@ -477,74 +487,124 @@ function createInitialCmsDatabase(): FullCmsDatabase {
   };
 }
 
+// Helper: read content from best available storage tier
+function loadContentRaw(): FullCmsDatabase | null {
+  // 1. In-memory hot cache
+  if (globalThis.__RAMESH_CMS_DB__) {
+    return globalThis.__RAMESH_CMS_DB__;
+  }
+
+  // 2. Serverless writable fallback (/tmp)
+  try {
+    if (fs.existsSync(TMP_CONTENT_FILE)) {
+      const raw = fs.readFileSync(TMP_CONTENT_FILE, 'utf-8');
+      const parsed = JSON.parse(raw) as FullCmsDatabase;
+      if (parsed && parsed.settings && parsed.home) {
+        globalThis.__RAMESH_CMS_DB__ = parsed;
+        return parsed;
+      }
+    }
+  } catch (err) {
+    console.warn('Notice: Error reading from tmp content file:', err);
+  }
+
+  // 3. Bundled static content file
+  try {
+    if (fs.existsSync(CONTENT_FILE)) {
+      const raw = fs.readFileSync(CONTENT_FILE, 'utf-8');
+      const parsed = JSON.parse(raw) as FullCmsDatabase;
+      if (parsed && parsed.settings && parsed.home) {
+        globalThis.__RAMESH_CMS_DB__ = parsed;
+        return parsed;
+      }
+    }
+  } catch (err) {
+    console.warn('Notice: Error reading from static content file:', err);
+  }
+
+  return null;
+}
+
 // Ensure data folder and content file exist
 export function ensureCmsDatabase(): FullCmsDatabase {
   try {
-    if (!fs.existsSync(DATA_DIR)) {
-      fs.mkdirSync(DATA_DIR, { recursive: true });
-    }
+    const existing = loadContentRaw();
+    if (existing) {
+      // Auto-migrate newly supported sections if missing from existing JSON
+      let modified = false;
+      const initialSeed = createInitialCmsDatabase();
 
-    if (!fs.existsSync(CONTENT_FILE)) {
-      const initial = createInitialCmsDatabase();
-      fs.writeFileSync(CONTENT_FILE, JSON.stringify(initial, null, 2), 'utf-8');
-      return initial;
-    }
-
-    const raw = fs.readFileSync(CONTENT_FILE, 'utf-8');
-    const data = JSON.parse(raw) as FullCmsDatabase;
-
-    // Auto-migrate newly supported sections if missing from existing JSON
-    let modified = false;
-    const initialSeed = createInitialCmsDatabase();
-
-    if (!data.projects || data.projects.length === 0) {
-      data.projects = initialSeed.projects;
-      modified = true;
-    }
-    if (!data.career) {
-      data.career = initialSeed.career;
-      modified = true;
-    }
-    if (!data.lionisticJourney) {
-      data.lionisticJourney = initialSeed.lionisticJourney;
-      modified = true;
-    }
-    if (!data.aboutExtras) {
-      data.aboutExtras = initialSeed.aboutExtras;
-      modified = true;
-    }
-
-    if (modified) {
-      try {
-        fs.writeFileSync(CONTENT_FILE, JSON.stringify(data, null, 2), 'utf-8');
-      } catch (writeErr) {
-        console.error('Failed to update migrated CMS content:', writeErr);
+      if (!existing.projects || existing.projects.length === 0) {
+        existing.projects = initialSeed.projects;
+        modified = true;
       }
+      if (!existing.career) {
+        existing.career = initialSeed.career;
+        modified = true;
+      }
+      if (!existing.lionisticJourney) {
+        existing.lionisticJourney = initialSeed.lionisticJourney;
+        modified = true;
+      }
+      if (!existing.aboutExtras) {
+        existing.aboutExtras = initialSeed.aboutExtras;
+        modified = true;
+      }
+
+      if (modified) {
+        saveCmsDatabase(existing);
+      }
+
+      globalThis.__RAMESH_CMS_DB__ = existing;
+      return existing;
     }
 
-    return data;
+    const initial = createInitialCmsDatabase();
+    saveCmsDatabase(initial);
+    globalThis.__RAMESH_CMS_DB__ = initial;
+    return initial;
   } catch (err) {
     console.error('Error reading CMS database, resetting to seed data:', err);
     const initial = createInitialCmsDatabase();
-    try {
-      fs.writeFileSync(CONTENT_FILE, JSON.stringify(initial, null, 2), 'utf-8');
-    } catch {}
+    globalThis.__RAMESH_CMS_DB__ = initial;
     return initial;
   }
 }
 
-// Save complete CMS database
+// Save complete CMS database with resilient multi-tier persistence
 export function saveCmsDatabase(data: FullCmsDatabase): void {
+  data.lastPublishedAt = new Date().toISOString();
+  data.version = (data.version || 1) + 1;
+
+  // 1. Immediately update in-memory hot cache so subsequent requests in this process see updates
+  globalThis.__RAMESH_CMS_DB__ = data;
+
+  let persisted = false;
+
+  // 2. Persist to serverless writable storage (/tmp)
+  try {
+    if (!fs.existsSync(TMP_DIR)) {
+      fs.mkdirSync(TMP_DIR, { recursive: true });
+    }
+    fs.writeFileSync(TMP_CONTENT_FILE, JSON.stringify(data, null, 2), 'utf-8');
+    persisted = true;
+  } catch (tmpErr) {
+    console.warn('Notice: Could not write to serverless tmp directory:', tmpErr);
+  }
+
+  // 3. Persist to project data directory (works in local dev and non-serverless environments)
   try {
     if (!fs.existsSync(DATA_DIR)) {
       fs.mkdirSync(DATA_DIR, { recursive: true });
     }
-    data.lastPublishedAt = new Date().toISOString();
-    data.version = (data.version || 1) + 1;
     fs.writeFileSync(CONTENT_FILE, JSON.stringify(data, null, 2), 'utf-8');
-  } catch (err) {
-    console.error('Error saving CMS database:', err);
-    throw new Error('Failed to persist CMS data');
+    persisted = true;
+  } catch {
+    // Expected on read-only serverless filesystems (e.g. Vercel)
+  }
+
+  if (!persisted) {
+    console.error('Warning: CMS data could not be saved to disk, retained in memory cache.');
   }
 }
 
@@ -564,15 +624,41 @@ export function getPublishedCmsData(): FullCmsDatabase {
 
 // Media Assets manager
 export function getMediaAssets(): MediaAsset[] {
+  // 1. In-memory hot cache
+  if (globalThis.__RAMESH_CMS_MEDIA__) {
+    return globalThis.__RAMESH_CMS_MEDIA__;
+  }
+
+  // 2. Serverless writable fallback (/tmp)
   try {
-    if (!fs.existsSync(MEDIA_FILE)) {
-      const db = ensureCmsDatabase();
-      const initialMedia = db.media || [];
-      fs.writeFileSync(MEDIA_FILE, JSON.stringify(initialMedia, null, 2), 'utf-8');
-      return initialMedia;
+    if (fs.existsSync(TMP_MEDIA_FILE)) {
+      const raw = fs.readFileSync(TMP_MEDIA_FILE, 'utf-8');
+      const parsed = JSON.parse(raw) as MediaAsset[];
+      if (Array.isArray(parsed)) {
+        globalThis.__RAMESH_CMS_MEDIA__ = parsed;
+        return parsed;
+      }
     }
-    const raw = fs.readFileSync(MEDIA_FILE, 'utf-8');
-    return JSON.parse(raw) as MediaAsset[];
+  } catch {}
+
+  // 3. Bundled static media file
+  try {
+    if (fs.existsSync(MEDIA_FILE)) {
+      const raw = fs.readFileSync(MEDIA_FILE, 'utf-8');
+      const parsed = JSON.parse(raw) as MediaAsset[];
+      if (Array.isArray(parsed)) {
+        globalThis.__RAMESH_CMS_MEDIA__ = parsed;
+        return parsed;
+      }
+    }
+  } catch {}
+
+  // 4. Default from database
+  try {
+    const db = ensureCmsDatabase();
+    const initialMedia = db.media || [];
+    globalThis.__RAMESH_CMS_MEDIA__ = initialMedia;
+    return initialMedia;
   } catch {
     return [];
   }
@@ -586,7 +672,21 @@ export function saveMediaAsset(asset: MediaAsset): void {
   } else {
     assets.unshift(asset);
   }
-  fs.writeFileSync(MEDIA_FILE, JSON.stringify(assets, null, 2), 'utf-8');
+
+  globalThis.__RAMESH_CMS_MEDIA__ = assets;
+
+  // Write to /tmp
+  try {
+    if (!fs.existsSync(TMP_DIR)) {
+      fs.mkdirSync(TMP_DIR, { recursive: true });
+    }
+    fs.writeFileSync(TMP_MEDIA_FILE, JSON.stringify(assets, null, 2), 'utf-8');
+  } catch {}
+
+  // Write to project disk if writable
+  try {
+    fs.writeFileSync(MEDIA_FILE, JSON.stringify(assets, null, 2), 'utf-8');
+  } catch {}
 
   // Also sync with database
   try {
@@ -602,7 +702,20 @@ export function deleteMediaAsset(id: string): boolean {
   assets = assets.filter((a) => a.id !== id);
   if (assets.length === initialLen) return false;
 
-  fs.writeFileSync(MEDIA_FILE, JSON.stringify(assets, null, 2), 'utf-8');
+  globalThis.__RAMESH_CMS_MEDIA__ = assets;
+
+  // Write to /tmp
+  try {
+    if (!fs.existsSync(TMP_DIR)) {
+      fs.mkdirSync(TMP_DIR, { recursive: true });
+    }
+    fs.writeFileSync(TMP_MEDIA_FILE, JSON.stringify(assets, null, 2), 'utf-8');
+  } catch {}
+
+  // Write to project disk if writable
+  try {
+    fs.writeFileSync(MEDIA_FILE, JSON.stringify(assets, null, 2), 'utf-8');
+  } catch {}
 
   try {
     const db = ensureCmsDatabase();
@@ -611,3 +724,4 @@ export function deleteMediaAsset(id: string): boolean {
   } catch {}
   return true;
 }
+

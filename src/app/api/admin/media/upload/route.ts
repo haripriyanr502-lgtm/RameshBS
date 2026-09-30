@@ -66,10 +66,6 @@ export async function POST(request: NextRequest) {
     const categorySubdir = category.toLowerCase();
     const uploadDir = path.join(process.cwd(), 'public', 'uploads', categorySubdir);
 
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-
     const timestamp = Date.now();
     const cleanFileName = file.name
       .toLowerCase()
@@ -79,9 +75,17 @@ export async function POST(request: NextRequest) {
     const filePath = path.join(uploadDir, safeFileName);
 
     const buffer = Buffer.from(await file.arrayBuffer());
-    fs.writeFileSync(filePath, buffer);
+    let publicUrl = `/uploads/${categorySubdir}/${safeFileName}`;
 
-    const publicUrl = `/uploads/${categorySubdir}/${safeFileName}`;
+    try {
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+      fs.writeFileSync(filePath, buffer);
+    } catch {
+      // In serverless read-only environments (e.g. Vercel), fall back to Data URL
+      publicUrl = `data:${file.type};base64,${buffer.toString('base64')}`;
+    }
 
     const newAsset: MediaAsset = {
       id: `med-${timestamp}`,
