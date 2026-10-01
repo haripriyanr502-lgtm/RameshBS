@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const assets = getMediaAssets();
+    const assets = await getMediaAssets();
     return NextResponse.json(assets);
   } catch (error) {
     console.error('Error fetching media assets:', error);
@@ -31,7 +31,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Media asset ID is required' }, { status: 400 });
     }
 
-    const success = deleteMediaAsset(id);
+    const success = await deleteMediaAsset(id);
     if (!success) {
       return NextResponse.json({ error: 'Media asset not found' }, { status: 404 });
     }

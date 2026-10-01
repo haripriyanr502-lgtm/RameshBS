@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      const users = ensureUsersFile();
+      const users = await ensureUsersFile();
       const currentUser = users.find((u) => u.email === session.email);
       if (!currentUser) {
         return NextResponse.json({ error: 'User not found' }, { status: 404 });
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Current password is incorrect' }, { status: 400 });
       }
 
-      const updated = updatePassword(session.email, newPassword);
+      const updated = await updatePassword(session.email, newPassword);
       if (!updated) {
         return NextResponse.json({ error: 'Failed to update password' }, { status: 500 });
       }

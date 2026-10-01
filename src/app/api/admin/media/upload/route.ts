@@ -4,6 +4,7 @@ import fs from 'fs';
 import { getSessionFromRequest } from '../../../../../lib/auth';
 import { saveMediaAsset } from '../../../../../lib/cms/storage';
 import { MediaAsset } from '../../../../../lib/cms/types';
+import { getSupabaseClient } from '../../../../../lib/supabase';
 
 export const dynamic = 'force-dynamic';
 
@@ -75,16 +76,43 @@ export async function POST(request: NextRequest) {
     const filePath = path.join(uploadDir, safeFileName);
 
     const buffer = Buffer.from(await file.arrayBuffer());
-    let publicUrl = `/uploads/${categorySubdir}/${safeFileName}`;
+    let publicUrl = '';
 
-    try {
-      if (!fs.existsSync(uploadDir)) {
-        fs.mkdirSync(uploadDir, { recursive: true });
+    // 1. If Supabase is configured, upload directly to durable Supabase Storage bucket
+    const supabase = getSupabaseClient();
+    if (supabase) {
+      const storagePath = `${categorySubdir}/${safeFileName}`;
+      const { error: uploadError } = await supabase.storage
+        .from('cms-media')
+        .upload(storagePath, buffer, {
+          contentType: file.type,
+          upsert: true,
+        });
+
+      if (!uploadError) {
+        const { data: urlData } = supabase.storage
+          .from('cms-media')
+          .getPublicUrl(storagePath);
+        if (urlData && urlData.publicUrl) {
+          publicUrl = urlData.publicUrl;
+        }
+      } else {
+        console.warn('Notice: Supabase storage upload returned error, using fallback:', uploadError.message);
       }
-      fs.writeFileSync(filePath, buffer);
-    } catch {
-      // In serverless read-only environments (e.g. Vercel), fall back to Data URL
-      publicUrl = `data:${file.type};base64,${buffer.toString('base64')}`;
+    }
+
+    // 2. Local fallback if Supabase is not configured or upload did not complete
+    if (!publicUrl) {
+      try {
+        if (!fs.existsSync(uploadDir)) {
+          fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        fs.writeFileSync(filePath, buffer);
+        publicUrl = `/uploads/${categorySubdir}/${safeFileName}`;
+      } catch {
+        // In serverless read-only environments without storage configured, fall back to Data URL
+        publicUrl = `data:${file.type};base64,${buffer.toString('base64')}`;
+      }
     }
 
     const newAsset: MediaAsset = {
@@ -98,7 +126,7 @@ export async function POST(request: NextRequest) {
       altText: altText || cleanFileName,
     };
 
-    saveMediaAsset(newAsset);
+    await saveMediaAsset(newAsset);
 
     return NextResponse.json({
       success: true,

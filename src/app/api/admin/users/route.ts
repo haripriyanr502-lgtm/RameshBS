@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
   if (!auth.authorized) return auth.response;
 
   try {
-    const users = getAllAdminUsers();
+    const users = await getAllAdminUsers();
     return NextResponse.json({ success: true, users });
   } catch (error) {
     console.error('Error fetching admin users:', error);
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const result = createAdminUser({
+    const result = await createAdminUser({
       email,
       password,
       role: role === 'editor' ? 'editor' : 'admin',
@@ -106,7 +106,7 @@ export async function PATCH(request: NextRequest) {
       if (!status || (status !== 'active' && status !== 'disabled')) {
         return NextResponse.json({ error: 'Valid status (active/disabled) required' }, { status: 400 });
       }
-      const result = updateAdminUserStatus(id, status, auth.session.email);
+      const result = await updateAdminUserStatus(id, status, auth.session.email);
       if (!result.success) {
         return NextResponse.json({ error: result.error }, { status: 400 });
       }
@@ -120,7 +120,7 @@ export async function PATCH(request: NextRequest) {
       if (!role || (role !== 'owner' && role !== 'admin' && role !== 'editor')) {
         return NextResponse.json({ error: 'Valid role required' }, { status: 400 });
       }
-      const result = updateAdminUserRole(id, role, auth.session.email);
+      const result = await updateAdminUserRole(id, role, auth.session.email);
       if (!result.success) {
         return NextResponse.json({ error: result.error }, { status: 400 });
       }
@@ -134,7 +134,7 @@ export async function PATCH(request: NextRequest) {
       if (!password || password.length < 6) {
         return NextResponse.json({ error: 'Password must be at least 6 characters long' }, { status: 400 });
       }
-      const result = resetAdminUserPassword(id, password);
+      const result = await resetAdminUserPassword(id, password);
       if (!result.success) {
         return NextResponse.json({ error: result.error }, { status: 400 });
       }
@@ -164,7 +164,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Target user ID is required' }, { status: 400 });
     }
 
-    const result = deleteAdminUser(id, auth.session.email);
+    const result = await deleteAdminUser(id, auth.session.email);
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 400 });
     }

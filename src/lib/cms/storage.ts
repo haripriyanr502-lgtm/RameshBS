@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
+import { getSupabaseClient } from '../supabase';
 import {
   FullCmsDatabase,
   SiteSettings,
@@ -487,7 +488,7 @@ function createInitialCmsDatabase(): FullCmsDatabase {
   };
 }
 
-// Helper: read content from best available storage tier
+// Helper: read content from local storage tiers (in-memory hot cache, /tmp, bundled JSON)
 function loadContentRaw(): FullCmsDatabase | null {
   // 1. In-memory hot cache
   if (globalThis.__RAMESH_CMS_DB__) {
@@ -525,12 +526,106 @@ function loadContentRaw(): FullCmsDatabase | null {
   return null;
 }
 
-// Ensure data folder and content file exist
-export function ensureCmsDatabase(): FullCmsDatabase {
+// Helper: save to local files (/tmp and project data directory if writable)
+function saveCmsDatabaseLocal(data: FullCmsDatabase): void {
+  // 1. Update in-memory hot cache
+  globalThis.__RAMESH_CMS_DB__ = data;
+
+  // 2. Persist to serverless writable storage (/tmp)
+  try {
+    if (!fs.existsSync(TMP_DIR)) {
+      fs.mkdirSync(TMP_DIR, { recursive: true });
+    }
+    fs.writeFileSync(TMP_CONTENT_FILE, JSON.stringify(data, null, 2), 'utf-8');
+  } catch (tmpErr) {
+    console.warn('Notice: Could not write to serverless tmp directory:', tmpErr);
+  }
+
+  // 3. Persist to project data directory (works in local dev and non-serverless environments)
+  try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+    fs.writeFileSync(CONTENT_FILE, JSON.stringify(data, null, 2), 'utf-8');
+  } catch {
+    // Expected on read-only serverless filesystems (e.g. Vercel)
+  }
+}
+
+// Ensure complete CMS database exists and is synchronized with durable shared storage
+export async function ensureCmsDatabase(): Promise<FullCmsDatabase> {
+  const supabase = getSupabaseClient();
+
+  if (supabase) {
+    try {
+      const { data, error } = await supabase
+        .from('cms_documents')
+        .select('data, version, updated_at')
+        .eq('key', 'content')
+        .maybeSingle();
+
+      if (!error && data && data.data && typeof data.data === 'object') {
+        const doc = data.data as FullCmsDatabase;
+        if (doc.settings && doc.home) {
+          doc.version = data.version || doc.version || 1;
+          doc.lastPublishedAt = data.updated_at || doc.lastPublishedAt;
+
+          // Auto-migrate newly supported sections if missing from existing JSON
+          let modified = false;
+          const initialSeed = createInitialCmsDatabase();
+          if (!doc.projects || doc.projects.length === 0) {
+            doc.projects = initialSeed.projects;
+            modified = true;
+          }
+          if (!doc.career) {
+            doc.career = initialSeed.career;
+            modified = true;
+          }
+          if (!doc.lionisticJourney) {
+            doc.lionisticJourney = initialSeed.lionisticJourney;
+            modified = true;
+          }
+          if (!doc.aboutExtras) {
+            doc.aboutExtras = initialSeed.aboutExtras;
+            modified = true;
+          }
+
+          if (modified) {
+            await saveCmsDatabase(doc);
+          }
+
+          globalThis.__RAMESH_CMS_DB__ = doc;
+          return doc;
+        }
+      }
+
+      // If document does not exist yet in Supabase, seed from local JSON / default
+      const initial = loadContentRaw() || createInitialCmsDatabase();
+      const { error: insertErr } = await supabase
+        .from('cms_documents')
+        .upsert({
+          key: 'content',
+          data: initial,
+          version: initial.version || 1,
+          updated_at: new Date().toISOString(),
+        });
+
+      if (insertErr) {
+        console.warn('Warning: Failed to seed CMS document in Supabase:', insertErr.message);
+      }
+
+      saveCmsDatabaseLocal(initial);
+      globalThis.__RAMESH_CMS_DB__ = initial;
+      return initial;
+    } catch (supabaseErr) {
+      console.warn('Notice: Error connecting to Supabase CMS storage, falling back to local tiers:', supabaseErr);
+    }
+  }
+
+  // Non-Supabase / local development fallback
   try {
     const existing = loadContentRaw();
     if (existing) {
-      // Auto-migrate newly supported sections if missing from existing JSON
       let modified = false;
       const initialSeed = createInitialCmsDatabase();
 
@@ -552,7 +647,7 @@ export function ensureCmsDatabase(): FullCmsDatabase {
       }
 
       if (modified) {
-        saveCmsDatabase(existing);
+        saveCmsDatabaseLocal(existing);
       }
 
       globalThis.__RAMESH_CMS_DB__ = existing;
@@ -560,7 +655,7 @@ export function ensureCmsDatabase(): FullCmsDatabase {
     }
 
     const initial = createInitialCmsDatabase();
-    saveCmsDatabase(initial);
+    saveCmsDatabaseLocal(initial);
     globalThis.__RAMESH_CMS_DB__ = initial;
     return initial;
   } catch (err) {
@@ -571,46 +666,41 @@ export function ensureCmsDatabase(): FullCmsDatabase {
   }
 }
 
-// Save complete CMS database with resilient multi-tier persistence
-export function saveCmsDatabase(data: FullCmsDatabase): void {
+// Save complete CMS database with durable shared persistence and multi-tier caching
+export async function saveCmsDatabase(data: FullCmsDatabase): Promise<{ success: boolean; version: number }> {
   data.lastPublishedAt = new Date().toISOString();
   data.version = (data.version || 1) + 1;
 
-  // 1. Immediately update in-memory hot cache so subsequent requests in this process see updates
+  // 1. Immediately update in-memory hot cache
   globalThis.__RAMESH_CMS_DB__ = data;
 
-  let persisted = false;
+  // 2. Persist locally (/tmp & local project dir if writable)
+  saveCmsDatabaseLocal(data);
 
-  // 2. Persist to serverless writable storage (/tmp)
-  try {
-    if (!fs.existsSync(TMP_DIR)) {
-      fs.mkdirSync(TMP_DIR, { recursive: true });
+  // 3. Persist to durable shared database (Supabase PostgreSQL)
+  const supabase = getSupabaseClient();
+  if (supabase) {
+    const { error } = await supabase
+      .from('cms_documents')
+      .upsert({
+        key: 'content',
+        data,
+        version: data.version,
+        updated_at: data.lastPublishedAt,
+      });
+
+    if (error) {
+      console.error('Error persisting CMS document to Supabase:', error);
+      throw new Error(`Failed to persist CMS document in Supabase: ${error.message}`);
     }
-    fs.writeFileSync(TMP_CONTENT_FILE, JSON.stringify(data, null, 2), 'utf-8');
-    persisted = true;
-  } catch (tmpErr) {
-    console.warn('Notice: Could not write to serverless tmp directory:', tmpErr);
   }
 
-  // 3. Persist to project data directory (works in local dev and non-serverless environments)
-  try {
-    if (!fs.existsSync(DATA_DIR)) {
-      fs.mkdirSync(DATA_DIR, { recursive: true });
-    }
-    fs.writeFileSync(CONTENT_FILE, JSON.stringify(data, null, 2), 'utf-8');
-    persisted = true;
-  } catch {
-    // Expected on read-only serverless filesystems (e.g. Vercel)
-  }
-
-  if (!persisted) {
-    console.error('Warning: CMS data could not be saved to disk, retained in memory cache.');
-  }
+  return { success: true, version: data.version };
 }
 
 // Get only published content for public website consumption
-export function getPublishedCmsData(): FullCmsDatabase {
-  const data = ensureCmsDatabase();
+export async function getPublishedCmsData(): Promise<FullCmsDatabase> {
+  const data = await ensureCmsDatabase();
   return {
     ...data,
     projects: (data.projects || []).filter((p) => p.status === 'published'),
@@ -622,14 +712,12 @@ export function getPublishedCmsData(): FullCmsDatabase {
   };
 }
 
-// Media Assets manager
-export function getMediaAssets(): MediaAsset[] {
-  // 1. In-memory hot cache
+// Local media helper functions
+function getMediaAssetsLocal(): MediaAsset[] {
   if (globalThis.__RAMESH_CMS_MEDIA__) {
     return globalThis.__RAMESH_CMS_MEDIA__;
   }
 
-  // 2. Serverless writable fallback (/tmp)
   try {
     if (fs.existsSync(TMP_MEDIA_FILE)) {
       const raw = fs.readFileSync(TMP_MEDIA_FILE, 'utf-8');
@@ -641,7 +729,6 @@ export function getMediaAssets(): MediaAsset[] {
     }
   } catch {}
 
-  // 3. Bundled static media file
   try {
     if (fs.existsSync(MEDIA_FILE)) {
       const raw = fs.readFileSync(MEDIA_FILE, 'utf-8');
@@ -653,19 +740,59 @@ export function getMediaAssets(): MediaAsset[] {
     }
   } catch {}
 
-  // 4. Default from database
-  try {
-    const db = ensureCmsDatabase();
-    const initialMedia = db.media || [];
-    globalThis.__RAMESH_CMS_MEDIA__ = initialMedia;
-    return initialMedia;
-  } catch {
-    return [];
+  const rawDb = loadContentRaw();
+  if (rawDb?.media) {
+    globalThis.__RAMESH_CMS_MEDIA__ = rawDb.media;
+    return rawDb.media;
   }
+
+  return [];
 }
 
-export function saveMediaAsset(asset: MediaAsset): void {
-  const assets = getMediaAssets();
+function saveMediaAssetsLocal(assets: MediaAsset[]): void {
+  globalThis.__RAMESH_CMS_MEDIA__ = assets;
+
+  try {
+    if (!fs.existsSync(TMP_DIR)) {
+      fs.mkdirSync(TMP_DIR, { recursive: true });
+    }
+    fs.writeFileSync(TMP_MEDIA_FILE, JSON.stringify(assets, null, 2), 'utf-8');
+  } catch {}
+
+  try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+    fs.writeFileSync(MEDIA_FILE, JSON.stringify(assets, null, 2), 'utf-8');
+  } catch {}
+}
+
+// Media Assets manager with durable shared persistence
+export async function getMediaAssets(): Promise<MediaAsset[]> {
+  const supabase = getSupabaseClient();
+
+  if (supabase) {
+    try {
+      const { data, error } = await supabase
+        .from('cms_documents')
+        .select('data')
+        .eq('key', 'media')
+        .maybeSingle();
+
+      if (!error && data && Array.isArray(data.data)) {
+        globalThis.__RAMESH_CMS_MEDIA__ = data.data as MediaAsset[];
+        return data.data as MediaAsset[];
+      }
+    } catch (err) {
+      console.warn('Notice: Error fetching media from Supabase:', err);
+    }
+  }
+
+  return getMediaAssetsLocal();
+}
+
+export async function saveMediaAsset(asset: MediaAsset): Promise<void> {
+  const assets = await getMediaAssets();
   const existingIdx = assets.findIndex((a) => a.id === asset.id || a.url === asset.url);
   if (existingIdx >= 0) {
     assets[existingIdx] = asset;
@@ -674,54 +801,76 @@ export function saveMediaAsset(asset: MediaAsset): void {
   }
 
   globalThis.__RAMESH_CMS_MEDIA__ = assets;
+  saveMediaAssetsLocal(assets);
 
-  // Write to /tmp
-  try {
-    if (!fs.existsSync(TMP_DIR)) {
-      fs.mkdirSync(TMP_DIR, { recursive: true });
+  const supabase = getSupabaseClient();
+  if (supabase) {
+    const { error } = await supabase
+      .from('cms_documents')
+      .upsert({
+        key: 'media',
+        data: assets,
+        updated_at: new Date().toISOString(),
+      });
+
+    if (error) {
+      console.error('Error persisting media list to Supabase:', error);
+      throw new Error(`Failed to persist media asset in Supabase: ${error.message}`);
     }
-    fs.writeFileSync(TMP_MEDIA_FILE, JSON.stringify(assets, null, 2), 'utf-8');
-  } catch {}
+  }
 
-  // Write to project disk if writable
+  // Also sync with database content document
   try {
-    fs.writeFileSync(MEDIA_FILE, JSON.stringify(assets, null, 2), 'utf-8');
-  } catch {}
-
-  // Also sync with database
-  try {
-    const db = ensureCmsDatabase();
+    const db = await ensureCmsDatabase();
     db.media = assets;
-    saveCmsDatabase(db);
-  } catch {}
+    await saveCmsDatabase(db);
+  } catch (err) {
+    console.warn('Notice: Could not sync media into main content document:', err);
+  }
 }
 
-export function deleteMediaAsset(id: string): boolean {
-  let assets = getMediaAssets();
-  const initialLen = assets.length;
+export async function deleteMediaAsset(id: string): Promise<boolean> {
+  let assets = await getMediaAssets();
+  const target = assets.find((a) => a.id === id);
+  if (!target) return false;
+
   assets = assets.filter((a) => a.id !== id);
-  if (assets.length === initialLen) return false;
-
   globalThis.__RAMESH_CMS_MEDIA__ = assets;
+  saveMediaAssetsLocal(assets);
 
-  // Write to /tmp
-  try {
-    if (!fs.existsSync(TMP_DIR)) {
-      fs.mkdirSync(TMP_DIR, { recursive: true });
+  const supabase = getSupabaseClient();
+  if (supabase) {
+    if (target.url && target.url.includes('/storage/v1/object/public/cms-media/')) {
+      try {
+        const pathPart = target.url.split('/cms-media/')[1];
+        if (pathPart) {
+          await supabase.storage.from('cms-media').remove([pathPart]);
+        }
+      } catch (storageErr) {
+        console.warn('Notice: Could not delete file from Supabase storage:', storageErr);
+      }
     }
-    fs.writeFileSync(TMP_MEDIA_FILE, JSON.stringify(assets, null, 2), 'utf-8');
-  } catch {}
 
-  // Write to project disk if writable
-  try {
-    fs.writeFileSync(MEDIA_FILE, JSON.stringify(assets, null, 2), 'utf-8');
-  } catch {}
+    const { error } = await supabase
+      .from('cms_documents')
+      .upsert({
+        key: 'media',
+        data: assets,
+        updated_at: new Date().toISOString(),
+      });
+
+    if (error) {
+      console.error('Error updating media list in Supabase after deletion:', error);
+      throw new Error(`Failed to update media list in Supabase: ${error.message}`);
+    }
+  }
 
   try {
-    const db = ensureCmsDatabase();
+    const db = await ensureCmsDatabase();
     db.media = assets;
-    saveCmsDatabase(db);
+    await saveCmsDatabase(db);
   } catch {}
+
   return true;
 }
 

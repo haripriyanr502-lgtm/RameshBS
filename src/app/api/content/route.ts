@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    const data = getPublishedCmsData();
+    const data = await getPublishedCmsData();
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error fetching public content:', error);

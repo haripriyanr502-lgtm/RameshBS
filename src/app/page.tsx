@@ -17,7 +17,7 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const cmsData = getPublishedCmsData();
+  const cmsData = await getPublishedCmsData();
   const title = cmsData?.settings?.seoMetaTitle || cmsData?.settings?.siteTitle || "Bangalore Siddegowda Ramesh | Executive Leadership";
   const description = cmsData?.settings?.seoMetaDescription || cmsData?.settings?.shortIntro || "Official leadership and portfolio platform of Bangalore Siddegowda Ramesh (Ramesh B.S)";
   const keywords = cmsData?.settings?.seoKeywords || "BS Ramesh, Lions Club Bangalore Brigade, District 317F, BSR IT Solutions, WIN5M, CSR Clean Water, Region Chairperson, MJF";
@@ -34,8 +34,8 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function Home() {
-  const cmsData = getPublishedCmsData();
+export default async function Home() {
+  const cmsData = await getPublishedCmsData();
   const data = mergeCmsIntoPortfolio(initialPortfolioData, cmsData);
 
   return (

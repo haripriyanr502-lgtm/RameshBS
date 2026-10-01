@@ -4,6 +4,7 @@ import path from 'path';
 import os from 'os';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { getSupabaseClient } from './supabase';
 
 const USERS_FILE = path.join(process.cwd(), 'src', 'data', 'cms', 'users.json');
 const TMP_USERS_FILE = path.join(os.tmpdir(), 'ramesh_bs_cms', 'users.json');
@@ -132,7 +133,7 @@ export function verifySessionToken(token: string): SessionPayload | null {
 }
 
 // Helper: save users across storage tiers
-export function saveUsers(users: AdminUser[]): boolean {
+export async function saveUsers(users: AdminUser[]): Promise<boolean> {
   globalThis.__RAMESH_CMS_USERS__ = users;
   let persisted = false;
 
@@ -156,11 +157,44 @@ export function saveUsers(users: AdminUser[]): boolean {
     persisted = true;
   } catch {}
 
+  // 3. Supabase durable document
+  const supabase = getSupabaseClient();
+  if (supabase) {
+    try {
+      const { error } = await supabase
+        .from('cms_documents')
+        .upsert({
+          key: 'users',
+          data: users,
+          updated_at: new Date().toISOString(),
+        });
+      if (!error) persisted = true;
+    } catch {}
+  }
+
   return persisted || true;
 }
 
 // Ensure users.json exists with default admin credentials & normalized structure
-export function ensureUsersFile(): AdminUser[] {
+export async function ensureUsersFile(): Promise<AdminUser[]> {
+  const supabase = getSupabaseClient();
+  if (supabase) {
+    try {
+      const { data, error } = await supabase
+        .from('cms_documents')
+        .select('data')
+        .eq('key', 'users')
+        .maybeSingle();
+
+      if (!error && data && Array.isArray(data.data) && data.data.length > 0) {
+        globalThis.__RAMESH_CMS_USERS__ = data.data as AdminUser[];
+        return data.data as AdminUser[];
+      }
+    } catch (err) {
+      console.warn('Notice: Error reading users from Supabase:', err);
+    }
+  }
+
   // 1. In-memory cache
   if (globalThis.__RAMESH_CMS_USERS__ && globalThis.__RAMESH_CMS_USERS__.length > 0) {
     return globalThis.__RAMESH_CMS_USERS__;
@@ -210,17 +244,17 @@ export function ensureUsersFile(): AdminUser[] {
     updatedAt: new Date().toISOString(),
   };
 
-  saveUsers([defaultUser]);
+  await saveUsers([defaultUser]);
   globalThis.__RAMESH_CMS_USERS__ = [defaultUser];
   return [defaultUser];
 }
 
 // Authenticate user credentials
-export function authenticateUser(
+export async function authenticateUser(
   email: string,
   password: string
-): { user: AdminUser | null; error?: string } {
-  const users = ensureUsersFile();
+): Promise<{ user: AdminUser | null; error?: string }> {
+  const users = await ensureUsersFile();
   const user = users.find(
     (u) => u.email.trim().toLowerCase() === email.trim().toLowerCase()
   );
@@ -244,8 +278,8 @@ export function authenticateUser(
 }
 
 // Get all administrators without exposing password hashes or salts
-export function getAllAdminUsers(): SafeAdminUser[] {
-  const users = ensureUsersFile();
+export async function getAllAdminUsers(): Promise<SafeAdminUser[]> {
+  const users = await ensureUsersFile();
   return users.map((u) => ({
     id: u.id,
     email: u.email,
@@ -257,11 +291,11 @@ export function getAllAdminUsers(): SafeAdminUser[] {
 }
 
 // Create a new administrator account (secured & hashed)
-export function createAdminUser(params: {
+export async function createAdminUser(params: {
   email: string;
   password: string;
   role?: 'owner' | 'admin' | 'editor';
-}): { success: boolean; user?: SafeAdminUser; error?: string } {
+}): Promise<{ success: boolean; user?: SafeAdminUser; error?: string }> {
   const email = (params.email || '').trim().toLowerCase();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!email || !emailRegex.test(email)) {
@@ -272,7 +306,7 @@ export function createAdminUser(params: {
     return { success: false, error: 'Password must be at least 6 characters long' };
   }
 
-  const users = ensureUsersFile();
+  const users = await ensureUsersFile();
   if (users.some((u) => u.email.toLowerCase() === email)) {
     return { success: false, error: 'An administrator with this email address already exists' };
   }
@@ -291,7 +325,7 @@ export function createAdminUser(params: {
   };
 
   users.push(newUser);
-  saveUsers(users);
+  await saveUsers(users);
 
   const safeUser: SafeAdminUser = {
     id: newUser.id,
@@ -305,12 +339,12 @@ export function createAdminUser(params: {
 }
 
 // Update an administrator's active/disabled status
-export function updateAdminUserStatus(
+export async function updateAdminUserStatus(
   id: string,
   newStatus: 'active' | 'disabled',
   callerEmail: string
-): { success: boolean; error?: string } {
-  const users = ensureUsersFile();
+): Promise<{ success: boolean; error?: string }> {
+  const users = await ensureUsersFile();
   const user = users.find((u) => u.id === id);
   if (!user) {
     return { success: false, error: 'Administrator account not found' };
@@ -338,17 +372,17 @@ export function updateAdminUserStatus(
 
   user.status = newStatus;
   user.updatedAt = new Date().toISOString();
-  saveUsers(users);
+  await saveUsers(users);
   return { success: true };
 }
 
 // Update an administrator's role
-export function updateAdminUserRole(
+export async function updateAdminUserRole(
   id: string,
   newRole: 'owner' | 'admin' | 'editor',
   callerEmail: string
-): { success: boolean; error?: string } {
-  const users = ensureUsersFile();
+): Promise<{ success: boolean; error?: string }> {
+  const users = await ensureUsersFile();
   const user = users.find((u) => u.id === id);
   if (!user) {
     return { success: false, error: 'Administrator account not found' };
@@ -368,20 +402,20 @@ export function updateAdminUserRole(
 
   user.role = newRole;
   user.updatedAt = new Date().toISOString();
-  saveUsers(users);
+  await saveUsers(users);
   return { success: true };
 }
 
 // Reset an administrator's password
-export function resetAdminUserPassword(
+export async function resetAdminUserPassword(
   id: string,
   newPassword: string
-): { success: boolean; error?: string } {
+): Promise<{ success: boolean; error?: string }> {
   if (!newPassword || newPassword.length < 6) {
     return { success: false, error: 'Password must be at least 6 characters long' };
   }
 
-  const users = ensureUsersFile();
+  const users = await ensureUsersFile();
   const user = users.find((u) => u.id === id);
   if (!user) {
     return { success: false, error: 'Administrator account not found' };
@@ -391,16 +425,16 @@ export function resetAdminUserPassword(
   user.salt = salt;
   user.passwordHash = hash;
   user.updatedAt = new Date().toISOString();
-  saveUsers(users);
+  await saveUsers(users);
   return { success: true };
 }
 
 // Delete an administrator account
-export function deleteAdminUser(
+export async function deleteAdminUser(
   id: string,
   callerEmail: string
-): { success: boolean; error?: string } {
-  const users = ensureUsersFile();
+): Promise<{ success: boolean; error?: string }> {
+  const users = await ensureUsersFile();
   const user = users.find((u) => u.id === id);
   if (!user) {
     return { success: false, error: 'Administrator account not found' };
@@ -425,13 +459,13 @@ export function deleteAdminUser(
   }
 
   const updatedUsers = users.filter((u) => u.id !== id);
-  saveUsers(updatedUsers);
+  await saveUsers(updatedUsers);
   return { success: true };
 }
 
 // Change current password by email
-export function updatePassword(email: string, newPassword: string): boolean {
-  const users = ensureUsersFile();
+export async function updatePassword(email: string, newPassword: string): Promise<boolean> {
+  const users = await ensureUsersFile();
   const userIndex = users.findIndex(
     (u) => u.email.trim().toLowerCase() === email.trim().toLowerCase()
   );
@@ -442,7 +476,7 @@ export function updatePassword(email: string, newPassword: string): boolean {
   users[userIndex].passwordHash = hash;
   users[userIndex].updatedAt = new Date().toISOString();
 
-  saveUsers(users);
+  await saveUsers(users);
   return true;
 }
 

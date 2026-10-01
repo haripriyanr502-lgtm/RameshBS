@@ -158,12 +158,25 @@ CREATE POLICY "Public Read Published Achievements" ON achievements FOR SELECT US
 CREATE POLICY "Public Read Published Charter" ON charter_sections FOR SELECT USING (status = 'published');
 CREATE POLICY "Public Read Media" ON media FOR SELECT USING (true);
 
--- Authenticated Admin: Full CRUD Access
-CREATE POLICY "Admin Full Access Settings" ON site_settings FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin Full Access Page Content" ON page_content FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin Full Access Meetings" ON meetings FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin Full Access Services" ON services FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin Full Access Team" ON team_members FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin Full Access Achievements" ON achievements FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin Full Access Charter" ON charter_sections FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin Full Access Media" ON media FOR ALL TO authenticated USING (true);
+-- 9. Central CMS Documents Table (Unified atomic persistence for serverless Lambdas)
+CREATE TABLE IF NOT EXISTS cms_documents (
+  key TEXT PRIMARY KEY,
+  data JSONB NOT NULL,
+  version INT DEFAULT 1,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE cms_documents ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public Read CMS Documents" ON cms_documents FOR SELECT USING (true);
+CREATE POLICY "Admin Full Access CMS Documents" ON cms_documents FOR ALL USING (true);
+
+-- 10. Storage Bucket Setup (for durable media uploads)
+INSERT INTO storage.buckets (id, name, public) 
+VALUES ('cms-media', 'cms-media', true)
+ON CONFLICT (id) DO NOTHING;
+
+CREATE POLICY "Public Read Media Storage" ON storage.objects FOR SELECT USING (bucket_id = 'cms-media');
+CREATE POLICY "Public Insert Media Storage" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'cms-media');
+CREATE POLICY "Public Update Media Storage" ON storage.objects FOR UPDATE USING (bucket_id = 'cms-media');
+CREATE POLICY "Public Delete Media Storage" ON storage.objects FOR DELETE USING (bucket_id = 'cms-media');
