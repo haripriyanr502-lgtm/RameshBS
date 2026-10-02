@@ -103,7 +103,7 @@ export const Hero: React.FC<HeroProps> = ({ personalInfo, onOpenImporter }) => {
           </div>
 
           {/* Right Portrait Image Column */}
-          <div className="lg:col-span-5 flex justify-center relative">
+          <div className="lg:col-span-5 flex justify-center relative z-20">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -138,21 +138,21 @@ export const Hero: React.FC<HeroProps> = ({ personalInfo, onOpenImporter }) => {
                 
                 {/* Gradient Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/30 via-transparent to-transparent opacity-60 pointer-events-none" />
+              </div>
 
-                {/* Floating Bottom Card */}
-                <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-white/95 border border-slate-200 backdrop-blur-xl z-20 shadow-lg">
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <p className="text-xs uppercase tracking-widest text-amber-700 font-bold flex items-center gap-1.5">
-                        <Crown className="w-3.5 h-3.5 text-amber-600" />
-                        Lions Clubs International
-                      </p>
-                      <p className="text-sm font-bold text-slate-900 mt-0.5">
-                        Region Chairperson - District 317F
-                      </p>
-                    </div>
-                    <RegionChairDropdown buttonText="More Info" variant="badge" />
+              {/* Floating Bottom Card */}
+              <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-white/95 border border-slate-200 backdrop-blur-xl z-20 shadow-lg">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-xs uppercase tracking-widest text-amber-700 font-bold flex items-center gap-1.5">
+                      <Crown className="w-3.5 h-3.5 text-amber-600" />
+                      Lions Clubs International
+                    </p>
+                    <p className="text-sm font-bold text-slate-900 mt-0.5">
+                      Region Chairperson - District 317F
+                    </p>
                   </div>
+                  <RegionChairDropdown buttonText="More Info" variant="badge" direction="up" />
                 </div>
               </div>
 
