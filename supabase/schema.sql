@@ -168,15 +168,27 @@ CREATE TABLE IF NOT EXISTS cms_documents (
 
 ALTER TABLE cms_documents ENABLE ROW LEVEL SECURITY;
 
+-- Public / Anonymous users: READ-ONLY access to CMS documents
+DROP POLICY IF EXISTS "Admin Full Access CMS Documents" ON cms_documents;
+DROP POLICY IF EXISTS "Public Read CMS Documents" ON cms_documents;
 CREATE POLICY "Public Read CMS Documents" ON cms_documents FOR SELECT USING (true);
-CREATE POLICY "Admin Full Access CMS Documents" ON cms_documents FOR ALL USING (true);
+
+-- Service Role: Full access for server-side Next.js API / Lambdas using SUPABASE_SERVICE_ROLE_KEY
+DROP POLICY IF EXISTS "Service Role Full Access CMS Documents" ON cms_documents;
+CREATE POLICY "Service Role Full Access CMS Documents" ON cms_documents FOR ALL TO service_role USING (true) WITH CHECK (true);
 
 -- 10. Storage Bucket Setup (for durable media uploads)
 INSERT INTO storage.buckets (id, name, public) 
 VALUES ('cms-media', 'cms-media', true)
 ON CONFLICT (id) DO NOTHING;
 
+-- Public / Anonymous users: READ-ONLY / Download access to public media objects
+DROP POLICY IF EXISTS "Public Insert Media Storage" ON storage.objects;
+DROP POLICY IF EXISTS "Public Update Media Storage" ON storage.objects;
+DROP POLICY IF EXISTS "Public Delete Media Storage" ON storage.objects;
+DROP POLICY IF EXISTS "Public Read Media Storage" ON storage.objects;
 CREATE POLICY "Public Read Media Storage" ON storage.objects FOR SELECT USING (bucket_id = 'cms-media');
-CREATE POLICY "Public Insert Media Storage" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'cms-media');
-CREATE POLICY "Public Update Media Storage" ON storage.objects FOR UPDATE USING (bucket_id = 'cms-media');
-CREATE POLICY "Public Delete Media Storage" ON storage.objects FOR DELETE USING (bucket_id = 'cms-media');
+
+-- Service Role: Full access for server-side media upload/delete endpoints using SUPABASE_SERVICE_ROLE_KEY
+DROP POLICY IF EXISTS "Service Role Full Access Media Storage" ON storage.objects;
+CREATE POLICY "Service Role Full Access Media Storage" ON storage.objects FOR ALL TO service_role USING (bucket_id = 'cms-media') WITH CHECK (bucket_id = 'cms-media');

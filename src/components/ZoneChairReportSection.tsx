@@ -339,6 +339,9 @@ export const ZoneChairReportSection: React.FC<ZoneChairReportSectionProps> = ({ 
                   {club.leadership.president && (
                     <p><strong>President:</strong> {club.leadership.president}</p>
                   )}
+                  {club.leadership.firstVP && (
+                    <p><strong>1st Vice President:</strong> {club.leadership.firstVP}</p>
+                  )}
                   {club.leadership.secretary && (
                     <p><strong>Secretary:</strong> {club.leadership.secretary}</p>
                   )}

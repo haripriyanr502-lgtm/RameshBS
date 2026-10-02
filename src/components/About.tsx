@@ -7,9 +7,11 @@ import { AboutSectionData } from '../types/portfolio';
 import { Eye, Target, Compass, Award, CheckCircle2, Globe, MapPin, Mic, HeartHandshake } from 'lucide-react';
 
 import { ExecutiveHighlightsAccordion } from './ExecutiveHighlightsAccordion';
+import { TeamMemberItem } from '../lib/cms/types';
 
 interface AboutProps {
   aboutData: AboutSectionData;
+  team?: TeamMemberItem[];
 }
 
 const getIconComponent = (iconName?: string) => {
@@ -22,8 +24,8 @@ const getIconComponent = (iconName?: string) => {
   }
 };
 
-export const About: React.FC<AboutProps> = ({ aboutData }) => {
-  const [activeTab, setActiveTab] = useState<'bio' | 'vision' | 'values'>('bio');
+export const About: React.FC<AboutProps> = ({ aboutData, team }) => {
+  const [activeTab, setActiveTab] = useState<'bio' | 'vision' | 'values' | 'leadership'>('bio');
 
   return (
     <section id="about" className="py-24 bg-white relative overflow-hidden">
@@ -127,6 +129,19 @@ export const About: React.FC<AboutProps> = ({ aboutData }) => {
               >
                 Core Values
               </button>
+
+              {team && team.length > 0 && (
+                <button
+                  onClick={() => setActiveTab('leadership')}
+                  className={`px-5 py-2.5 rounded-lg text-xs font-bold tracking-wider uppercase transition-all cursor-pointer ${
+                    activeTab === 'leadership'
+                      ? 'btn-gold shadow-md'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  Leadership Roster ({team.length})
+                </button>
+              )}
             </div>
 
             {/* Tab 1: Biography */}
@@ -177,6 +192,48 @@ export const About: React.FC<AboutProps> = ({ aboutData }) => {
                   >
                     <CheckCircle2 className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                     <span className="text-sm font-semibold text-slate-800">{val}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Tab 4: Leadership & Team Roster */}
+            {activeTab === 'leadership' && team && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {team.map((member) => (
+                  <div
+                    key={member.id}
+                    className="p-4 rounded-2xl bg-white border border-slate-200 hover:border-amber-400 transition-all shadow-sm flex items-start gap-3.5 group"
+                  >
+                    {member.profileImage ? (
+                      <img
+                        src={member.profileImage}
+                        alt={member.fullName}
+                        className="w-12 h-12 rounded-xl object-cover border border-slate-200 group-hover:scale-105 transition-transform shrink-0"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 flex items-center justify-center font-bold text-base shrink-0">
+                        {member.fullName.charAt(0)}
+                      </div>
+                    )}
+                    <div className="space-y-1 min-w-0">
+                      <h5 className="font-serif font-bold text-slate-900 text-sm truncate group-hover:text-amber-700 transition-colors">
+                        {member.fullName}
+                      </h5>
+                      <p className="text-xs text-amber-800 font-semibold truncate">
+                        {member.position}
+                      </p>
+                      {member.organization && (
+                        <p className="text-[11px] text-slate-500 truncate">
+                          {member.organization}
+                        </p>
+                      )}
+                      {member.biography && (
+                        <p className="text-xs text-slate-600 line-clamp-2 mt-1 leading-relaxed">
+                          {member.biography}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>

@@ -168,8 +168,19 @@ export async function saveUsers(users: AdminUser[]): Promise<boolean> {
           data: users,
           updated_at: new Date().toISOString(),
         });
-      if (!error) persisted = true;
-    } catch {}
+      if (error) {
+        console.error('Error persisting admin users in Supabase:', error);
+        if (process.env.VERCEL) {
+          throw new Error(`Failed to persist admin users in Supabase: ${error.message}`);
+        }
+      } else {
+        persisted = true;
+      }
+    } catch (err) {
+      if (process.env.VERCEL) throw err;
+    }
+  } else if (process.env.VERCEL) {
+    throw new Error('Supabase durable database connection is not configured in production');
   }
 
   return persisted || true;

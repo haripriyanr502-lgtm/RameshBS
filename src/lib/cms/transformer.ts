@@ -115,7 +115,27 @@ export function mergeCmsIntoPortfolio(
         date: p.date,
         location: p.location,
       }))
-    : initial.activities.activities;
+    : [...initial.activities.activities];
+
+  // Also include published CMS meetings under 'Meetings' category
+  if (Array.isArray(cms.meetings)) {
+    const existingMeetingIds = new Set(mappedActivities.map((a) => a.id));
+    for (const m of cms.meetings) {
+      if (!existingMeetingIds.has(m.id)) {
+        mappedActivities.push({
+          id: m.id,
+          youtubeId: '',
+          url: m.image || '',
+          title: m.title,
+          category: 'Meetings',
+          description: m.description,
+          hashtags: m.keyOutcomes || (m.dignitaries ? m.dignitaries.slice(0, 3) : []),
+          date: m.date + (m.time ? ` • ${m.time}` : ''),
+          location: m.location,
+        });
+      }
+    }
+  }
 
   const activities = {
     ...initial.activities,

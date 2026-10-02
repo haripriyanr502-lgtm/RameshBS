@@ -89,19 +89,30 @@ export async function POST(request: NextRequest) {
           upsert: true,
         });
 
-      if (!uploadError) {
+      if (uploadError) {
+        console.error('Supabase storage upload error:', uploadError.message);
+        if (process.env.VERCEL) {
+          return NextResponse.json(
+            { error: `Media upload to durable storage failed: ${uploadError.message}` },
+            { status: 500 }
+          );
+        }
+      } else {
         const { data: urlData } = supabase.storage
           .from('cms-media')
           .getPublicUrl(storagePath);
         if (urlData && urlData.publicUrl) {
           publicUrl = urlData.publicUrl;
         }
-      } else {
-        console.warn('Notice: Supabase storage upload returned error, using fallback:', uploadError.message);
       }
+    } else if (process.env.VERCEL) {
+      return NextResponse.json(
+        { error: 'Durable Supabase storage is not configured in production' },
+        { status: 500 }
+      );
     }
 
-    // 2. Local fallback if Supabase is not configured or upload did not complete
+    // 2. Local fallback if Supabase is not configured or upload did not complete in development
     if (!publicUrl) {
       try {
         if (!fs.existsSync(uploadDir)) {
@@ -110,7 +121,7 @@ export async function POST(request: NextRequest) {
         fs.writeFileSync(filePath, buffer);
         publicUrl = `/uploads/${categorySubdir}/${safeFileName}`;
       } catch {
-        // In serverless read-only environments without storage configured, fall back to Data URL
+        // In local environments without storage configured, fall back to Data URL
         publicUrl = `data:${file.type};base64,${buffer.toString('base64')}`;
       }
     }
@@ -134,9 +145,10 @@ export async function POST(request: NextRequest) {
       asset: newAsset,
     });
   } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'An error occurred while uploading file';
     console.error('File upload error:', error);
     return NextResponse.json(
-      { error: 'An error occurred while uploading file' },
+      { error: errorMsg },
       { status: 500 }
     );
   }

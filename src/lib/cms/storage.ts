@@ -671,13 +671,7 @@ export async function saveCmsDatabase(data: FullCmsDatabase): Promise<{ success:
   data.lastPublishedAt = new Date().toISOString();
   data.version = (data.version || 1) + 1;
 
-  // 1. Immediately update in-memory hot cache
-  globalThis.__RAMESH_CMS_DB__ = data;
-
-  // 2. Persist locally (/tmp & local project dir if writable)
-  saveCmsDatabaseLocal(data);
-
-  // 3. Persist to durable shared database (Supabase PostgreSQL)
+  // 1. Persist to durable shared database (Supabase PostgreSQL) FIRST
   const supabase = getSupabaseClient();
   if (supabase) {
     const { error } = await supabase
@@ -693,7 +687,13 @@ export async function saveCmsDatabase(data: FullCmsDatabase): Promise<{ success:
       console.error('Error persisting CMS document to Supabase:', error);
       throw new Error(`Failed to persist CMS document in Supabase: ${error.message}`);
     }
+  } else if (process.env.VERCEL) {
+    throw new Error('Supabase durable database connection is not configured in production');
   }
+
+  // 2. Only after durable persistence succeeds (or in local dev), update in-memory hot cache & local files
+  globalThis.__RAMESH_CMS_DB__ = data;
+  saveCmsDatabaseLocal(data);
 
   return { success: true, version: data.version };
 }
@@ -794,14 +794,12 @@ export async function getMediaAssets(): Promise<MediaAsset[]> {
 export async function saveMediaAsset(asset: MediaAsset): Promise<void> {
   const assets = await getMediaAssets();
   const existingIdx = assets.findIndex((a) => a.id === asset.id || a.url === asset.url);
+  const updatedAssets = [...assets];
   if (existingIdx >= 0) {
-    assets[existingIdx] = asset;
+    updatedAssets[existingIdx] = asset;
   } else {
-    assets.unshift(asset);
+    updatedAssets.unshift(asset);
   }
-
-  globalThis.__RAMESH_CMS_MEDIA__ = assets;
-  saveMediaAssetsLocal(assets);
 
   const supabase = getSupabaseClient();
   if (supabase) {
@@ -809,7 +807,7 @@ export async function saveMediaAsset(asset: MediaAsset): Promise<void> {
       .from('cms_documents')
       .upsert({
         key: 'media',
-        data: assets,
+        data: updatedAssets,
         updated_at: new Date().toISOString(),
       });
 
@@ -817,12 +815,17 @@ export async function saveMediaAsset(asset: MediaAsset): Promise<void> {
       console.error('Error persisting media list to Supabase:', error);
       throw new Error(`Failed to persist media asset in Supabase: ${error.message}`);
     }
+  } else if (process.env.VERCEL) {
+    throw new Error('Supabase durable database connection is not configured in production');
   }
+
+  globalThis.__RAMESH_CMS_MEDIA__ = updatedAssets;
+  saveMediaAssetsLocal(updatedAssets);
 
   // Also sync with database content document
   try {
     const db = await ensureCmsDatabase();
-    db.media = assets;
+    db.media = updatedAssets;
     await saveCmsDatabase(db);
   } catch (err) {
     console.warn('Notice: Could not sync media into main content document:', err);
@@ -830,13 +833,11 @@ export async function saveMediaAsset(asset: MediaAsset): Promise<void> {
 }
 
 export async function deleteMediaAsset(id: string): Promise<boolean> {
-  let assets = await getMediaAssets();
+  const assets = await getMediaAssets();
   const target = assets.find((a) => a.id === id);
   if (!target) return false;
 
-  assets = assets.filter((a) => a.id !== id);
-  globalThis.__RAMESH_CMS_MEDIA__ = assets;
-  saveMediaAssetsLocal(assets);
+  const updatedAssets = assets.filter((a) => a.id !== id);
 
   const supabase = getSupabaseClient();
   if (supabase) {
@@ -855,7 +856,7 @@ export async function deleteMediaAsset(id: string): Promise<boolean> {
       .from('cms_documents')
       .upsert({
         key: 'media',
-        data: assets,
+        data: updatedAssets,
         updated_at: new Date().toISOString(),
       });
 
@@ -863,11 +864,16 @@ export async function deleteMediaAsset(id: string): Promise<boolean> {
       console.error('Error updating media list in Supabase after deletion:', error);
       throw new Error(`Failed to update media list in Supabase: ${error.message}`);
     }
+  } else if (process.env.VERCEL) {
+    throw new Error('Supabase durable database connection is not configured in production');
   }
+
+  globalThis.__RAMESH_CMS_MEDIA__ = updatedAssets;
+  saveMediaAssetsLocal(updatedAssets);
 
   try {
     const db = await ensureCmsDatabase();
-    db.media = assets;
+    db.media = updatedAssets;
     await saveCmsDatabase(db);
   } catch {}
 

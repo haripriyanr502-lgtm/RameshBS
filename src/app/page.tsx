@@ -47,7 +47,7 @@ export default async function Home() {
       <Hero personalInfo={data.personalInfo} />
 
       {/* Section 1: ABOUT ME */}
-      <About aboutData={data.about} />
+      <About aboutData={data.about} team={cmsData?.team} />
 
       {/* Section 2: MY LIONISTIC JOURNEY */}
       <LionisticJourney journeyData={data.lionisticJourney} />

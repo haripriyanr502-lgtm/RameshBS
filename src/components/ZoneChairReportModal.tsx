@@ -482,6 +482,9 @@ export const ZoneChairReportModal: React.FC<ZoneChairReportModalProps> = ({
                           {club.leadership.president && (
                             <p className="text-slate-800"><strong>President:</strong> {club.leadership.president}</p>
                           )}
+                          {club.leadership.firstVP && (
+                            <p className="text-slate-800"><strong>1st Vice President:</strong> {club.leadership.firstVP}</p>
+                          )}
                           {club.leadership.secretary && (
                             <p className="text-slate-800"><strong>Secretary:</strong> {club.leadership.secretary}</p>
                           )}

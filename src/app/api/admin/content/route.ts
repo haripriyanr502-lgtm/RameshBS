@@ -51,7 +51,8 @@ export async function POST(request: NextRequest) {
       lastPublishedAt: body.lastPublishedAt,
     });
   } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Failed to save CMS data';
     console.error('Error saving CMS data:', error);
-    return NextResponse.json({ error: 'Failed to save CMS data' }, { status: 500 });
+    return NextResponse.json({ error: errorMsg }, { status: 500 });
   }
 }
